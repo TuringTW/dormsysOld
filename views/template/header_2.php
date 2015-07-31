@@ -44,32 +44,33 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="./index.php">蔡阿姨管理系統beta<?=" ".$version." "?></a>
+				<a class="navbar-brand" href="<?=web_url('/index/index')?>">蔡阿姨管理系統beta<?=" ".$version." "?></a>
 			</div>			
 			<div class = "collapse navbar-collapse navHeadercollapse">
 				<ul class = "nav navbar-nav navbar-left" id="nav">
-					<li><a href = "./index.php">Home</a></li>
+					<li><a href = "<?=web_url('/index/index')?>">Home</a></li>
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">合約</a>
 						<ul class="dropdown-menu">
-							<li><a href = "contract.php">合約列表</a></li>
-							<li><a href = "checkOut.php">待結算合約</a></li>
-							<li><a href = "sealContract.php">封存合約</a></li>
-							<li><a href = "newContract.php">新版新增合約</a></li>
+							<?php $CI =& get_instance(); ?>
+							<li><a href = "<?=web_url('/contract/index')?>">合約列表</a></li>
+							<li><a href = "#">待結算合約</a></li>
+							<li><a href = "#">封存合約</a></li>
+							<li><a href = "#">新版新增合約</a></li>
 
 							<hr>
-							<li><a href = "stuInfo.php">學生資料</a></li>
+							<li><a href = "#">學生資料</a></li>
 						</ul>
 					</li>
-					<li><a href = "roomEngine.php">租屋狀態</a></li>
+					<li><a href = "#">租屋狀態</a></li>
 					
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">聯絡通訊</a>
 						<ul class="dropdown-menu">
-							<li><a href = "contactSTU.php">學生通訊錄</a></li>
-							<li><a href = "contactRS.php">常用通訊錄</a></li>
+							<li><a href = "#">學生通訊錄</a></li>
+							<li><a href = "#">常用通訊錄</a></li>
 							<hr>
-							<li><a href = "Sms.php">簡訊</a></li>
+							<li><a href = "#">簡訊</a></li>
 						</ul>
 					</li>
 
@@ -80,15 +81,15 @@
 							<li><a href = "fix.php">維修</a></li>
 							<li><a href = "utilityBill.php">水電費押金</a></li>
 						</ul>
-					</li>
+					</li><!-- 
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">會計</a>
 						<ul class="dropdown-menu">
 							<li><a href = "receipt.php">收據管理</a></li>
 							<li><a href = "item.php">支出管理</a></li>
 						</ul>
-					</li>
-					<li class="dropdown">
+					</li> -->
+					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">管理</a>
 						<ul class="dropdown-menu">
 							<li><a href = "room.php">房間管理</a></li>
@@ -96,8 +97,8 @@
 							<hr>
 							
 							<!-- <li><a href = "reward.php">帶看獎金</a></li> -->
-						</ul>
-					</li>
+						<!-- </ul>
+					</li> -->
 <!-- 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">分析</a>
 						<ul class="dropdown-menu">
@@ -139,7 +140,7 @@
 				<ul class = "nav navbar-nav navbar-right">
 					<li><a id="showbox"></a></li>
 					<li><a href = "#"><?="使用者:".$user?></a></li>
-					<li><a  href="_logout.php">登出</a></li>				
+					<li><a  href="<?=web_url('/index/logout')?>">登出</a></li>				
 				</ul>
 			</div>
 		</div>

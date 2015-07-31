@@ -17,4 +17,13 @@
 		return $js_string;
 		}
 	}
+	if ( ! function_exists('web_url'))
+	{
+		function web_url($uri = '')
+		{
+		$CI =& get_instance();
+		$string = $CI->config->base_url("index.php".$uri);
+		return $string;
+		}
+	}
  ?>

@@ -7,7 +7,7 @@ class Login extends CI_Controller
 		$this->load->helper(array('form', 'url', 'My_url_helper', 'security'));
 		$this->load->library('session');
 		$this->load->model('login_check');
-		$this->load->database();
+		
 		// session
 		$this->session->sess_destroy();
 
@@ -28,6 +28,7 @@ class Login extends CI_Controller
 			$this->load->view('template/login');
 
 		}else if ($this->input->post('btnlogin')=='login') {
+
 			$result = $this->login_check->get_user(xss_clean($username), $password);
 			if (count($result)>0) {
 				$sessiondata = array(
@@ -42,12 +43,6 @@ class Login extends CI_Controller
 				redirect('/login');
 			}
 		}
-		
-			
-			
-		
-		
 	}
-
 }
 ?>

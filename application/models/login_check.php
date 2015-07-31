@@ -7,6 +7,7 @@ class login_check extends CI_Model
      function __construct()
      {
           // Call the Model constructor
+     	$this->load->database();
           parent::__construct();
      }
 
@@ -24,24 +25,24 @@ class login_check extends CI_Model
 		$this->load->library('session');
 
 		// login check
-		if ($this->session->userdata('user')==false) {
+		if ($this->session->userdata('user')===false) {
 			redirect('/login');
 		}
 		// power check
-		if ($this->session->userdata('power')==false) {
+		if ($this->session->userdata('power')===false) {
 			redirect('/login');
 		}else{
 			if ($this->session->userdata('power') > $required_power) {
 				redirect('/index');
 			}
 		}
-		// header
-		$data = array(	'title' => 'Home', 
-						'user' => $this->session->userdata('user'),
-						'power' => $this->session->userdata('power')
-					);
-
-		$this->load->view('template/header', $data);
-		$this->load->view('template/header_2', $data);
-     }
+		
+    }
+    function log_out(){
+		$this->load->library('session');
+		$this->session->sess_destroy();
+		
+		redirect('/login');
+		
+    }
 }?>
