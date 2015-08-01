@@ -5,12 +5,9 @@
 		function dorm_list_html($dormlist){
 			?>
 					<div class="btn-group" style="width:100%">
+						<input type="hidden" id="dorm_select_value" value="0">
 						<button type="button" class="btn btn-default dropdown-toggle btn-success" data-toggle="dropdown" style="width:100%">
-							宿舍:<?php if (empty($dorm)) {
-								echo "全部";
-							}else{foreach ($dormlist as  $dorm) { if ($dorm['dorm_id']==$dorm) {
-								echo $dorm['name'];					
-									}} } ?> <span class="caret"></span>
+							宿舍:<span id="lbldorm">全部</span> <span class="caret"></span>
 						</button>
 						<?php 	$countdorm = count($dormlist);
 								$coln = floor(($countdorm+2)/10);
@@ -23,7 +20,7 @@
 										
 										<ul class="nav navbar" style="width:100%">
 											<?php if ($i==0) { ?>
-												<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767">全部</a></li>									
+												<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"  onclick="dorm_select(0,'全部')">全部</a></li>									
 												<hr>
 											<?php 
 													$key = $j -2;
@@ -33,7 +30,7 @@
 											<?php while($j < $key+10 && $j < $countdorm) { ?>
 												<?php $value = $dormlist[$j];
 												if ($value['dorm_id']!=33&&$value['dorm_id']!=34){ ?>
-													<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"><?=$value['name']?></a></li>									
+													<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767" onclick="dorm_select(<?=$value['dorm_id']?>,'<?=$value['name']?>')"><?=$value['name']?></a></li>									
 												<?php }else{ ?>
 													<?php $key++; ?>
 												<?php } ?>
@@ -45,10 +42,11 @@
 							</div>
 						</div>
 					</div>
+				
+
+					<?php 
 
 
-
-			<?php
 		}
 	}
 ?>

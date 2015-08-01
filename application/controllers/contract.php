@@ -33,47 +33,22 @@ class Contract extends CI_Controller
 		$data['dormlist'] = $this->utility->get_dorm_list();
 		$this->load->view('contract/search_table', $data);
 
+		// footer
+		$this->load->view('contract/js_section');
 		$this->load->view('template/footer');
 	}
-
-	// public function view($slug)
-	// {
-	// 	$data['news_item'] = $this->news_model->get_news($slug);
-
-	// 	if (empty($data['news_item']))
-	// 	{
-	// 		show_404();
-	// 	}
-
-	// 	$data['title'] = $data['news_item']['title'];
-
-	// 	$this->load->view('template/header', $data);
-	// 	$this->load->view('news/view', $data);
-	// 	$this->load->view('template/footer');
-	// }
-	// public function create()
-	// {
-	// 	$this->load->helper('form');
-	// 	$this->load->library('form_validation');
+	public function show()
+	{
+		$keyword = $this->input->post("keyword", TRUE);
+		$page = $this->input->post("page", TRUE);
+		$due = $this->input->post("due_value", TRUE);
+		$ofd = $this->input->post("ofd_value", TRUE);
+		$dorm = $this->input->post("dorm", TRUE);
 		
-	// 	$data['title'] = 'Create a news item';
-		
-	// 	$this->form_validation->set_rules('title', '標題', 'required');
-	// 	$this->form_validation->set_rules('text', '內文', 'required');
-		
-	// 	if ($this->form_validation->run() === FALSE)
-	// 	{
-	// 		$this->load->view('template/header', $data);	
-	// 		$this->load->view('news/create');
-	// 		$this->load->view('template/footer');
-			
-	// 	}
-	// 	else
-	// 	{
-	// 		$this->news_model->set_news();
-	// 		$this->load->view('news/success');
-	// 	}
-	// }
+		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $page);
+		$this->load->view('template/jsonview', $data);
+	}
+	
 
 	
 }

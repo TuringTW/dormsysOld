@@ -3,22 +3,25 @@
 	<form method="GET" action="contract.php">
 		<div class="form-group">
 			<div class="col-sm-3">
-				<input type="text" class="form-control" name="search" placeholder="搜尋:宿舍、房號、姓名" value="">
+				<input type="text" id="txtkeyword"class="form-control" name="search" placeholder="搜尋:宿舍、房號、姓名" value="">
 			</div>
 			<div class="col-sm-1">
-				<a name="searchsubmit" class="btn btn-primary" >搜尋</a>
+				<a name="searchsubmit" id="btnSearch" class="btn btn-primary" >搜尋</a>
 			</div>
 			<div class="col-md-3">
 				<?php echo dorm_list_html($dormlist); ?>
 			</div>
 			<div class="col-sm-3">
 				<div class="btn-group">
-					<a href="#" name="searchsubmit" class="btn btn-default" >本月到期&nbsp;&nbsp;<span class="badge">1</span></a>
-					<a href="#" name="searchsubmit" class="btn btn-default" >過期合約&nbsp;&nbsp;<span class="badge">1</span></a>
+					<input type="hidden" id="due_value" value="0">
+					<input type="hidden" id="ofd_value" value="0">
+					<a href="#" id="btnDue" class="btn btn-default" >本月到期&nbsp;&nbsp;<span class="badge">1</span></a>
+					<a href="#" id="btnOFD" class="btn btn-default" >過期合約&nbsp;&nbsp;<span class="badge">1</span></a>
 				</div>
 			</div>
 
 			<div class="col-sm-2">
+				<input type="hidden" value="1" id="page_value">
 				<a href="#" class="btn btn-default " ><span class=" glyphicon glyphicon-chevron-left"></span></a>
 				<a href="#" class="btn btn-default " >1</a>
 				<a href="#" class="btn btn-default " ><span class=" glyphicon glyphicon-chevron-right"></span></a>
@@ -32,7 +35,7 @@
 			<!-- 搜尋結果 -->
 
 	<div class="table-responsive">
-		<table class="table table-striped">
+		<table class="table table-striped" >
 			
 				<thead>
 					<tr>
@@ -47,7 +50,7 @@
 						<th style="width:5%">詳細</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="result_table">
 
 
 
@@ -83,7 +86,3 @@
 </div>
 </div>
 
-<script type="text/javascript">
-	
-
-</script>

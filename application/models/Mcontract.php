@@ -25,15 +25,17 @@ class Mcontract extends CI_Model
         }
         // 宿舍
         $dormrule = "1";
-        if ($dorm !== 0) {
-            $dormrule = "(`dorm`.`dorm_id` = '$dorm')";
+        if ($dorm != 0&&!is_null($dorm)) {
+            $dormrule = "`dorm`.`dorm_id` = '$dorm'";
+        }
+        if ($page <= 0) {
+            $page = 1;
         }
 
 
         // 頁數
         $pages = 30*$page-30;
-
-        $sql = "SELECT  `contract`.`contract_id`,`contract`.`c_num`,`contract`.`rent`,`contract`.`keep`,`contract`.`sales`,`student`.`name` as `sname`,`dorm`.`name`as `dname`,`room`.`name`as`rname`,  `contract`.`s_date` ,  `contract`.`e_date`,`contract`.`seal`
+        $sql = "SELECT  `contract`.`contract_id`,`contract`.`c_num`,`contract`.`rent`,`contract`.`keep`,`contract`.`sales`,`student`.`name` as `sname`,`dorm`.`name`as `dname`,`room`.`name`as`rname`,  `contract`.`s_date`,`contract`.`in_date`,`contract`.`out_date` ,  `contract`.`e_date`,`contract`.`seal`
             FROM  `contract` 
             LEFT JOIN `room` on `room`.`room_id`=`contract`.`room_id`
             LEFT JOIN `dorm` on `dorm`.`dorm_id`=`room`.`dorm`
@@ -63,6 +65,9 @@ class Mcontract extends CI_Model
             
             ORDER BY `dorm`.`name` DESC,`room`.`name`,`contract`.`c_num`
             LIMIT $pages,30";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+
     }
     // 取得單筆合約資料
     function get_contract_info($c_num)
