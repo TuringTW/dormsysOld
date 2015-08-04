@@ -14,7 +14,7 @@ class login_check extends CI_Model
      //get the username & password from tbl_usrs
      function get_user($usr, $pwd)
      {
-          $sql = "select `name`,`power` from `manager` where `user` = '" . $usr . "' and pass = '" . md5($pwd) . "' and active = 1";
+          $sql = "select `name`,`power`, `m_id` from `manager` where `user` = '" . $usr . "' and pass = '" . md5($pwd) . "' and active = 1";
           $query = $this->db->query($sql);
           return $query->row();
      }
