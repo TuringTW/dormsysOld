@@ -2,7 +2,7 @@
 
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class utility extends CI_Model
+class Mutility extends CI_Model
 {
      function __construct()
      {
@@ -16,7 +16,6 @@ class utility extends CI_Model
     	$query = $this->db->query($sql);
     	return $query->result_array();
     }
-
     function get_room_list($dorm_id)
     {
     	$sql = "SELECT * from `room` where `dorm` = '$dorm_id'";
@@ -26,6 +25,12 @@ class utility extends CI_Model
     	$query = $this->db->query($sql);
     	return $query->result_array();
     }
+    function get_room_info($room_id){
+        $sql = "SELECT * from `contract` where `room_id` = '$room_id'";
+        $query = $this->db->query($sql);
+        return $query->row(0);
+    }
+
     function get_user_list()
     {
         $sql = "SELECT `m_id`,`name` from `manager` where 1";

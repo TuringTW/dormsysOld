@@ -8,7 +8,7 @@ class Mstudent extends CI_Model
 	{
 	  // Call the Model constructor
 	$this->load->library('session');
-	$this->load->model(array('login_check', 'utility'));
+	$this->load->model(array('login_check', 'Mutility'));
 	$required_power = 2;
 	$this->login_check->check_init($required_power);
 	parent::__construct();
@@ -36,6 +36,33 @@ class Mstudent extends CI_Model
 			$sql = "SELECT * from `student` where `stu_id` = '$stu_id'";
 			$query = $this->db->query($sql);
 			return $query->row(0);
+		}else{
+			return FALSE;
+		}
+	}
+
+
+	function submitstuinfo($data){
+		if (isset($data['stu_id'])) {
+			if ($data['stu_id']==0) {
+				$sql = "INSERT INTO `dorm`.`student` (`stu_id`, `name`, `sex`, `school`, `mobile`, `home`, `reg_address`, `mailing_address`, `email`, `id_num`, `birthday`, `emg_name`, `emg_phone`, `note`, `ctime`) VALUES (NULL, '".$data['name']."', 'NULL', '".$data['school']."', '".$data['mobile']."', '".$data['home']."', '".$data['reg_address']."', '".$data['mailing_address']."', '".$data['email']."', '".$data['id_num']."', '".$data['birthday']."', '".$data['emg_name']."', '".$data['emg_phone']."', '".$data['note']."', CURRENT_TIMESTAMP)";
+				$query = $this->db->query($sql);
+				return $this->db->insert_id();
+			}else{
+				$sql = "UPDATE `dorm`.`student` SET `name` = '".$data['name']."', `sex` = 'NULL', `school` = '".$data['school']."', `mobile` = '".$data['mobile']."', `home` = '".$data['home']."', `reg_address` = '".$data['reg_address']."',`birthday` = '".$data['birthday']."', `mailing_address` = '".$data['mailing_address']."', `email` = '".$data['email']."', `id_num` = '".$data['id_num']."', `emg_name` = '".$data['emg_name']."', `emg_phone` = '".$data['emg_phone']."', `note` = '".$data['note']."' WHERE `student`.`stu_id` = '".$data['stu_id']."'";
+				$query = $this->db->query($sql);
+				return $data['stu_id'];
+			}
+				
+		}else{
+			return FALSE;
+		}
+	}
+	function checkdoubleadd($name, $id_num, $mobile){
+		$sql = "SELECT COUNT(`stu_id`) as `count` FROM `student` where `name` = '$name' and (`id_num` = '$id_num' or `mobile` = '$mobile')";
+		$query = $this->db->query($sql);
+		if ($query->row(0)->count>0) {
+			return TRUE;
 		}else{
 			return FALSE;
 		}

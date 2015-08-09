@@ -66,37 +66,41 @@
 		}
 	}
 	// 檢查資料庫是否有重複
-	function checkreadd(key,num){
-		var name = document.getElementById('stu_'+key+'_name').value;
-		var mobile = document.getElementById('stu_'+key+'_mobile').value;
-		var idnum = document.getElementById('stu_'+key+'_idnum').value;
-		var data = 'idnum='+idnum+'&name='+name+'&mobile='+mobile+'&readd=1';
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		xhr.open("POST", "_add_new_contract.php", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// alert(xhr.responseText.trim().length);
-
-					if (xhr.responseText.trim() != "0") {
-						alert('資料庫中已有此人!!!!\n請勿重複新增!!!!\n'+xhr.responseText);
-						document.getElementById('stu_'+key+'_btn').disabled = true;
-
-					}
-						 
-				} else {  
-					alert('There was a problem with the request.');  
-				}  
+	function checkreadd(key, stu_id){
+		if (1) {
+			var name = document.getElementById('stu_'+key+'_name').value;
+			var mobile = document.getElementById('stu_'+key+'_mobile').value;
+			var idnum = document.getElementById('stu_'+key+'_idnum').value;
+			var data = 'id_num='+idnum+'&name='+name+'&mobile='+mobile;
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 			}  
-		}
+			xhr.open("POST", "<?=web_url('/student/checkdoubleadd')?>", true);   
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+			xhr.send(data);  
+			xhr.onreadystatechange = display_data;  
+			function display_data() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);
+						data = JSON.parse(xhr.responseText);
+						if (data == true) {
+							alert('資料庫中已有此人!!!!\n請勿重複新增!!!!\n'+xhr.responseText);
+							document.getElementById('stu_'+key+'_btn').disabled = true;
+						}else{
+							document.getElementById('stu_'+key+'_btn').disabled = false;
+
+						}
+							 
+					} else {  
+						alert('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}
+		}			
 	}
 	function addstuinfo(stu_id){
 		document.getElementById('submitbtn').disabled=true;
@@ -104,41 +108,49 @@
 		key = Number(key)+1;
 		document.getElementById('key').value = key;	
 		// alert(stu_id+' '+key);
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "stu_id=" + stu_id;
-		xhr.open("POST", "<?=web_url('/student/add_stu_info')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// alert(xhr.responseText);   
-					data = JSON.parse(xhr.responseText);
-					
-					document.getElementById('accordion').innerHTML += stu_info_gen(data, key, stu_id);
-					$(function() {$( '#stu_'+key+'_birthday' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});})
-				} else {  
-					alert('There was a problem with the request.');  
-				}  
+		if (stu_id == 0) {
+			data = JSON.parse('{"stu_id":"","name":"","sex":"","school":"","mobile":"","home":"","reg_address":"","mailing_address":"","email":"","id_num":"","birthday":"","emg_name":"","emg_phone":"","note":""}')
+			$('#accordion').append(stu_info_gen(data, key, stu_id));
+			$(function() {$( '#stu_'+key+'_birthday' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});})
+		}else{
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 			}  
-		}
+			var data = "stu_id=" + stu_id;
+			xhr.open("POST", "<?=web_url('/student/add_stu_info')?>", true);   
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+			xhr.send(data);  
+			xhr.onreadystatechange = display_data;  
+			function display_data() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);   
+						data = JSON.parse(xhr.responseText);
+						// alert(document.getElementById('accordion').innerHTML);
+						$('#accordion').append(stu_info_gen(data, key, stu_id));
+						$(function() {$( '#stu_'+key+'_birthday' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});})
+					} else {  
+						alert('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}
 
-		//清除搜尋結果
-		document.getElementById('stu_search_result').innerHTML = "";
-		document.getElementById('add_stu_info_search').value = "";
+			//清除搜尋結果
+			document.getElementById('stu_search_result').innerHTML = "";
+			document.getElementById('add_stu_info_search').value = "";
 
-		//新增submit的資料
-		if (stu_id!=0) {
-			document.getElementById('stuinfosubmit').innerHTML += "<input type='hidden' name='stu_id[]' id='stu_id_"+key+"_submit' value="+stu_id+">"
-		};	
+			//新增submit的資料
+			if (stu_id!=0) {
+				document.getElementById('stuinfosubmit').innerHTML += "<input type='hidden' name='stu_id[]' id='stu_id_"+key+"_submit' value="+stu_id+">"
+			};
+		}			
 	}
+
 	function stu_info_gen(data, key, stu_id){
+
 		var htmltext = '';
 						htmltext+=' <div class="panel panel-default" id="stu_info_'+key+'">'
 						htmltext+=' <div class="panel-heading">'
@@ -147,13 +159,13 @@
 						htmltext+=' <!-- 簡要資料橫排 -->'
 						htmltext+=' <table class="table-bordered" style="width:100%; text-align:center;">'
 						htmltext+=' <tr>'
-						htmltext+=' <td style="width:10%"><h4><span id="stu_'+key+'_banner_name">'+data.name+'</span></h4></td>'
-						htmltext+=' <td><h4><span id="stu_'+key+'_banner_mobile">'+data.mobile+'</span></h4></td>'
-						htmltext+=' <td style="width:15%"><h4><span id="stu_'+key+'_banner_home">'+data.home+'</span></h4></td>'
-						htmltext+=' <td style="width:15%"><h4><span id="stu_'+key+'_banner_idnum">'+data.id_num+'</span></h4></td>'
-						htmltext+=' <td style="width:10%"><h4><span id="stu_'+key+'_banner_birthday">'+data.birthday+'</span></h4></td>'
-						htmltext+=' <td style="width:10%"><h4><span id="stu_'+key+'_banner_emg_name">'+data.emg_name+'</span></h4></td>'
-						htmltext+=' <td style="width:20%"><h4><span id="stu_'+key+'_banner_emg_phone">'+data.emg_phone+'</span></h4></td>'
+						htmltext+=' <td style="width:10%"><h4><span id="stu_'+key+'_banner_name">'+((data.name=='')?'姓名':data.name)+'</span></h4></td>'
+						htmltext+=' <td><h4><span id="stu_'+key+'_banner_mobile">'+((data.mobile=='')?'行動電話':data.mobile)+'</span></h4></td>'
+						htmltext+=' <td style="width:15%"><h4><span id="stu_'+key+'_banner_home">'+((data.home=='')?'家裡電話':data.home)+'</span></h4></td>'
+						htmltext+=' <td style="width:15%"><h4><span id="stu_'+key+'_banner_idnum">'+((data.id_num=='')?'身分證字號':data.id_num)+'</span></h4></td>'
+						htmltext+=' <td style="width:10%"><h4><span id="stu_'+key+'_banner_birthday">'+((data.birthday=='')?'生日':data.birthday)+'</span></h4></td>'
+						htmltext+=' <td style="width:10%"><h4><span id="stu_'+key+'_banner_emg_name">'+((data.emg_name=='')?'緊急聯絡人':data.emg_name)+'</span></h4></td>'
+						htmltext+=' <td style="width:20%"><h4><span id="stu_'+key+'_banner_emg_phone">'+((data.emg_phone=='')?'緊急連絡電話':data.emg_phone)+'</span></h4></td>'
 						htmltext+=' <td id="stu_'+key+'_remove" style="width:5%"><h4><a href="#" onClick="removestuinfo('+key+')"><span class="glyphicon glyphicon-remove"></span></a></h4></td>'
 						htmltext+=' </tr></table></a></h4></div>'
 
@@ -166,7 +178,7 @@
 						htmltext+=' <table class="table " style="100%">'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:25%" align="right">*名字</td>'
-						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_name" placeholder="請輸入承租戶姓名" style="" type="text"  value="'+data.name+'" onChange="bannerrefresh('+key+',0);"></td>'
+						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_name" placeholder="請輸入承租戶姓名" style="" type="text"  value="'+data.name+'" onChange="bannerrefresh('+key+',0);checkreadd('+key+','+stu_id+');"></td>'
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:25%" align="right">學校/單位</td>'
@@ -174,7 +186,7 @@
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:25%" align="right">*身分證字號</td>'
-						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_idnum" placeholder="(ex:A123456789)" style="" type="text"  value="'+data.id_num+'" onChange="bannerrefresh('+key+',1);checkreadd($key,1)"></td>'
+						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_idnum" placeholder="(ex:A123456789)" style="" type="text"  value="'+data.id_num+'" onChange="bannerrefresh('+key+',1);checkreadd('+key+','+stu_id+');"></td>'
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:25%" align="right">*生日</td>'
@@ -184,10 +196,6 @@
 						htmltext+=' <td style="width:25%" align="right">備註</td>'
 						htmltext+=' <td><textarea class="form-control" id="stu_'+key+'_note" rows="5" style="resize:none"></textarea></td>'
 						htmltext+=' </tr>'
-						htmltext+=' '
-						htmltext+=' '
-						htmltext+=' '
-						htmltext+=' '
 						htmltext+=' </table>'
 						htmltext+=' </div>'
 						htmltext+=' <div class="col-md-6">'
@@ -195,7 +203,7 @@
 						htmltext+=' <table class="table " style="100%">'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:28%" align="right">*手機</td>'
-						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_mobile" placeholder="請輸入個人行動電話號碼" style="" type="text"  value="'+data.mobile+'" onChange="bannerrefresh('+key+',3);checkreadd('+key+',2)"></td>'
+						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_mobile" placeholder="請輸入個人行動電話號碼" style="" type="text"  value="'+data.mobile+'" onChange="bannerrefresh('+key+',3);checkreadd('+key+','+stu_id+')"></td>'
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:28%" align="right">家裡電話</td>'
@@ -206,11 +214,11 @@
 						htmltext+=' <td><input class="form-control"  id="stu_'+key+'_email" placeholder="請輸入常用電子郵件號碼" style="" type="text"  value="'+data.email+'" onChange="bannerrefresh('+key+',-1)"></td>'
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
-						htmltext+=' <td style="width:28%" align="right">戶籍地址</td>'
+						htmltext+=' <td style="width:28%" align="right">*戶籍地址</td>'
 						htmltext+=' <td><input class="form-control"  id="stu_'+key+'_reg_address" placeholder="請輸入戶籍地址" style="" type="text"  value="'+data.reg_address+'" onChange="bannerrefresh('+key+',-1)"></td>'
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
-						htmltext+=' <td style="width:28%" align="right">通訊地址</td>'
+						htmltext+=' <td style="width:28%" align="right">*通訊地址</td>'
 						htmltext+=' <td>'
 						htmltext+=' <div class="row">'
 						htmltext+=' 	<div class="col-md-9"><input class="form-control"  id="stu_'+key+'_mailing_address" placeholder="請輸入通訊地址" style="" type="text"  value="'+data.mailing_address+'" onChange="bannerrefresh('+key+',-1)"></div>'
@@ -276,6 +284,9 @@
 
 		}
 	}
+	function sameasreg(key){
+		document.getElementById('stu_'+key+'_mailing_address').value = document.getElementById('stu_'+key+'_reg_address').value;
+	}	
 	// 更新學生資料
 	function submitstuinfo(key){
 		document.getElementById('submitbtn').disabled=true;
@@ -317,14 +328,14 @@
 			checkinfo +='。手機號碼\n';
 			check = 0;
 		}
-		// if(reg_address==''){
-		// 	checkinfo +='。戶籍地址\n';
-		// 	check = 0;
-		// }
-		// if(mailing_address==''){
-		// 	checkinfo +='。通訊地址\n';
-		// 	check = 0;
-		// }
+		if(reg_address==''){
+			checkinfo +='。戶籍地址\n';
+			check = 0;
+		}
+		if(mailing_address==''){
+			checkinfo +='。通訊地址\n';
+			check = 0;
+		}
 		if(emg_name==''){
 			checkinfo +='。緊急聯絡人\n';
 			check = 0;
@@ -335,7 +346,7 @@
 		}
 
 		if (check) {
-			var data = 'key='+key+'&name='+name+'&school='+school+'&idnum='+idnum+'&birthday='+birthday+'&note='+note+'&mobile='+mobile+'&home='+home+'&email='+email+'&reg_address='+reg_address+'&mailing_address='+mailing_address+'&emg_name='+emg_name+'&emg_phone='+emg_phone+'&stu_id='+stu_id;  
+			var data = 'key='+key+'&name='+name+'&school='+school+'&id_num='+idnum+'&birthday='+birthday+'&note='+note+'&mobile='+mobile+'&home='+home+'&email='+email+'&reg_address='+reg_address+'&mailing_address='+mailing_address+'&emg_name='+emg_name+'&emg_phone='+emg_phone+'&stu_id='+stu_id;  
 			submitinfo(data,key,stu_id);
 			
 		}else{
@@ -358,25 +369,82 @@
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
 					// alert(xhr.responseText);  
-					if (parseInt(xhr.responseText) != 0) {
+					result = JSON.parse(xhr.responseText);
+					if (result != false) {
 						document.getElementById('stu_'+key+'_btn').className = 'btn btn-primary';
 						if (stu_id==0) {
 							// alert('key='+key);
 							document.getElementById('stu_'+key+'_stu_id').value = xhr.responseText;
 							document.getElementById('stuinfosubmit').innerHTML += "<input type='hidden' name='stu_id[]' id='stu_id_"+key+"_submit' value="+xhr.responseText+">"
 
-						}else{
-
-						} 
+						}
 					}else{
 						alert('[錯誤：儲存時發生錯誤，請再試一次]\n如果持續出現請聯絡Kevin\n');
 					}      
 						 
 				} else {  
-					alert('There was a problem with the request.');  
+					alert('資料傳送出現問題，等等在試一次.');  
 				}  
 			}  
 		}
+	}
+// 合約資料
+	function room_suggestion()  
+	{  
+		var dorm = document.getElementById("dorm_select").value;  
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "dorm_id=" + dorm;  
+		xhr.open("POST", "<?=web_url('/utility/room_suggestion')?>", true);   
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+		xhr.send(data);  
+		xhr.onreadystatechange = display_data;  
+		function display_data() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					alert(xhr.responseText);        
+					data = JSON.parse(xhr.responseText);
+					var htmltext = '';
+					for (var i = data.length - 1; i >= 0; i--) {
+						htmltext += "<option class='form-control' value='"+data[i].room_id+"'>"+data[i].name+"</option>";
+					};
+
+					document.getElementById("room_select").innerHTML = htmltext;  
+					room_data_suggestion();
+				} else {  
+					alert('There was a problem with the request.');  
+				}  
+			}  
+		}  
+	}
+	function room_data_suggestion(){  
+		var room = document.getElementById("room_select").value;  
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "room_id=" + room;  
+		xhr.open("POST", "<?=web_url('/utility/get_room_info')?>", true);   
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+		xhr.send(data);  
+		xhr.onreadystatechange = display_data;  
+		function display_data() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);    
+					data = JSON.parse(xhr.responseText);    
+					document.getElementById("rent").value = data.rent;  
+				} else {  
+					alert('There was a problem with the request.');  
+				}  
+			}  
+		}  
 	}
 </script>
 

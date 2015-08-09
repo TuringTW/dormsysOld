@@ -8,7 +8,7 @@ class Mcontract extends CI_Model
      {
           // Call the Model constructor
         $this->load->library('session');
-        $this->load->model(array('login_check', 'utility'));
+        $this->load->model(array('login_check', 'Mutility'));
         $required_power = 2;
         $this->login_check->check_init($required_power);
         parent::__construct();

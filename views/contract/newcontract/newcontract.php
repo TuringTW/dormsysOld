@@ -7,7 +7,7 @@
 <ul class="nav nav-tabs" role="tablist">
 	<li class="active "><a href="#stuinfo" role="tab" data-toggle="tab">Step1.房客資料</a></li>
 	<li><a href="#contract" role="tab" data-toggle="tab" onClick="recheck()">Step2.合約資料</a></li>
-	<li><a href="#count" disabled role="tab" data-toggle="tab" onClick="">Step3.付款計畫</a></li>
+	<li><a href="#count" role="tab" data-toggle="tab" onClick="">Step3.付款計畫</a></li>
 	<li><a href="#print" role="tab" data-toggle="tab" onClick="">Step4.確認合約</a></li>
 	<li><a href="#print" role="tab" data-toggle="tab" onClick="">Step5.列印</a></li>
 </ul>

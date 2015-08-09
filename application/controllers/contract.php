@@ -6,7 +6,7 @@ class Contract extends CI_Controller
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
 		$this->load->library('session');
-		$this->load->model(array('login_check', 'Mcontract', 'utility'));
+		$this->load->model(array('login_check', 'Mcontract', 'Mutility'));
 		// check login & power, and then init the header
 		$required_power = 2;
 		$this->login_check->check_init($required_power);
@@ -30,9 +30,9 @@ class Contract extends CI_Controller
 		$data['active'] = 0;
 		$this->load->view('contract/sidebar', $data);
 		// body table
-		$data['dormlist'] = $this->utility->get_dorm_list();
+		$data['dormlist'] = $this->Mutility->get_dorm_list();
 		$this->load->view('contract/index/search_table', $data);
-		$data['saleslist'] = $this->utility->get_user_list();
+		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/index/viewModel',$data);
 		$this->load->view('contract/index/break_contract_dialog');
 		$this->load->view('contract/index/checkout');
@@ -113,9 +113,9 @@ class Contract extends CI_Controller
 		$data['active'] = 1;
 		$this->load->view('contract/sidebar', $data);
 		// body table
-		// $data['dormlist'] = $this->utility->get_dorm_list();
+		// $data['dormlist'] = $this->Mutility->get_dorm_list();
 		// $this->load->view('contract/search_table', $data);
-		// $data['saleslist'] = $this->utility->get_user_list();
+		// $data['saleslist'] = $this->Mutility->get_user_list();
 		// $this->load->view('contract/viewModel',$data);
 		// $this->load->view('contract/break_contract_dialog');
 
@@ -128,7 +128,7 @@ class Contract extends CI_Controller
 		$this->view_header();
 		$data['active'] = 3;
 		$this->load->view('contract/sidebar', $data);
-		$data['dormlist'] = $this->utility->get_dorm_list();
+		// $data['dormlist'] = $this->Mutility->get_dorm_list();
 		$this->load->view('contract/newcontract/newcontract', $data);
 
 
