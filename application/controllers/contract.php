@@ -128,6 +128,7 @@ class Contract extends CI_Controller
 		$this->view_header();
 		$data['active'] = 3;
 		$this->load->view('contract/sidebar', $data);
+		$data['dormlist'] = $this->utility->get_dorm_list();
 		$this->load->view('contract/newcontract/newcontract', $data);
 
 
