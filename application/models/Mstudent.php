@@ -59,7 +59,7 @@ class Mstudent extends CI_Model
 		}
 	}
 	function checkdoubleadd($name, $id_num, $mobile){
-		$sql = "SELECT COUNT(`stu_id`) as `count` FROM `student` where `name` = '$name' and (`id_num` = '$id_num' or `mobile` = '$mobile')";
+		$sql = "SELECT COUNT(`stu_id`) as `count` FROM `student` where `name` = '$name' and (`id_num` = '$id_num' and `mobile` = '$mobile')";
 		$query = $this->db->query($sql);
 		if ($query->row(0)->count>0) {
 			return TRUE;

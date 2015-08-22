@@ -1,16 +1,14 @@
 <?php
 class Contract extends CI_Controller 
 {
-	public function __construct()
-	{
+	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
 		$this->load->library('session');
-		$this->load->model(array('login_check', 'Mcontract', 'Mutility'));
+		$this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance'));
 		// check login & power, and then init the header
 		$required_power = 2;
 		$this->login_check->check_init($required_power);
-
 	}
 	private function view_header(){
 		$data = array(	'title' => 'Home', 
@@ -21,8 +19,7 @@ class Contract extends CI_Controller
 		$this->load->view('template/header', $data);
 		$this->load->view('template/header_2', $data);
 	}
-	public function index($c_num=0)
-	{	
+	public function index($c_num=0){	
 		$this->load->helper('dorm_list_helper');
 		// header
 		$this->view_header();
@@ -41,8 +38,7 @@ class Contract extends CI_Controller
 		$this->load->view('contract/index/js_section');
 		$this->load->view('template/footer');
 	}
-	public function show()
-	{
+	public function show(){
 		$keyword = $this->input->post("keyword", TRUE);
 		$page = $this->input->post("page", TRUE);
 		$due = $this->input->post("due_value", TRUE);
@@ -52,19 +48,16 @@ class Contract extends CI_Controller
 		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $page);
 		$this->load->view('template/jsonview', $data);
 	}
-	public function due_ofd_refresh()
-	{
+	public function due_ofd_refresh(){
 		$keyword = $this->input->post("keyword", TRUE);
 		$dorm = $this->input->post("dorm", TRUE);
 		$data['json_data'] = $this->Mcontract->count_ofd_due($dorm, $keyword);
 		$this->load->view('template/jsonview', $data);
 	}
-	public function show_contract()
-	{
+	public function show_contract(){
 		$c_num = $this->input->post('c_num', true);
 		$data['json_data'] = $this->Mcontract->get_contract_info($c_num);
 		$this->load->view('template/jsonview', $data);
-
 	}
 	public function edit(){
 		$c_num = $this->input->post('c_num', TRUE);
@@ -79,8 +72,7 @@ class Contract extends CI_Controller
 			$this->load->view('template/jsonview', $data);
 		}
 	}
-	public function break_contract()
-	{
+	public function break_contract(){
 		$c_num = $this->input->post('c_num',TRUE);
 		$b_date = $this->input->post('b_date',TRUE);
 
@@ -88,8 +80,7 @@ class Contract extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
-	public function date_check_by_room()
-	{
+	public function date_check_by_room(){
 		$in_date = $this->input->post('in_date', TRUE);
 		$out_date = $this->input->post('out_date', TRUE);
 		$room_id = $this->input->post('room_id', TRUE);
@@ -97,8 +88,7 @@ class Contract extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
-	public function checkout_contract()
-	{
+	public function checkout_contract(){
 		$c_num = $this->input->post('c_num', TRUE);
 		$result = $this->Mcontract->set_check_out($c_num);
 		$data['json_data'] = $result;
@@ -128,12 +118,43 @@ class Contract extends CI_Controller
 		$this->view_header();
 		$data['active'] = 3;
 		$this->load->view('contract/sidebar', $data);
-		// $data['dormlist'] = $this->Mutility->get_dorm_list();
+		$data['dormlist'] = $this->Mutility->get_dorm_list();
+		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/newcontract/newcontract', $data);
-
+		$this->load->view('contract/newcontract/overlapModal');
+		$this->load->view('template/message_dialog');
 
 		$this->load->view('contract/newcontract/js_section');
 		$this->load->view('template/footer');
+	}
+	public function get_rent_cal(){
+		$s_date = $this->input->post('s_date', TRUE);
+		$e_date = $this->input->post('e_date', TRUE);
+		$rpm = $this->input->post('rpm', TRUE);
+		$countpeo = $this->input->post('countpeo', TRUE);
+		$data['json_data'] = $this->Mfinance->rent_cal($rpm, $s_date, $e_date, $countpeo);
+		$this->load->view('template/jsonview', $data);	
+	}
+	public function check_not_over_lap(){
+		$s_date = $this->input->post('s_date',TRUE);		
+		$e_date = $this->input->post('e_date',TRUE);
+		$room_id = $this->input->post('room_id',TRUE);
+		if (is_numeric($room_id)&&$room_id!==0) {
+			$data['json_data'] = $this->Mcontract->checknotoverlap($room_id, $s_date, $e_date);
+		}
+		else{
+			$data['json_data']['state'] = -1;
+		}
+		$this->load->view('template/jsonview', $data);	
+
+	}
+	public function submitcontract(){
+		$json_data = $this->input->post('json_data', TRUE);
+		$cdata = json_decode($json_data, TRUE);
+
+		$data['json_data'] = $this->Mcontract->add_contract($cdata);
+		$this->load->view('template/jsonview', $data);	
+
 	}
 }
 ?>

@@ -13,7 +13,7 @@ class Mcontract extends CI_Model
         $this->login_check->check_init($required_power);
         parent::__construct();
 
-     }
+    }
     // 取得合約列表
     function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page)
     {
@@ -260,5 +260,79 @@ class Mcontract extends CI_Model
         }
     }
 
+    function checknotoverlap($room_id, $start, $end){
+         $sql = "SELECT  `dorm`.`name` as `dname`, `room`.`name` as `rname`, `student`.`name` as `sname`, `student`.`mobile`,  `contract`.`s_date`,`contract`.`in_date`,`contract`.`out_date` ,  `contract`.`e_date`, COUNT(`contract`.`contract_id`) as `countp`
+                    from `contract` 
+                    LEFT join `room` on `room`.`room_id`=`contract`.`room_id`
+                    LEFT JOIN `dorm` on `dorm`.`dorm_id`=`room`.`dorm`
+                    LEFT JOIN `student` on `student`.`stu_id`=`contract`.`stu_id`
+                             where `contract`.`seal`=0 and `room`.`room_id`= '$room_id' and
+                            ((DATEDIFF(  `contract`.`in_date`,'$start' ) >=0
+                            AND DATEDIFF(   `contract`.`out_date`,'$end' ) <=0) or 
+                            (DATEDIFF(  `contract`.`out_date`,'$start' ) >=0
+                            AND DATEDIFF(   `contract`.`out_date`,'$end' ) <=0) or 
+                            (DATEDIFF(  `contract`.`out_date`,'$start' ) >=0
+                            AND DATEDIFF(   `contract`.`in_date`,'$start' ) <=0) or 
+                            (DATEDIFF(  `contract`.`out_date`,'$end' ) >=0
+                            AND DATEDIFF(   `contract`.`in_date`,'$end' ) <=0)) 
+                    GROUP BY `c_num`" ; 
+        $query = $this->db->query($sql);
+        $output = array();
+        if ($query->num_rows()>0) {
+            $output['state'] = false;
+            $output['result'] = $query->result_array();
+        }else{
+            $output['state'] = true;
+        }
+
+        return $output;
+    }
+    function add_contract($data){
+        $sql = "SELECT MAX(`c_num`) as `max` from `contract` where `seal` <> 1";
+        $query = $this->db->query($sql);
+        $c_num = $query->row(0)->max + 1;
+        $c_date = date('Y-m-d h:i:s');
+        $manager = $this->login_check->get_user_id();
+
+        $result = array();
+        $result['error_id'] = array();
+        $result['state'] = 1;
+        for ($i=0; $i < count($data['stu_id']); $i++) { 
+            $sql = "INSERT INTO  `contract` (
+                `stu_id` ,
+                `c_num`,
+                `room_id` ,
+                `s_date` ,
+                `e_date` ,
+                `c_date` ,
+                `in_date` ,
+                `out_date` ,
+                `manager` ,
+                `rent`,
+                `sales`,
+                `note`
+                )VALUES (  
+                '".$data['stu_id'][$i]."', 
+                '".$c_num."', 
+                '".$data['room_id']."',  
+                '".$data['s_date']."',   
+                '".$data['e_date']."',  
+                '".$c_date."',  
+                '".$data['in_date']."',  
+                '".$data['out_date']."',  
+                '".$manager."', 
+                '".$data['rent']."', 
+                '".$data['sales']."', 
+                '".$data['note']."')";
+            $this->db->query($sql);
+            $countr = $this->db->affected_rows();
+            if ($countr=0 ) {
+                $result['state']*=0;
+                array_push($result['error_id'], $data['stu_id'][$i]) ;
+            }
+        }
+        return $result;
+            
+    }
 
 }?>

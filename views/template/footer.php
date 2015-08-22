@@ -13,36 +13,72 @@
 	</script>
 	
 	<script type="text/javascript"> 
-		function check_all(obj,cName) 
-		{ 
-		    var checkboxs = document.getElementsByName(cName); 
-		    for(var i=0;i<checkboxs.length;i++){checkboxs[i].checked = obj.checked;} 
-		} 
+		dialogbreakdone = $( "#dialog-warning" ).dialog({
+			autoOpen: false,
+			
+			modal: true,
+			width: "50%",
+			resizable: false,
+			dialogClass: "alert",
+			buttons: {
+	        
+	        '確定': function(){
+	        	$( this ).dialog( "close" );
+	        }
+	      }
+	    });
+	    dialogbreakdone = $( "#dialog-success" ).dialog({
+			autoOpen: false,
+			
+			modal: true,
+			width: "50%",
+			resizable: false,
+			dialogClass: "alert",
+			buttons: {
+	        
+	        '確定': function(){
+	        	$( this ).dialog( "close" );
+	        }
+	      }
+	    });
+		function errormsg(msg){
+			$('#error_msg').html(msg);
+			$('#dialog-warning').dialog( "open" );
+		}
+		function successmsg(msg){
+			$('#success_msg').html(msg);
+			$('#dialog-success').dialog( "open" );
+		}
+		// function check_all(obj,cName) 
+		// { 
+		//     var checkboxs = document.getElementsByName(cName); 
+		//     for(var i=0;i<checkboxs.length;i++){checkboxs[i].checked = obj.checked;} 
+		// } 
 
-		function selAll(){
-			//變數checkItem為checkbox的集合
-			var checkItem = document.getElementsByName("tocsv[]");
-			for(var i=0;i<checkItem.length;i++){
-				checkItem[i].checked=true;   
-			}
-		}
-		function unselAll(){
-			//變數checkItem為checkbox的集合
-			var checkItem = document.getElementsByName("tocsv[]");
-			for(var i=0;i<checkItem.length;i++){
-				checkItem[i].checked=false;
-			}
-		}
-		function checkornot(){
-			var check=document.getElementsByName("checkall");
-			if(check.value==1){
-				unselAll();
-				check.value=0;
-			}else{
-				selAll();
-				check.value=1;
-			}
-		}
+		// function selAll(){
+		// 	//變數checkItem為checkbox的集合
+		// 	var checkItem = document.getElementsByName("tocsv[]");
+		// 	for(var i=0;i<checkItem.length;i++){
+		// 		checkItem[i].checked=true;   
+		// 	}
+		// }
+		// function unselAll(){
+		// 	//變數checkItem為checkbox的集合
+		// 	var checkItem = document.getElementsByName("tocsv[]");
+		// 	for(var i=0;i<checkItem.length;i++){
+		// 		checkItem[i].checked=false;
+		// 	}
+		// }
+		// function checkornot(){
+		// 	var check=document.getElementsByName("checkall");
+		// 	if(check.value==1){
+		// 		unselAll();
+		// 		check.value=0;
+		// 	}else{
+		// 		selAll();
+		// 		check.value=1;
+		// 	}
+		// }
 		function ShowTime(){
 			var NowDate=new Date();
 			var y=NowDate.getFullYear();

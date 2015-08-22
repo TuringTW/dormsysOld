@@ -17,7 +17,7 @@
 		function display_data() {  
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
-					// alert(xhr.responseText);        
+					// errormsg(xhr.responseText);        
 					var data = JSON.parse(xhr.responseText);
 					var htmltext = '';
 					htmltext += "<div class='list-group' style='position: relative; width: 100%; max-height: 180px; overflow: auto;'>";
@@ -36,7 +36,7 @@
 					htmltext += '</div>';
 					$('#stu_search_result').html(htmltext);
 				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
+					errormsg('資料傳送出現問題，等等在試一次.');  
 				}  
 			}  
 		}  
@@ -45,12 +45,12 @@
 	function checkreselect(stu_id){
 		document.getElementById('submitbtn').disabled=true;
 		var x = document.getElementById('stuinfosubmit');
-		//alert(x.childNodes.length);
+		//errormsg(x.childNodes.length);
 		max = Number(x.childNodes.length);
-		//alert('max='+max);
+		//errormsg('max='+max);
 		var state =1;
 		for (var i = 1; i < max; i++) {
-			//alert(i+'='+x.childNodes[i].value);
+			//errormsg(i+'='+x.childNodes[i].value);
 			if (stu_id == x.childNodes[i].value) {
 				state = 0;
 			};
@@ -58,7 +58,7 @@
 		if (state) {
 			addstuinfo(stu_id);
 		}else{
-			alert('已新增過此人');
+			errormsg('已新增過此人');
 			//清除搜尋結果
 			document.getElementById('stu_search_result').innerHTML = "";
 			document.getElementById('add_stu_info_search').value = "";
@@ -85,10 +85,10 @@
 			function display_data() {  
 				if (xhr.readyState == 4) {  
 					if (xhr.status == 200) {  
-						// alert(xhr.responseText);
+						// errormsg(xhr.responseText);
 						data = JSON.parse(xhr.responseText);
 						if (data == true) {
-							alert('資料庫中已有此人!!!!\n請勿重複新增!!!!\n'+xhr.responseText);
+							errormsg('資料庫中已有此人!!!!\n請勿重複新增!!!!\n'+xhr.responseText);
 							document.getElementById('stu_'+key+'_btn').disabled = true;
 						}else{
 							document.getElementById('stu_'+key+'_btn').disabled = false;
@@ -96,7 +96,7 @@
 						}
 							 
 					} else {  
-						alert('資料傳送出現問題，等等在試一次.');  
+						errormsg('資料傳送出現問題，等等在試一次.');  
 					}  
 				}  
 			}
@@ -107,7 +107,7 @@
 		var key = document.getElementById('key').value;
 		key = Number(key)+1;
 		document.getElementById('key').value = key;	
-		// alert(stu_id+' '+key);
+		// errormsg(stu_id+' '+key);
 		if (stu_id == 0) {
 			data = JSON.parse('{"stu_id":"","name":"","sex":"","school":"","mobile":"","home":"","reg_address":"","mailing_address":"","email":"","id_num":"","birthday":"","emg_name":"","emg_phone":"","note":""}')
 			$('#accordion').append(stu_info_gen(data, key, stu_id));
@@ -127,13 +127,17 @@
 			function display_data() {  
 				if (xhr.readyState == 4) {  
 					if (xhr.status == 200) {  
-						// alert(xhr.responseText);   
+						// errormsg(xhr.responseText);   
 						data = JSON.parse(xhr.responseText);
-						// alert(document.getElementById('accordion').innerHTML);
+						// errormsg(document.getElementById('accordion').innerHTML);
 						$('#accordion').append(stu_info_gen(data, key, stu_id));
+						if (stu_id!==0) {
+							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+data.name+'</td><td>'+data.mobile+'</td><tr>');		
+						};
+
 						$(function() {$( '#stu_'+key+'_birthday' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});})
 					} else {  
-						alert('資料傳送出現問題，等等在試一次.');  
+						errormsg('資料傳送出現問題，等等在試一次.');  
 					}  
 				}  
 			}
@@ -145,10 +149,10 @@
 			//新增submit的資料
 			if (stu_id!=0) {
 				document.getElementById('stuinfosubmit').innerHTML += "<input type='hidden' name='stu_id[]' id='stu_id_"+key+"_submit' value="+stu_id+">"
+				get_rent_cal();
 			};
 		}			
 	}
-
 	function stu_info_gen(data, key, stu_id){
 
 		var htmltext = '';
@@ -254,6 +258,11 @@
 
 			var remove_item = document.getElementById('stu_id_'+key+'_submit');
 			remove_item.parentElement.removeChild(remove_item);
+
+			var remove_item = document.getElementById('final_stu_'+key);
+			remove_item.parentElement.removeChild(remove_item);
+
+
 		}	
 	}
 	function bannerrefresh(key,item){
@@ -285,7 +294,8 @@
 		}
 	}
 	function sameasreg(key){
-		document.getElementById('stu_'+key+'_mailing_address').value = document.getElementById('stu_'+key+'_reg_address').value;
+
+		document.getElementById('stu_'+key+'_mailing_address').value = document.getElementById('stu_'+key+'_reg_address').value;	
 	}	
 	// 更新學生資料
 	function submitstuinfo(key){
@@ -350,7 +360,7 @@
 			submitinfo(data,key,stu_id);
 			
 		}else{
-			alert(checkinfo);
+			errormsg(checkinfo);
 		};
 	}
 	function submitinfo(data,key,stu_id){
@@ -368,29 +378,35 @@
 		function display_data() {  
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
-					// alert(xhr.responseText);  
+					// errormsg(xhr.responseText);  
 					result = JSON.parse(xhr.responseText);
 					if (result != false) {
 						document.getElementById('stu_'+key+'_btn').className = 'btn btn-primary';
 						if (stu_id==0) {
-							// alert('key='+key);
+							// errormsg('key='+key);
 							document.getElementById('stu_'+key+'_stu_id').value = xhr.responseText;
 							document.getElementById('stuinfosubmit').innerHTML += "<input type='hidden' name='stu_id[]' id='stu_id_"+key+"_submit' value="+xhr.responseText+">"
+							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+$('#stu_'+key+'_name').val()+'</td><td>'+$('#stu_'+key+'_mobile').val()+'</td><tr>');		
+
+							get_rent_cal();
+						}else{
+							var remove_item = document.getElementById('final_stu_'+key);
+							remove_item.parentElement.removeChild(remove_item);
+							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+$('#stu_'+key+'_name').val()+'</td><td>'+$('#stu_'+key+'_mobile').val()+'</td><tr>');		
 
 						}
 					}else{
-						alert('[錯誤：儲存時發生錯誤，請再試一次]\n如果持續出現請聯絡Kevin\n');
+						errormsg('[儲存時發生錯誤，請再試一次]\n如果持續出現請聯絡Kevin\n');
 					}      
 						 
 				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
+					errormsg('資料傳送出現問題，等等在試一次.');  
 				}  
 			}  
 		}
 	}
 // 合約資料
-	function room_suggestion()  
-	{  
+	function room_suggestion(){  
 		var dorm = document.getElementById("dorm_select").value;  
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
@@ -406,7 +422,7 @@
 		function display_data() {  
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
-					alert(xhr.responseText);        
+					// errormsg(xhr.responseText);        
 					data = JSON.parse(xhr.responseText);
 					var htmltext = '';
 					for (var i = data.length - 1; i >= 0; i--) {
@@ -416,7 +432,7 @@
 					document.getElementById("room_select").innerHTML = htmltext;  
 					room_data_suggestion();
 				} else {  
-					alert('There was a problem with the request.');  
+					errormsg('資料傳送出現問題，等等在試一次.');  
 				}  
 			}  
 		}  
@@ -437,14 +453,405 @@
 		function display_data() {  
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
-					// alert(xhr.responseText);    
+					// errormsg(xhr.responseText);    
 					data = JSON.parse(xhr.responseText);    
 					document.getElementById("rent").value = data.rent;  
+					$('#final_dorm').html(data.rname);
+					$('#final_room').html(data.dname);
+					final_rent_check();
 				} else {  
-					alert('There was a problem with the request.');  
+					errormsg('資料傳送出現問題，等等在試一次.');  
 				}  
 			}  
 		}  
+	}
+	$( '#datepickerStart' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#datepickerEnd' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#datepickerIn' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#datepickerOut' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	function sameascontract(item){
+		if (item==0) {
+			$('#datepickerIn').val($('#datepickerStart').val());
+		}
+		if (item==1) {
+			$('#datepickerOut').val($('#datepickerEnd').val());
+		}
+		recheck();
+	}
+	function get_rent_cal(){
+		var rpm = $('#rent').val();
+		var s_date = $('#datepickerStart').val();
+		var e_date = $('#datepickerEnd').val();
+		var countpeo = $('input[name*="stu_id[]"]').length;
+
+		if (final_rent_check()&&checkSE()) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = 'rpm='+rpm+'&s_date='+s_date+'&e_date='+e_date+'&countpeo='+countpeo;
+			xhr.open("POST", "<?=web_url('/contract/get_rent_cal')?>", true);   
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+			xhr.send(data);  
+			xhr.onreadystatechange = display_data;  
+			function display_data() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// errormsg(xhr.responseText);    
+						data = JSON.parse(xhr.responseText);
+						if (data!==false) {
+							$('#total_days').html(data.date_result.td);
+							$('#total_peo').html(countpeo);
+							$('#mib').html(data.date_result.mib);
+							$('#ROD').html(data.date_result.rod);
+							$('#mib_rent').html(data.rent_result.mib_rent);
+							$('#ROD_rent').html(data.rent_result.ROD_rent);
+							$('#total_rent').html(data.rent_result.total_rent);
+							$('#final_tr').html(data.rent_result.total_rent);
+						}  
+					} else {  
+						errormsg('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+		}		
+	}
+	function checkSE(){
+		var s_date = $('#datepickerStart').val();
+		var e_date = $('#datepickerEnd').val();
+		if (s_date!==''&&e_date!=='') {
+			if (date_diff(s_date, e_date)<=0) {
+				errormsg('合約日期錯誤');
+				$('#final_sd').html('合約日期錯誤');
+				$('#final_ed').html('合約日期錯誤');
+				$('#final_tr').html('合約日期錯誤');
+				return false;
+			}else{
+				$('#final_sd').html($('#datepickerStart').val());
+				$('#final_ed').html($('#datepickerEnd').val());
+				
+				return true;
+			}
+		}else{
+			$('#final_sd').html('合約日期未填');
+			$('#final_ed').html('合約日期未填');
+			$('#final_tr').html('合約日期未填');
+			return false;
+		}
+	}
+	function checkInOut(){
+		var s_date = $('#datepickerIn').val();
+		var e_date = $('#datepickerOut').val();
+		if (s_date!==''&&e_date!=='') {
+			if (date_diff(s_date, e_date)<=0) {
+				errormsg('遷入遷出日期錯誤');
+				
+				return false;
+			}else{
+				
+				return true;
+			}
+		}else{
+			return false;
+		}
+	}
+	function date_diff(s_date, e_date){
+		var start = new Date(s_date);
+		var end = new Date(e_date);
+		return (end-start)/86400000;
+	}
+	function checknotoverlap(){
+		var s_date = $('#datepickerIn').val();
+		var e_date = $('#datepickerOut').val();
+		var room_id = $('#room_select').val();
+		if (checkInOut()&&room_id!==''&&room_id!==null&&room_id!==0) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = 's_date='+s_date+'&e_date='+e_date+'&room_id='+room_id;
+			xhr.open("POST", "<?=web_url('/contract/check_not_over_lap')?>", true);   
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+			xhr.send(data);  
+			xhr.onreadystatechange = display_data;  
+			function display_data() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// errormsg(xhr.responseText);    
+						data = JSON.parse(xhr.responseText);
+						if (data.state ===true) {
+							checkOK();
+						}else if(data.state ===false){
+							$('#over_lap_dorm').html(data.result[0].dname);
+							$('#over_lap_room').html(data.result[0].rname);
+							$('#over_lap_list').html('');
+							for (var i = 0;i < data.result.length; i++) {
+								datum = data.result[i];
+								$('#over_lap_list').append('<tr><td>'+(i+1)+'</td><td>'+datum.sname+'</td><td>'+datum.mobile+'</td><td>'+datum.s_date+'</td><td>'+datum.e_date+'</td><td>'+datum.in_date+'</td><td>'+datum.out_date+'</td></tr>')
+							};
+							$('#overlapModal').modal('toggle');
+							recheck();
+						}else if(data.state ===-1){
+							errormsg('房間日期資料輸入不完整或格式錯誤');
+							recheck();
+						}
+					} else {  
+						errormsg('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+		}else{
+			errormsg('房號、遷入、遷出日期請填寫完整');
+		}	
+	}
+	function checkOK(){
+		$('#btncheck').attr('disabled', true);
+		$('#btncheck').html('OK');
+		$('#btncheck').attr('class','btn btn-success  btn-lg');
+		$('#InOutcheck').attr('class', 'glyphicon glyphicon-ok-circle');
+		$('#final_id').html($('#datepickerIn').val());
+		$('#final_od').html($('#datepickerOut').val());
+		$('#checkInOutval').val(1);
+	}
+	function recheck(){
+		$('#btncheck').attr('disabled', false);
+		$('#btncheck').html('CHECK');
+		$('#btncheck').attr('class','btn btn-warning btn-lg');
+		$('#InOutcheck').attr('class', '');
+		$('#final_id').html('檢查未通過');
+		$('#final_od').html('檢查未通過');
+		$('#checkInOutval').val(0);
+	}
+
+// final check
+	function final_rent_check(){
+		var rent = $('#rent').val();
+		if (rent!=='') {
+			if ($('#rent').val()<=0) {
+				errormsg('租金不可以小於等於0');
+				$('#final_rent').html('租金錯誤');
+				$('#final_tr').html('租金錯誤');
+				$('#rent').focus();
+				return false;
+			}else{
+				$('#final_rent').html($('#rent').val())
+				return true;
+			}
+		}else{
+			$('#final_rent').html('租金未填');
+			$('#final_tr').html('租金未填');
+			return false;
+		}	
+	}
+	function final_check(key){
+		switch(key){
+			case 1:
+				check_stu(key,true);				
+				break;
+			case 2:
+				check_room_dorm(key,true);				
+				break;
+			case 3:
+				checkfinalSE(key,true);
+				break;
+			case 4:
+				checkfinalIO(key,true);
+				break;
+			case 5:
+				checkfinanceplan(key,true);
+				break;
+		}
+		if (buttonlock(1)&&check_room_dorm(2,false)&&checkfinalSE(3,false)&&checkfinalIO(4,false)) {
+			$('#tab_contract').attr('data-toggle','none');
+			$('#tab_contract').attr('onClick','errormsg("已鎖定")');
+		}
+		if(buttonlock(0)&&check_stu(1,false)&&check_room_dorm(2,false)&&checkfinalSE(3,false)&&checkfinalIO(4,false)&&checkfinanceplan(5,false)){
+			$('#submitbtn').attr('disabled', false);
+		}
+	}
+	function check_stu(key,show){
+		if ($('input[name*="stu_id[]"]').length<=0) {
+			if (show) {
+				errormsg('沒有新增房客');
+			};
+			
+			return false;
+		}else{
+			$('#btnfinalcheck_'+key).attr('disabled', true);
+			$('#btnfinalcheck_'+key).html('OK');
+			$('#btnfinalcheck_'+key).attr('class','btn btn-success');
+			$('#tab_stuinfo').attr('data-toggle','none');
+			$('#tab_stuinfo').attr('onClick','errormsg("已鎖定")');
+			return true;
+		}
+	}
+	function check_room_dorm(key,show){
+		if($('room_select').val()===''||$('dorm_select').val()<=0){
+			if (show) {
+				errormsg('宿舍未選擇');
+			};
+			
+			return false;
+		}else if($('room_select').val()===''||$('room_select').val()<=0){
+			if (show) {
+				errormsg('房間未選擇');
+			};
+			
+			return false;
+		}else if (!final_rent_check()) {
+			if (show) {
+				errormsg('租金未填');
+			};
+			
+			return false;
+		}else if($('#checkInOutval').val()!=='1'){
+			if (show) {
+				errormsg('遷入遷出檢查未通過');
+			};
+			
+		}else{
+			$('#dorm_select').attr('disabled', true);
+			$('#room_select').attr('disabled', true);
+			$('#rent').attr('disabled', true);
+
+			$('#btnfinalcheck_'+key).attr('disabled', true);
+			$('#btnfinalcheck_'+key).html('OK');
+			$('#btnfinalcheck_'+key).attr('class','btn btn-success');
+			return true;
+		}
+	}
+	function checkfinalSE(key,show){
+		if (checkSE()) {
+			$('#datepickerStart').attr('disabled', true);
+			$('#datepickerEnd').attr('disabled', true);
+
+			$('#btnfinalcheck_'+key).attr('disabled', true);
+			$('#btnfinalcheck_'+key).html('OK');
+			$('#btnfinalcheck_'+key).attr('class','btn btn-success');
+			return true;
+		}else{
+			if (show) {
+				errormsg('合約日期未填');
+			}
+			
+			return false;
+		}
+	}
+	function checkfinalIO(key,show){
+
+		if(!checkInOut()){
+			if (show) {
+				errormsg('遷入遷出日期未填')
+			}
+			
+			return false;
+		}else if($('#checkInOutval').val()!=="1"){
+			if (show) {
+				errormsg('遷入遷出檢查未通過');
+			}
+			
+			return false;
+		}else{
+			$('#datepickerIn').attr('disabled', true);
+			$('#datepickerOut').attr('disabled', true);
+
+			$('#btnfinalcheck_'+key).attr('disabled', true);
+			$('#btnfinalcheck_'+key).html('OK');
+			$('#btnfinalcheck_'+key).attr('class','btn btn-success');	
+			return true;
+		}
+	}
+	function checkfinanceplan(key, show){
+		if (checkSE()&&final_rent_check()&&parseInt($('#total_rent').html())>0) {
+			$('#btnfinalcheck_'+key).attr('disabled', true);
+			$('#btnfinalcheck_'+key).html('OK');
+			$('#btnfinalcheck_'+key).attr('class','btn btn-success');
+			$('#tab_financialplan').attr('data-toggle','none');
+			$('#tab_financialplan').attr('onClick','errormsg("已鎖定")');
+			return true;
+		}else{
+			if (show) {
+				errormsg('租金計算錯誤');
+			}
+			return false;
+		}
+	}
+	function buttonlock(method){
+		if (method==0) {
+			if ($('#btnfinalcheck_1').attr('disabled')=='disabled'&&$('#btnfinalcheck_2').attr('disabled')=='disabled'&&$('#btnfinalcheck_3').attr('disabled')=='disabled'&&$('#btnfinalcheck_4').attr('disabled')=='disabled'&&$('#btnfinalcheck_5').attr('disabled')=='disabled') {
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			if ($('#btnfinalcheck_2').attr('disabled')=='disabled'&&$('#btnfinalcheck_3').attr('disabled')=='disabled'&&$('#btnfinalcheck_4').attr('disabled')=='disabled') {
+				return true;
+			}else{
+				return false;
+			}
+		}	
+	}
+// submit
+	function submitcontract(){
+		// lock
+		$('#submitbtn').attr('disabled','true');
+
+	// data
+		// stu_id
+		var cdata = {};
+		cdata.stu_id =  {};
+		$('input[name*="stu_id[]"]').each(function(key){
+			cdata.stu_id[key] = ($(this).val());
+		});
+		cdata.room_id = $('#room_select').val();
+		cdata.rent = $('#rent').val();
+		cdata.s_date = $('#datepickerStart').val();
+		cdata.e_date = $('#datepickerEnd').val();
+		cdata.in_date = $('#datepickerIn').val();
+		cdata.out_date = $('#datepickerOut').val();
+		cdata.note = $('#note').val()+'';
+		cdata.sales = $('#sales').val();
+		json_data = JSON.stringify(cdata);
+		data = "json_data="+json_data;
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		xhr.open("POST", "<?=web_url('/contract/submitcontract')?>", true);   
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+		xhr.send(data);  
+		xhr.onreadystatechange = display_data;  
+		function display_data() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// errormsg(xhr.responseText);  
+					result = JSON.parse(xhr.responseText);
+					if (result.state == 1) {
+						successmsg('新增完成。請列印合約');
+						$('#tab_print').attr('data-toggle','tab');
+						$('#tab_print').attr('onclick','');
+						$('#tab_print').trigger('click');
+					}else if(result.state == 0){
+						for (var i = result.error_id.length - 1; i >= 0; i--) {
+							text = text + result.error_id[i] + ',';
+						};
+						errormsg('[儲存時發生錯誤，請再試一次]\n錯誤的學生代碼:'+text+'\n如果持續出現請聯絡Kevin\n');
+					}else if(result.state == -1){
+						errormsg('[資料有誤]\n請重新來一次\n');
+					}
+						 
+				} else {  
+					errormsg('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}
+
 	}
 </script>
 
