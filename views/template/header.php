@@ -25,5 +25,6 @@
 		.sidebar{
 			padding-top: 60px;
 		}
+		.ui-dialog { z-index: 1500 !important ;}
 	</style>
 

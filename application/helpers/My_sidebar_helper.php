@@ -7,7 +7,7 @@
 			$num = 0;
 			foreach ($data as $gnum => $group) {
 				$html_string .= '<ul class="nav nav-sidebar">';
-				$html_string .= '<div class="alert alert-info">'.$group['name'].'</div>';
+				$html_string .= '<div class="alert '.$group['style'].'">'.$group['name'].'</div>';
 				foreach ($group['data'] as $dnum => $datum) {
 					$html_string .= '<li '.(($num+$dnum==$active)?'class="active"':'').'><a href="'.$datum['url'].'">'.$datum['icon'].'<span class="sidebartext">&nbsp;&nbsp;'.$datum['text'].'</span></a></li>';
 				}

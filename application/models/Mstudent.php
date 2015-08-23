@@ -68,4 +68,90 @@ class Mstudent extends CI_Model
 		}
 	}
 
+	function show_student_list($keyword, $page){
+		if ($page <= 0) {
+            $page = 1;
+        }
+
+
+        // 頁數
+        $pages = 30*$page-30;
+        $sql = "SELECT  *
+            FROM  `student` 
+            WHERE  (`student`.`name` LIKE 
+            BINARY  '%$keyword%'
+            or  `student`.`mobile` LIKE 
+            BINARY  '%$keyword%'
+            or  `student`.`home` LIKE 
+            BINARY  '%$keyword%'
+            or   `student`.`name` LIKE 
+            BINARY  '%$keyword'
+            or  `student`.`mobile` LIKE 
+            BINARY  '%$keyword'
+            or  `student`.`home` LIKE 
+            BINARY  '%$keyword'
+            or   `student`.`name` LIKE 
+            BINARY  '$keyword%'
+            or  `student`.`mobile` LIKE 
+            BINARY  '$keyword%'
+            or  `student`.`home` LIKE 
+            BINARY  '$keyword%'
+            or  `student`.`emg_name` LIKE 
+            BINARY  '%$keyword%'
+            or  `student`.`emg_name` LIKE 
+            BINARY  '%$keyword'
+            or  `student`.`emg_name` LIKE 
+            BINARY  '$keyword%'
+            or  `student`.`emg_phone` LIKE 
+            BINARY  '%$keyword%'
+            or  `student`.`emg_phone` LIKE 
+            BINARY  '%$keyword'
+            or  `student`.`emg_phone` LIKE 
+            BINARY  '$keyword%'
+            )
+            ORDER BY `student`.`name`
+            LIMIT $pages,30";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+	}
+	function get_stu_info($stu_id){
+		$output = array();
+
+		$sql = "SELECT * from `student` where `stu_id` = '$stu_id'";
+		$query = $this->db->query($sql);
+
+		
+		if ($query->num_rows()>0) {
+			$output['stu_info'] = $query->result_array();
+
+			$sql = "SELECT `contract_id`,`c_num`, `dorm`.`name` as `dname`, `room`.`name` as `rname`, `s_date`, `e_date`, `in_date`, `out_date` ,`seal`
+				from `contract`
+				LEFT JOIN `room` on `room`.`room_id`=`contract`.`room_id`
+            	LEFT JOIN `dorm` on `dorm`.`dorm_id`=`room`.`dorm`
+				where `contract`.`stu_id` = '100' and `seal` <> 1";
+			$query = $this->db->query($sql);
+			$output['countc'] = $query->num_rows();
+			$output['cdata'] = $query->result_array();
+			$output['state'] = true;
+			return $output;
+			
+		}else{
+			$outpu['state'] = false;
+			return $output;
+
+		}
+		
+
+	}
+
+	function edit_stu_info($stu_id, $reg_address, $mailing_address, $name, $school, $mobile, $home, $email, $id_num, $birthday, $emg_name, $emg_phone, $note){
+		$sql = "UPDATE `dorm`.`student` SET `name` = '$name', `school` = '$school', `mobile` = '$mobile', `home` = '$home', `reg_address` = '$reg_address', `mailing_address` = '$mailing_address', `email` = '$email', `id_num` = '$id_num', `birthday` = '$birthday', `emg_name` = '$emg_name', `emg_phone` = '$emg_phone', `note` = '$note' WHERE `student`.`stu_id` = '$stu_id';";
+		$query = $this->db->query($sql);
+		if ($this->db->affected_rows()>0) {
+			return true;
+		}else{
+			return false;
+		}
+	}
+
 }?>

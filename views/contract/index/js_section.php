@@ -176,14 +176,15 @@
 					document.getElementById('view_stu_info').innerHTML = '';
 					for (var i = 0; i < data.length; i++) {
 						datum = data[i];
+						var stu_url = "<?=web_url('/student/index')?>";
 						document.getElementById('view_stu_info').innerHTML+='<tr>'
 		     						+'<td style="width:15%" align="right" >'+((i==0)?'立約人':'')+'</td>'
 		     						+'<td>'
 		     						+'	<div class="row">'
 		     						+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.sname+'"></div>'
 		     						+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.mobile+'"></div>'
-		     						+'		<div class="col-md-2"><a href="stuInfo.php?view='+datum.stu_id+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-user"></span></a></div>'
-		     						+'		<div class="col-md-2"><a href="Sms.php?smssname='+datum.sname+'&phone='+datum.mobile+'&smson" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-comment"></span></a></div>'
+		     						+'		<div class="col-md-2"><a title="學生資料" href="'+stu_url+'?view='+datum.stu_id+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-user"></span></a></div>'
+		     						+'		<div class="col-md-2"><a title="寄簡訊" href="Sms.php?smssname='+datum.sname+'&phone='+datum.mobile+'&smson" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-comment"></span></a></div>'
 		     						+'	</div>'
 		     						+'</td>'
 		     						+'<input type="hidden" name="contract[]" value="'+datum.contract_id+'">'

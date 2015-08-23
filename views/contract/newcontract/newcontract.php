@@ -256,6 +256,35 @@
 
 	</div>
 	<div class="tab-pane" id="print">
+		<div class="row">
+			<div class="col-md-4">
+				<h2>列印設定</h2>
+				<hr>
+				<div class="row">
+					<div class="col-md-4"><label>選擇印表機</label></div>
+					<div class="col-md-8">
+						<select id="printer" class="form-control" style="width:100%">
+
+						</select>
+					</div>
+					
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-4 pull-right">
+						<a class="btn btn-default " onclick="gcpprint()" style="width:100%"><span class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;列印</a>
+					</div>
+				</div>
+
+			</div>
+			<div class="col-md-8" >
+				<div class="well" style="width:100%;">
+					<h2>列印預覽</h2>
+					<hr>
+					<iframe id="printFrame" src="_contract_2_pdf.php?c_num=123&todo=0" style="width:100%;height:630px"></iframe>
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>

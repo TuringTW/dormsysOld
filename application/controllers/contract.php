@@ -18,6 +18,7 @@ class Contract extends CI_Controller
 
 		$this->load->view('template/header', $data);
 		$this->load->view('template/header_2', $data);
+		$this->load->view('template/message_dialog');
 	}
 	public function index($c_num=0){	
 		$this->load->helper('dorm_list_helper');
@@ -122,7 +123,7 @@ class Contract extends CI_Controller
 		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/newcontract/newcontract', $data);
 		$this->load->view('contract/newcontract/overlapModal');
-		$this->load->view('template/message_dialog');
+		
 
 		$this->load->view('contract/newcontract/js_section');
 		$this->load->view('template/footer');

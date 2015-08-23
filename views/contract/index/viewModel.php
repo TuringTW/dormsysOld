@@ -91,7 +91,7 @@
 			     					<tr>
 			     						<td style="width:15%" align="right">備註</td>
 			     						<td colspan="3">
-			     							<textarea class="form-control" onchange="change_alert()" id="view_note" style="resize: none;"  style="width:100%" name="new[]" rows="3"></textarea>
+			     							<textarea class="form-control" onchange="change_alert()" id="view_note" style="resize: none;"  style="width:100%" name="new[]" rows="2"></textarea>
 			     						</td>
 			     					</tr>
 			     				</table>

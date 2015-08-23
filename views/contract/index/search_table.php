@@ -1,13 +1,13 @@
 <h1 class="page-header">合約列表</h1>
 <!-- 搜尋列 次導覽列 -->
 	<div class="form-group">
-		<div class="col-sm-4">
-			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="按Enter搜尋:宿舍、房號、姓名、手機" value="">
+		<div class="col-sm-3">
+			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="Enter搜:宿舍、房號、姓名、手機" value="">
 		</div>
 		<div class="col-md-3">
 			<?php echo dorm_list_html($dormlist); ?>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<div class="btn-group">
 				<input type="hidden" id="due_value" value="0">
 				<input type="hidden" id="ofd_value" value="0">

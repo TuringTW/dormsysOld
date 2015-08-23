@@ -56,10 +56,10 @@
 							<li><a href = "<?=web_url('/contract/index')?>">合約列表</a></li>
 							<li><a href = "#">待結算合約</a></li>
 							<li><a href = "#">封存合約</a></li>
-							<li><a href = "#">新版新增合約</a></li>
+							<li><a href = "<?=web_url('/contract/newcontract')?>">新版新增合約</a></li>
 
 							<hr>
-							<li><a href = "#">學生資料</a></li>
+							<li><a href = "<?=web_url('/student/index')?>">學生資料</a></li>
 						</ul>
 					</li>
 					<li><a href = "#">租屋狀態</a></li>
