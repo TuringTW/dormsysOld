@@ -69,49 +69,18 @@ class Mstudent extends CI_Model
 	}
 
 	function show_student_list($keyword, $page){
+        // 頁數		
 		if ($page <= 0) {
             $page = 1;
         }
-
-
-        // 頁數
         $pages = 30*$page-30;
-        $sql = "SELECT  *
-            FROM  `student` 
-            WHERE  (`student`.`name` LIKE 
-            BINARY  '%$keyword%'
-            or  `student`.`mobile` LIKE 
-            BINARY  '%$keyword%'
-            or  `student`.`home` LIKE 
-            BINARY  '%$keyword%'
-            or   `student`.`name` LIKE 
-            BINARY  '%$keyword'
-            or  `student`.`mobile` LIKE 
-            BINARY  '%$keyword'
-            or  `student`.`home` LIKE 
-            BINARY  '%$keyword'
-            or   `student`.`name` LIKE 
-            BINARY  '$keyword%'
-            or  `student`.`mobile` LIKE 
-            BINARY  '$keyword%'
-            or  `student`.`home` LIKE 
-            BINARY  '$keyword%'
-            or  `student`.`emg_name` LIKE 
-            BINARY  '%$keyword%'
-            or  `student`.`emg_name` LIKE 
-            BINARY  '%$keyword'
-            or  `student`.`emg_name` LIKE 
-            BINARY  '$keyword%'
-            or  `student`.`emg_phone` LIKE 
-            BINARY  '%$keyword%'
-            or  `student`.`emg_phone` LIKE 
-            BINARY  '%$keyword'
-            or  `student`.`emg_phone` LIKE 
-            BINARY  '$keyword%'
-            )
-            ORDER BY `student`.`name`
-            LIMIT $pages,30";
-        $query = $this->db->query($sql);
+        // from
+        $this->db->from('student');
+        // where
+        $this->db->where('( 0',null,false)->or_like('student.name',$keyword)->or_like('student.mobile',$keyword)->or_like('student.home',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword)->or_where('0 )',null,false);
+        $this->db->order_by('student.name')->limit(30,$pages);
+
+        $query = $this->db->get();
         return $query->result_array();
 	}
 	function get_stu_info($stu_id){
