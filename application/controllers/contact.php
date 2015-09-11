@@ -52,5 +52,20 @@ class Contact extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
+	public function stu_show(){
+		$id = $this->input->post('id', TRUE);
+		$type = $this->input->post('type', TRUE);
+		$result['state'] = true;
+		if ($type == 0) {
+			$result['result'] = $this->Mstudent->get_stu_info_from_c_id($id);
+		}else if ($type == 1) {
+			$result['result'] = $this->Mstudent->get_stu_from_room($id);
+		}else{
+			$result['state'] == false;
+		}
+
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>

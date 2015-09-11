@@ -93,11 +93,11 @@ class Mstudent extends CI_Model
 		if ($query->num_rows()>0) {
 			$output['stu_info'] = $query->result_array();
 
-			$sql = "SELECT `contract_id`,`c_num`, `dorm`.`name` as `dname`, `room`.`name` as `rname`, `s_date`, `e_date`, `in_date`, `out_date` ,`seal`
+			$sql = "SELECT `contract_id`, `stu_id`,`c_num`, `dorm`.`name` as `dname`, `room`.`name` as `rname`, `s_date`, `e_date`, `in_date`, `out_date` ,`seal`
 				from `contract`
 				LEFT JOIN `room` on `room`.`room_id`=`contract`.`room_id`
             	LEFT JOIN `dorm` on `dorm`.`dorm_id`=`room`.`dorm`
-				where `contract`.`stu_id` = '100' and `seal` <> 1";
+				where `contract`.`stu_id` = '$stu_id' and `seal` <> 1";
 			$query = $this->db->query($sql);
 			$output['countc'] = $query->num_rows();
 			$output['cdata'] = $query->result_array();
@@ -125,17 +125,41 @@ class Mstudent extends CI_Model
 
 	function show_dorm_stu($dorm_id){
 		$today = date('Y-m-d');
-		$this->db->select('contract.stu_id, student.name as sname, room.name as rname');
+		$this->db->select('contract.stu_id, contract_id, student.name as sname, room.name as rname');
 		$this->db->from('contract');
 		$this->db->join('room','room.room_id=contract.room_id','left');
         $this->db->join('student','student.stu_id=contract.stu_id','left');
         $this->db->where('room.dorm',$dorm_id);
         $this->db->where("((DATEDIFF(  `in_date`,'$today' ) <=0
                             AND DATEDIFF(   `out_date`,'$today' ) >=0))");
-        $this->db->order_by('room.name', 'DESC');
+        $this->db->where('seal<>',1);
+        $this->db->order_by('room.name');
         $query = $this->db->get();
         return $query->result_array();
 
 	}
 
+	function get_stu_from_room($room_id){
+		$this->db->select('contract.stu_id, contract_id, student.name as sname')->from('contract');
+		$this->db->join('room','room.room_id=contract.room_id','left');
+        $this->db->join('student','student.stu_id=contract.stu_id','left');
+		$this->db->where('contract.room_id', $room_id)->where('seal<>', 1);
+		$this->db->order_by('contract.s_date');
+		$this->db->order_by('contract.e_date');
+		$this->db->order_by('student.name');
+		$query = $this->db->get();
+        return $query->result_array();
+	}
+	function get_stu_info_from_c_id($contract_id){
+
+		$this->db->select('contract_id, contract.stu_id, c_num, dorm.name as dname, room.name as rname, student.name as sname, mobile, home, email, reg_address, mailing_address, emg_name, emg_phone, school');
+		$this->db->from('contract');
+		$this->db->join('room','room.room_id=contract.room_id','left');
+		$this->db->join('dorm','dorm.dorm_id=room.dorm','left');
+        $this->db->join('student','student.stu_id=contract.stu_id','left');
+        $this->db->where('contract_id', $contract_id)->where('seal<>', 1);
+        $query = $this->db->get();
+        return $query->result_array();
+
+	}
 }?>

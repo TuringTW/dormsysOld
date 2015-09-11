@@ -22,15 +22,13 @@
 		<div class="col-md-3" style="height:100%;">
 
 			<div class="btn-group" role="group" aria-label="..." style=" width:100%">
-				<a href="#" class="btn btn-default active" style="width:50%">現在房客</a>
-				<a href="#" class="btn btn-default" style="width:50%">房間</a>
+				<a href="#" id="show_type_btn_0" class="btn btn-default show_type_btn active" onclick="select_stu_room(0)" style="width:50%">現在房客</a>
+				<a href="#" id="show_type_btn_1" class="btn btn-default show_type_btn" onclick="select_stu_room(1)" style="width:50%">房間</a>
 			</div>
 			<input type="hidden" id="show_type_select" value="0">
 			<hr>
-			<div class="well" style="height:100%;width:100%;" role="group" aria-label="...">	
-				<div class="btn-group-vertical" style="height:100%;width:100%;overflow-y:scroll;overflow-x:hidden" role="group" aria-label="..." id="room_stu_select">
+			<div class="btn-group-vertical well" style="height:100%;width:100%;overflow-y:scroll;overflow-x:hidden" role="group" aria-label="..." id="room_stu_select">
 
-				</div>
 			</div>
 			<input type="hidden" id="room_stu_select_id" value="0">
 		</div>
