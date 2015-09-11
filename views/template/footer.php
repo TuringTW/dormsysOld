@@ -49,41 +49,19 @@
 			$('#success_msg').html(msg);
 			$('#dialog-success').dialog( "open" );
 		}
-		// function check_all(obj,cName) 
-		// { 
-		//     var checkboxs = document.getElementsByName(cName); 
-		//     for(var i=0;i<checkboxs.length;i++){checkboxs[i].checked = obj.checked;} 
-		// } 
 
-		// function selAll(){
-		// 	//變數checkItem為checkbox的集合
-		// 	var checkItem = document.getElementsByName("tocsv[]");
-		// 	for(var i=0;i<checkItem.length;i++){
-		// 		checkItem[i].checked=true;   
-		// 	}
-		// }
-		// function unselAll(){
-		// 	//變數checkItem為checkbox的集合
-		// 	var checkItem = document.getElementsByName("tocsv[]");
-		// 	for(var i=0;i<checkItem.length;i++){
-		// 		checkItem[i].checked=false;
-		// 	}
-		// }
-		// function checkornot(){
-		// 	var check=document.getElementsByName("checkall");
-		// 	if(check.value==1){
-		// 		unselAll();
-		// 		check.value=0;
-		// 	}else{
-		// 		selAll();
-		// 		check.value=1;
-		// 	}
-		// }
+		function sendsms(content, phone){
+			$('#smsModal').modal('toggle');
+			$('#sms_content').val('[蔡阿姨宿舍通知0927619822]'+content);
+			$('#sms_receiver').val(phone);
+			document.getElementById('sms_content').focus();
+		}
 		function ShowTime(){
 			var NowDate=new Date();
 			var y=NowDate.getFullYear();
 			var mo=NowDate.getMonth()+1;
 		　	var d=NowDate.getDate();
+
 			var h=NowDate.getHours();
 			var m=NowDate.getMinutes();
 			var s=NowDate.getSeconds();　
@@ -96,25 +74,7 @@
 			document.getElementById('showbox').innerHTML = y+'/'+mo +'/'+d+' '+ h+':'+m+':'+s;
 			setTimeout('ShowTime()',1000);
 		}
-		function wrongreport(wrong){
-			if (confirm('【錯誤】'+wrong+'\n\n======錯誤回報======\n\n按確定開新分頁到錯誤回報')	) {
-				var url = encodeURI(document.URL);
-				window.open('ErrorRsp.php?pmsg='+wrong+'&report=&purl='+url);
-
-			};
-		}
 	</script> 
-
-	<?php 
-		if (isset($_GET['wrong'])) {
-			$wrong = $_GET['wrong'];
-	?>
-			<script type="text/javascript">
-				wrongreport('<?=$wrong?>');
-				
-				
-			</script>
-	<?php }	?>
 	<!-- 讓每一頁可以寫不同script的方法 -->
 	<?php if(function_exists("js_section")){ js_section(); } ?>
 </html>

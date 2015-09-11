@@ -26,5 +26,8 @@
 			padding-top: 60px;
 		}
 		.ui-dialog { z-index: 1500 !important ;}
+		.modal-sms {
+			z-index: 1100 !important ;
+		}
 	</style>
 

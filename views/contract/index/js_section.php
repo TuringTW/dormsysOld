@@ -145,7 +145,7 @@
 			if (data[i].countp>1) {
 				text = '等'+data[i].countp+'人';
 			};
-			$('#result_table').append('<tr><td>'+(page*30+i-29)+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td><a href="#" onclick="showcontract('+data[i].c_num+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
+			$('#result_table').append('<tr><td>'+(page*30+i-29)+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td><a onclick="showcontract('+data[i].c_num+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
 		};
 		if (data.length<30) {
 			$('#page_up').attr( "disabled", true );
@@ -184,11 +184,12 @@
 		     						+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.sname+'"></div>'
 		     						+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.mobile+'"></div>'
 		     						+'		<div class="col-md-2"><a title="學生資料" href="'+stu_url+'?view='+datum.stu_id+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-user"></span></a></div>'
-		     						+'		<div class="col-md-2"><a title="寄簡訊" href="Sms.php?smssname='+datum.sname+'&phone='+datum.mobile+'&smson" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-comment"></span></a></div>'
+		     						+'		<div class="col-md-2"><a title="寄簡訊" id="view_sms_'+i+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-comment"></span></a></div>'
 		     						+'	</div>'
 		     						+'</td>'
 		     						+'<input type="hidden" name="contract[]" value="'+datum.contract_id+'">'
 		     					+'</tr>';
+		     			$('#view_sms_'+i).attr('onclick','sendsms("'+datum.sname+'同學你好,", "'+datum.mobile+'")')
 					};
 					var datum = data[0];
 					document.getElementById('view_dorm_href').href = 'dorm.php?view='+datum.dorm_id;

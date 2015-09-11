@@ -105,6 +105,7 @@
 						document.getElementById('view_school').value = datum.school;
 						document.getElementById('view_mobile').value = datum.mobile;
 						document.getElementById('view_sms').href = '#'+datum.stu_id;
+						$('#view_sms').attr('onclick','sendsms("'+datum.sname+'同學你好,", "'+datum.mobile+'")')
 						document.getElementById('view_home').value = datum.home;
 						document.getElementById('view_email').value = datum.email;
 						document.getElementById('view_id_num').value = datum.id_num;

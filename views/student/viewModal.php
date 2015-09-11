@@ -129,6 +129,8 @@
 									<th>房號</th>
 									<th>開始日期</th>
 									<th>結束日期</th>
+									<th>遷入日期</th>
+									<th>遷出日期</th>
 									<th>合約資料</th>
 								</thead>
 								<tbody id="view_contract_list"></tbody>

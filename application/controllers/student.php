@@ -21,6 +21,7 @@ class Student extends CI_Controller
 		$this->load->view('template/header', $data);
 		$this->load->view('template/header_2', $data);
 		$this->load->view('template/message_dialog');
+		$this->load->view('template/smsModel');
 	}
 	public function search_name(){
 		$keyword = $this->input->post('keyword', TRUE);

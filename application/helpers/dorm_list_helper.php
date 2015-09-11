@@ -49,4 +49,22 @@
 
 		}
 	}
+	if ( ! function_exists('dorm_button_btnlist'))
+	{
+
+		function dorm_button_btnlist($dormlist){
+			?>
+			<?php foreach ($dormlist as $key => $dorm): ?>
+				<?php if ($dorm['dorm_id']!=33&&$dorm['dorm_id']!=34){ ?>
+					<a href="#" class="btn btn-default dormbtnlist" id="dorm_select_<?=$dorm['dorm_id']?>" style="color:#003767" onclick="dorm_select(<?=$dorm['dorm_id']?>)"><?=$dorm['name']?></a>
+				<?php } ?>
+			<?php endforeach ?>
+
+					
+
+		<?php 
+
+
+		}
+	}
 ?>

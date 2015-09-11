@@ -123,4 +123,19 @@ class Mstudent extends CI_Model
 		}
 	}
 
+	function show_dorm_stu($dorm_id){
+		$today = date('Y-m-d');
+		$this->db->select('contract.stu_id, student.name as sname, room.name as rname');
+		$this->db->from('contract');
+		$this->db->join('room','room.room_id=contract.room_id','left');
+        $this->db->join('student','student.stu_id=contract.stu_id','left');
+        $this->db->where('room.dorm',$dorm_id);
+        $this->db->where("((DATEDIFF(  `in_date`,'$today' ) <=0
+                            AND DATEDIFF(   `out_date`,'$today' ) >=0))");
+        $this->db->order_by('room.name', 'DESC');
+        $query = $this->db->get();
+        return $query->result_array();
+
+	}
+
 }?>

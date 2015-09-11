@@ -67,7 +67,7 @@
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">聯絡通訊</a>
 						<ul class="dropdown-menu">
-							<li><a href = "#">學生通訊錄</a></li>
+							<li><a href = "<?=web_url('/contact/stulist')?>">學生通訊錄</a></li>
 							<li><a href = "#">常用通訊錄</a></li>
 							<hr>
 							<li><a href = "#">簡訊</a></li>

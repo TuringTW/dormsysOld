@@ -19,6 +19,7 @@ class Contract extends CI_Controller
 		$this->load->view('template/header', $data);
 		$this->load->view('template/header_2', $data);
 		$this->load->view('template/message_dialog');
+		$this->load->view('template/smsModel');
 	}
 	public function index($c_num=0){	
 		$this->load->helper('dorm_list_helper');
