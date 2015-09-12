@@ -12,34 +12,37 @@
 		$('#room_stu_select').html('');
 		$('#stu_select').html('');
 		$('#stu_info').html('');
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "dorm_id=" + dorm_id + "&type="+type;  
-		xhr.open("POST", "<?=web_url('/contact/room_stu_show')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// alert(xhr.responseText);
-					var data = JSON.parse(xhr.responseText.trim());
+		if (dorm_id>0) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = "dorm_id=" + dorm_id + "&type="+type;  
+			xhr.open("POST", "<?=web_url('/contact/room_stu_show')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);
+						var data = JSON.parse(xhr.responseText.trim());
 
-					if (data.state===true) {
-						// 更新表格裡的資訊
-						room_show_parse(data.result, type);
-					}else{
-						errormsg('傳送錯誤，請再試一次'+xhr.responseText);  
-					}
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
+						if (data.state===true) {
+							// 更新表格裡的資訊
+							room_show_parse(data.result, type);
+						}else{
+							errormsg('傳送錯誤，請再試一次'+xhr.responseText);  
+						}
+					} else {  
+						errormsg('資料傳送出現問題，等等在試一次.');  
+					}  
 				}  
 			}  
-		}  
-		xhr.onreadystatechange = display_datas;  
+			xhr.onreadystatechange = display_datas;  
+		};
+			
 	}
 	function room_show_parse(data, type){
 
@@ -105,6 +108,10 @@
 							stu_parse(data.result);
 						}else{
 							show_stu_info(data.result, type)
+							if (type==2) {
+								$('.stubtnlist').attr('class', 'btn btn-default stubtnlist');
+								$('#stu_info_'+id).attr('class', 'btn btn-default stubtnlist active');						
+							};
 						}
 					}else{
 						errormsg('傳送錯誤，請再試一次'+xhr.responseText);  
@@ -118,7 +125,7 @@
 	}
 	function stu_parse(data){
 		for (var i = 0; i < data.length ;  i++) {
-			$('#stu_select').append('<a href="#" class="btn btn-default stubtnlist" id="stu_info_'+data[i].contract_id+'" style="color:#003767; text-align:left; width:100%" onclick="show_stu_list('+data[i].contract_id+',2)">'+data[i].sname+'</a>');
+			$('#stu_select').append('<a href="#" class="btn btn-default stubtnlist" id="stu_info_'+data[i].contract_id+'" style="color:#003767; text-align:left; width:100%" onclick="show_stu_list('+data[i].contract_id+',2)">'+data[i].sname+'&nbsp;&nbsp;['+data[i].in_date+']</a>');
 		};
 	}
 	function show_stu_info(data, type){
@@ -126,14 +133,49 @@
 			$('#stu_select').append('<a href="#" class="btn btn-default stubtnlist active" id="stu_info_'+data[0].stu_id+'" style="color:#003767; text-align:left; width:100%" onclick="show_stu_info('+data[0].stu_id+')">'+data[0].sname+'</a>')
 		}
 		$('#stu_info').html('<table class="table table-hover">'
-								+'<tr><th style="width:40%">姓名</th><td>'+data[0].sname+'</td></tr>'
-								+'<tr><th style="width:40%">單位</th><td>'+data[0].school+'</td></tr>'
-								+'<tr><th style="width:40%">手機</th><td>'+data[0].mobile+'</td></tr>'
-								+'<tr><th style="width:40%">家電</th><td>'+data[0].home+'</td></tr>'
-								+'<tr><th style="width:40%">緊急聯絡</th><td>'+data[0].emg_name+'</td></tr>'
-								+'<tr><th style="width:40%">緊急電話</th><td>'+data[0].emg_phone+'</td></tr>'
-								+'<tr><th style="width:40%">通訊地址</th><td>'+data[0].mailing_address+'</td></tr>'
+								+'<tr><th style="width:40%">姓名</th><td>'+data[0].sname+'</td><td><a href="#" id="stu_info_href"><span class="glyphicon glyphicon-user" title="學生資料"></span></a></td></tr>'
+								+'<tr><th style="width:40%">單位</th><td colspan="2">'+data[0].school+'</td></tr>'
+								+'<tr><th style="width:40%">手機</th><td>'+data[0].mobile+'</td><td><a id="stu_info_sms" onclick="sendsms(content, phone)"><span class="glyphicon glyphicon-comment" title="寄簡訊"></span></a></td></tr>'
+								+'<tr><th style="width:40%">家電</th><td colspan="2">'+data[0].home+'</td></tr>'
+								+'<tr><th style="width:40%">緊急聯絡</th><td colspan="2">'+data[0].emg_name+'</td></tr>'
+								+'<tr><th style="width:40%">緊急電話</th><td colspan="2">'+data[0].emg_phone+'</td></tr>'
+								+'<tr><th style="width:40%">通訊地址</th><td colspan="2">'+data[0].mailing_address+'</td></tr>'
 								+'</table>')
+		$('#stu_info_href').attr('href', '<?=web_url("/student/index")?>?view='+data[0].stu_id);
+		$('#stu_info_sms').click(function(){sendsms(data[0].sname+'同學你好,', data[0].mobile)});
+	}
+
+	function searchstu(){
+		$('#room_stu_select').html('');
+		$('#stu_select').html('');
+		$('#stu_info').html('');
+		keyword = $('#keyowrd_input').val();
+		if (keyword.trim().length>0) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = "keyword=" + keyword;  
+			xhr.open("POST", "<?=web_url('/contact/searchnstu')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);
+						var data = JSON.parse(xhr.responseText.trim());
+						stu_parse(data);
+
+					} else {  
+						errormsg('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+			xhr.onreadystatechange = display_datas
+		};
+			
 	}
 </script>
 

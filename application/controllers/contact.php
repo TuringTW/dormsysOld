@@ -67,5 +67,11 @@ class Contact extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
+	public function searchnstu(){
+		$keyword = $this->input->post('keyword', TRUE);
+		$result = $this->Mstudent->searchname_in_c_id($keyword);
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>

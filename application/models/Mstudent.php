@@ -140,12 +140,12 @@ class Mstudent extends CI_Model
 	}
 
 	function get_stu_from_room($room_id){
-		$this->db->select('contract.stu_id, contract_id, student.name as sname')->from('contract');
+		$this->db->select('contract.stu_id, contract_id, student.name as sname, in_date, out_date')->from('contract');
 		$this->db->join('room','room.room_id=contract.room_id','left');
         $this->db->join('student','student.stu_id=contract.stu_id','left');
 		$this->db->where('contract.room_id', $room_id)->where('seal<>', 1);
-		$this->db->order_by('contract.s_date');
-		$this->db->order_by('contract.e_date');
+		$this->db->order_by('contract.in_date', 'DESC');
+		$this->db->order_by('contract.out_date', 'DESC');
 		$this->db->order_by('student.name');
 		$query = $this->db->get();
         return $query->result_array();
@@ -161,5 +161,16 @@ class Mstudent extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
 
+	}
+	function searchname_in_c_id($keyword){
+		$this->db->select('contract_id, student.name as sname, in_date')->from('contract');
+		$this->db->join('student','student.stu_id=contract.stu_id','left');
+		$this->db->where('seal<>', 1);
+		$this->db->where('( 0',NULL, false); //for logic 
+        $this->db->or_like('student.name',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.mobile',$keyword)->or_like('student.emg_phone',$keyword);
+        $this->db->or_where('0 )',NULL, false);
+        $this->db->order_by('student.name')->order_by('in_date');
+		$query = $this->db->get();
+        return $query->result_array();
 	}
 }?>
