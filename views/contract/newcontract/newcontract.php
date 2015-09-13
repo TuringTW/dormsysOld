@@ -286,7 +286,19 @@
 			</div>
 		</div>
 	</div>
-
 </div>
+<?php 
+	$keep_result[0][0] = (new DateTime($keep_result[0]['e_date']))-> modify('+1 day') -> format('Y-m-d');
+	$keep_result[0][1] =(new DateTime($keep_result[0]['out_date']))-> modify('+1 day') -> format('Y-m-d');
+?>
+<a class="btn" id="keepbtn" onclick="
+<?php if(!is_null($keep)){ foreach ($keep_result as $key => $value) {?>
+	addstuinfo(<?=$value['stu_id']?>);
+<?php } ?>;
+document.getElementById('dorm_select').value = <?=$keep_result[0]['dorm_id']?>;room_suggestion();
+document.getElementById('room_select').value = <?=$keep_result[0]['room_id']?>;
+room_data_suggestion();
+$('#datepickerStart').val('<?=$keep_result[0][0]?>');
+$('#datepickerIn').val('<?=$keep_result[0][1]?>'); <?php } ?>"></a></button>
 
 

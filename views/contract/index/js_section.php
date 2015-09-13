@@ -551,6 +551,40 @@
 		}  
 		xhr.onreadystatechange = display_datas;  			
     }
+// 續約
+	// 檢查可否續約
+	function keep_check(){
+		$('#dialog-keep-comfirm').dialog( "open" );
+		$('#kc_num').val($('#c_num').val());
+		$(document).ready(function() {
+	        $('#viewModal').modal('toggle');
+			$('body').removeClass('modal-open');
+			$('.modal-backdrop').remove();
+	    });
+	}
+	dialogbreakdone = $( "#dialog-keep-comfirm" ).dialog({
+		autoOpen: false,
+		
+		modal: true,
+		width: "50%",
+		resizable: false,
+		dialogClass: "alert",
+		buttons: {
+        
+        '確定續約': function() {
+          	$( this ).dialog( "close" );
+          	var c_num = $('#kc_num').val();
+          	keep_contract(c_num);
+          
+        },
+        '取消': function(){
+        	$( this ).dialog( "close" );
+        }
+      }
+    });
+    function keep_contract(c_num){
+    	window.location = "<?=web_url('/contract/newcontract')?>?keep="+c_num;
+    }
 </script>
 
 <?php } ?>

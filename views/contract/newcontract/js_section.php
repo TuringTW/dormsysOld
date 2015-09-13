@@ -465,10 +465,7 @@
 			}  
 		}  
 	}
-	$( '#datepickerStart' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	$( '#datepickerEnd' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	$( '#datepickerIn' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	$( '#datepickerOut' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+
 	function sameascontract(item){
 		if (item==0) {
 			$('#datepickerIn').val($('#datepickerStart').val());
@@ -800,7 +797,7 @@
 		// lock
 		$('#submitbtn').attr('disabled','true');
 
-	// data
+		// data
 		// stu_id
 		var cdata = {};
 		cdata.stu_id =  {};
@@ -852,9 +849,14 @@
 				}  
 			}  
 		}
-
 	}
-</script>
+	$('#keepbtn').click();
 
+
+	$( '#datepickerStart' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#datepickerEnd' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#datepickerIn' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#datepickerOut' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+</script>
 <?php } ?>
 

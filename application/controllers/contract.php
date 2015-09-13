@@ -116,6 +116,16 @@ class Contract extends CI_Controller
 		$this->load->view('template/footer');
 	}
 	public function newcontract(){
+		$keep = $this->input->get('keep', TRUE);
+		if (!is_null($keep)&&is_numeric($keep)) {
+			$data['keep'] = $keep;
+			$data['keep_result'] = $this->Mcontract->get_keep_info($keep);
+
+		}else{
+			$data['keep'] = null;
+			$data['keep_result'] = array();
+		}
+		
 		$this->load->model('Mstudent');
 		$this->view_header();
 		$data['active'] = 3;
@@ -125,6 +135,7 @@ class Contract extends CI_Controller
 		$this->load->view('contract/newcontract/newcontract', $data);
 		$this->load->view('contract/newcontract/overlapModal');
 		
+
 
 		$this->load->view('contract/newcontract/js_section');
 		$this->load->view('template/footer');
@@ -170,10 +181,6 @@ class Contract extends CI_Controller
 			$this->pdf->SetTitle('蔡阿姨宿舍租賃合約');
 			$this->pdf->SetSubject('蔡阿姨宿舍租賃合約');
 			$this->pdf->SetKeywords('租賃,合約');
-
-			
-
-
 			$this->pdf->SetHeaderMargin(0);
 			$this->pdf->SetTopMargin(5);
 			$this->pdf->setFooterMargin(0);

@@ -283,5 +283,12 @@ class Mcontract extends CI_Model
         $result['countday'] = $this->Mutility->Date_diff($datum['s_date'], $datum['e_date']);
         return $result;
     }
+    function get_keep_info($c_num){
+        $this->db->select('contract.room_id, dorm as dorm_id, e_date, out_date, stu_id, room.rent')->from('contract');
+        $this->db->join('room','room.room_id = contract.room_id','left');
+        $this->db->where('c_num=', $c_num);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
 
 }?>

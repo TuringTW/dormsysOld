@@ -6,3 +6,10 @@
 <div id="dialog-universal-alert" title="通知">
 	
 </div>
+
+
+<div id="dialog-keep-comfirm" title="確定要續約嗎?">
+	<div class="alert alert-danger"><h2><span class="glyphicon glyphicon-ok"></span>確定要續約嗎?</h2></div>
+	<div class="alert alert-warning"><h2><span class="glyphicon glyphicon-star-empty">注意!!!續約後不會自動結算原合約</h2></div>
+	<input type="hidden" id="kc_num" name="bc_num" value="0">
+</div>
