@@ -281,7 +281,7 @@
 				<div class="well" style="width:100%;">
 					<h2>列印預覽</h2>
 					<hr>
-					<iframe id="printFrame" src="_contract_2_pdf.php?c_num=123&todo=0" style="width:100%;height:630px"></iframe>
+					<iframe id="printFrame" src="<?=web_url('/contract/pdf_gen')?>" style="width:100%;height:630px"></iframe>
 				</div>
 			</div>
 		</div>

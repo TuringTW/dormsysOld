@@ -837,6 +837,7 @@
 						$('#tab_print').attr('data-toggle','tab');
 						$('#tab_print').attr('onclick','');
 						$('#tab_print').trigger('click');
+						$('#printFrame').attr('src', '<?=web_url("/contract/pdf_gen")?>?c_num='+result.c_num);
 					}else if(result.state == 0){
 						for (var i = result.error_id.length - 1; i >= 0; i--) {
 							text = text + result.error_id[i] + ',';

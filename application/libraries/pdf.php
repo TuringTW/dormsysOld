@@ -1,28 +1,14 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
-/**
- * CodeIgniter PDF Library
- *
- * Generate PDF's in your CodeIgniter applications.
- *
- * @package			CodeIgniter
- * @subpackage		Libraries
- * @category		Libraries
- * @author			Chris Harvey
- * @license			MIT License
- * @link			https://github.com/chrisnharvey/CodeIgniter-PDF-Generator-Library
- */
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(dirname(__FILE__) . '/dompdf/dompdf_config.inc.php');
-
-class Pdf extends DOMPDF
+require_once dirname(__FILE__) . '/tcpdf/tcpdf.php';
+class Pdf extends TCPDF
 {
-	/**
-	 * Get an instance of CodeIgniter
-	 *
-	 * @access	protected
-	 * @return	void
-	 */
-	protected function ci()
+    function __construct()
+    {
+        parent::__construct();
+    }
+
+    protected function ci()
 	{
 		return get_instance();
 	}
@@ -39,6 +25,56 @@ class Pdf extends DOMPDF
 	{
 		$html = $this->ci()->load->view($view, $data, TRUE);
 
-		$this->load_html($html);
+		$this->writeHTML($html, true, false, true, false, '');
 	}
+
+	public function Header()
+	    {
+	    	global $data;
+	        	$style = array(
+
+				    'position' => '',
+
+				    'align' => 'C',
+				    'stretch' => false,
+				    'fitwidth' => true,
+				    'cellfitalign' => '',
+				    'border' => false,
+				    'hpadding' => 'auto',
+				    'vpadding' => 'auto',
+				    'fgcolor' => array(0,0,0),
+				    'bgcolor' => false, //array(255,255,255),
+				    'text' => true,
+				    'font' => 'helvetica',
+				    'fontsize' => 8,
+				    'stretchtext' => 4
+				);
+	        $image_file = img_url("/banner.jpg");
+	        $this->Image($image_file, 10, 5, 50, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+	        // Set font
+	        $this->SetFont('msungstdlight', 'B', 20);
+	        // Title
+	        // $this->Cell(x, y, ' text', 0, false,'x-align' , 0, '', 0, false, 'J', 'B');	        
+	        $this->Cell(76, 16, ' 蔡阿姨宿舍租賃合約', 0, false,0 , 0, '', 0, false, 'J', 'B');
+	        
+	    }
+	    public function Footer()
+	    {
+	        
+	        $this->SetY(-15);
+
+	        $this->SetFont('msungstdlight', '', 12);
+	        $this->Cell(0, 10, '甲方：                                                                             乙方：', 0, false, 'x-align', 0, 0, 0, false, 'J', 'M');
+	        // Set font
+	        $this->SetFont('msungstdlight', 'I', 8);
+	        // Page number
+
+		
+	    }
+	
 }
+
+/* End of file Pdf.php */
+/* Location: ./application/libraries/Pdf.php */
+
+?>

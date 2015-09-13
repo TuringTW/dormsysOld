@@ -223,7 +223,9 @@ class Mcontract extends CI_Model
         $c_date = date('Y-m-d h:i:s');
         $manager = $this->login_check->get_user_id();
 
+
         $result = array();
+        $result['c_num'] = $c_num;
         $result['error_id'] = array();
         $result['state'] = 1;
         for ($i=0; $i < count($data['stu_id']); $i++) { 
@@ -262,6 +264,24 @@ class Mcontract extends CI_Model
         }
         return $result;
             
+    }
+    function get_print_data($c_num){
+        $result = array();
+        $this->db->select('dorm.name as dname, room.name as rname, student.name as sname, mobile, birthday, reg_address, mailing_address, id_num, home, emg_name, emg_phone, s_date, e_date, in_date, out_date, contract.rent, location');
+        $this->db->from('contract');
+        $this->db->join('room','room.room_id = contract.room_id','left');
+        $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
+        $this->db->join('student','student.stu_id=contract.stu_id','left');
+        $this->db->where('c_num=', $c_num)->where('seal<>', 1);
+        $this->db->order_by('student.name')->order_by('student.mobile');
+        $query = $this->db->get();
+        $countpeo = $query->num_rows();
+        $result['countpeo'] = $countpeo;
+        $result['data'] = $query->result_array();
+        $datum = $result['data'][0];
+        $result['rent'] = $this->Mfinance->rent_cal($datum['rent'], $datum['s_date'], $datum['e_date'], $countpeo);
+        $result['countday'] = $this->Mutility->Date_diff($datum['s_date'], $datum['e_date']);
+        return $result;
     }
 
 }?>

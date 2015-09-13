@@ -25,10 +25,7 @@ class Index extends CI_Controller
 		$this->load->view('template/header_2', $data);
 
 
-		$this->load->helper('My_sidebar_helper');
-		// $this->load->view('news/index', $data);
-		$data['active'] = 2;
-		$this->load->view('contract/sidebar', $data);
+
 
 		$this->load->view('template/footer');
 	}

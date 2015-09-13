@@ -4,7 +4,7 @@ class Contract extends CI_Controller
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
-		$this->load->library('session');
+		$this->load->library(array('session'));
 		$this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance'));
 		// check login & power, and then init the header
 		$required_power = 2;
@@ -157,6 +157,47 @@ class Contract extends CI_Controller
 		$data['json_data'] = $this->Mcontract->add_contract($cdata);
 		$this->load->view('template/jsonview', $data);	
 
+	}
+	public function pdf_gen(){
+		$this->load->library(array('pdf'));
+
+		$c_num = $this->input->get('c_num', TRUE);
+		if (!is_null($c_num)&&is_numeric($c_num)) {
+			$data = $this->Mcontract->get_print_data($c_num);
+			
+
+			$this->pdf->SetAuthor('AunttsaiDormSYS');
+			$this->pdf->SetTitle('蔡阿姨宿舍租賃合約');
+			$this->pdf->SetSubject('蔡阿姨宿舍租賃合約');
+			$this->pdf->SetKeywords('租賃,合約');
+
+			
+
+
+			$this->pdf->SetHeaderMargin(0);
+			$this->pdf->SetTopMargin(5);
+			$this->pdf->setFooterMargin(0);
+			$this->pdf->SetAutoPageBreak(true);
+			$this->pdf->SetDisplayMode('real', 'default');
+
+			
+
+			$pw = $this->pdf->getPageWidth()*2.5;  
+  			$data['wu'] = $pw;
+  			$data['barcodetext'] = date('Y-m-d').'-'.$c_num;
+			// add a page
+
+			$this->pdf->AddPage();
+
+			
+			$this->pdf->SetFont('msungstdlight', '', 12);
+
+			// $this->load->view('contract/pdf/index', $data);
+			$this->pdf->load_view('contract/pdf/index', $data);
+
+			ob_end_clean();
+			$this->pdf->Output('My-File-Name.pdf', 'I');
+		}
 	}
 }
 ?>

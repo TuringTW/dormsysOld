@@ -17,6 +17,15 @@
 		return $js_string;
 		}
 	}
+	if ( ! function_exists('img_url'))
+	{
+		function img_url($uri = '')
+		{
+		$CI =& get_instance();
+		$string = $CI->config->base_url("/style/img".$uri);
+		return $string;
+		}
+	}
 	if ( ! function_exists('web_url'))
 	{
 		function web_url($uri = '')
