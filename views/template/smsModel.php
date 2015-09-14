@@ -21,7 +21,7 @@
 						</div>
 						<div class="col-md-6 pull-right">
 							<button id="sms_clean_btn" type = "reset" class="btn btn-danger btn-lg">清除</button>
-							<a id="edit_btn" onclick="editcontract()" class="btn btn-info btn-lg ">寄送</a>
+							<a id="edit_btn" onclick="send_new_sms()" class="btn btn-info btn-lg ">寄送</a>
 							<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Close</button>
 						</div>
 

@@ -288,8 +288,10 @@
 	</div>
 </div>
 <?php 
-	$keep_result[0][0] = (new DateTime($keep_result[0]['e_date']))-> modify('+1 day') -> format('Y-m-d');
-	$keep_result[0][1] =(new DateTime($keep_result[0]['out_date']))-> modify('+1 day') -> format('Y-m-d');
+	if (!is_null($keep)) {
+		$keep_result[0][0] = (new DateTime($keep_result[0]['e_date']))-> modify('+1 day') -> format('Y-m-d');
+		$keep_result[0][1] =(new DateTime($keep_result[0]['out_date']))-> modify('+1 day') -> format('Y-m-d');
+	}
 ?>
 <a class="btn" id="keepbtn" onclick="
 <?php if(!is_null($keep)){ foreach ($keep_result as $key => $value) {?>

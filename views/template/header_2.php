@@ -44,44 +44,44 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="<?=web_url('/index/index')?>">蔡阿姨管理系統beta<?=" ".$version." "?></a>
+				<a class="navbar-brand" href="#">蔡阿姨管理系統beta<?=" ".$version." "?></a>
 			</div>			
 			<div class = "collapse navbar-collapse navHeadercollapse">
 				<ul class = "nav navbar-nav navbar-left" id="nav">
-					<li><a href = "<?=web_url('/index/index')?>">Home</a></li>
+					<!-- <li><a href = "<?=web_url('/index/index')?>">Home</a></li> -->
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">合約</a>
 						<ul class="dropdown-menu">
 							<?php $CI =& get_instance(); ?>
 							<li><a href = "<?=web_url('/contract/index')?>">合約列表</a></li>
-							<li><a href = "#">待結算合約</a></li>
-							<li><a href = "#">封存合約</a></li>
-							<li><a href = "<?=web_url('/contract/newcontract')?>">新版新增合約</a></li>
+							<!-- <li><a href = "#">待結算合約</a></li> -->
+							<!-- <li><a href = "#">封存合約</a></li> -->
+							<li><a href = "<?=web_url('/contract/newcontract')?>">新增合約</a></li>
 
 							<hr>
 							<li><a href = "<?=web_url('/student/index')?>">學生資料</a></li>
 						</ul>
 					</li>
-					<li><a href = "#">租屋狀態</a></li>
+					<!-- <li><a href = "#">租屋狀態</a></li> -->
 					
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">聯絡通訊</a>
 						<ul class="dropdown-menu">
 							<li><a href = "<?=web_url('/contact/stulist')?>">學生通訊錄</a></li>
-							<li><a href = "#">常用通訊錄</a></li>
+							<!-- <li><a href = "#">常用通訊錄</a></li> -->
 							<hr>
 							<li><a href = "#">簡訊</a></li>
 						</ul>
 					</li>
 
-					<li class="dropdown">
+					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">服務</a>
 						<ul class="dropdown-menu">
 							<li><a href = "mail.php">信件通知</a></li>
 							<li><a href = "fix.php">維修</a></li>
 							<li><a href = "utilityBill.php">水電費押金</a></li>
 						</ul>
-					</li><!-- 
+					</li> --><!-- 
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">會計</a>
 						<ul class="dropdown-menu">
@@ -117,12 +117,12 @@
 					
 					
 					
-					<li class="dropdown">
+					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">系統</a>
-						<ul class="dropdown-menu">
-							<li><a href = "https://www.google.com/cloudprint#printers">管理雲端印表機</a></li>
+						<ul class="dropdown-menu"> -->
+							<!-- <li><a href = "https://www.google.com/cloudprint#printers">管理雲端印表機</a></li> -->
 							<!-- <li><a href="#" data-toggle="modal" data-target="#loginpcModal" >登入PCHOME</a></li> -->
-							<li><a href = "changePS.php">修改密碼</a></li>
+							<!-- <li><a href = "changePS.php">修改密碼</a></li>
 							<li><a href = "smsAdd.php">加值簡訊</a></li>
 							<?php if ($power<=1): ?>
 								<li><a href="addManager.php">新增使用者</a></li>
@@ -130,11 +130,11 @@
 							<?php if ($power==0): ?>
 								<li><a href="#" onclick="window.open('//127.0.0.1/phpmyadmin/');">PHPMYADMIN</a></li>								
 							<?php endif ?>
-							<li><a onclick="window.open('ErrorRsp.php')">錯誤回報</a></li>
+							<li><a onclick="window.open('ErrorRsp.php')">錯誤回報</a></li> -->
 							
 							
-						</ul>
-					</li>
+					<!-- 	</ul>
+					</li> -->
 				</ul>
 
 				<ul class = "nav navbar-nav navbar-right">

@@ -73,5 +73,23 @@ class Contact extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
+	public function send_sms(){
+		$this->load->model('Mservice');
+		$this->load->library(array('sms', 'smsapidata'));
+		$userdata = $this->smsapidata->getsmsAPIdata();
+
+		$rx = $this->input->post('rx', TRUE);
+		$content = $this->input->post('content', TRUE);
+		$note = $this->input->post('note', TRUE);
+
+		$send_result = $this->sms->send_sms($rx, 0927619822, $content, $note, $userdata);
+		if ($send_result['status']==1) {
+			$result = $this->Mservice->add_sms_record($content,$rx,$note,$send_result['status'],$send_result['error_code']);
+		}
+			
+		
+		$data['json_data'] = $send_result;
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>
