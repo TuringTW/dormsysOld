@@ -74,21 +74,22 @@
 						</ul>
 					</li>
 
-					<!-- <li class="dropdown">
+					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">服務</a>
 						<ul class="dropdown-menu">
-							<li><a href = "mail.php">信件通知</a></li>
-							<li><a href = "fix.php">維修</a></li>
-							<li><a href = "utilityBill.php">水電費押金</a></li>
+							<li><a href = "<?=web_url('/service/mail')?>">信件通知</a></li>
+							<!-- <li><a href = "">維修</a></li> -->
+							<!-- <li><a href = "">水電費押金</a></li> -->
 						</ul>
-					</li> --><!-- 
+					</li>
+					<!-- 
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">會計</a>
 						<ul class="dropdown-menu">
 							<li><a href = "receipt.php">收據管理</a></li>
 							<li><a href = "item.php">支出管理</a></li>
 						</ul>
-					</li> -->
+					</li>
 					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">管理</a>
 						<ul class="dropdown-menu">

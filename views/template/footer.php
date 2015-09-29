@@ -68,7 +68,7 @@
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 		}  
 		var data = "content=" +sms_content+"&rx=" + sms_receiver + "&note="; 
-		alert(data); 
+		// alert(data); 
 		xhr.open("POST", "<?=web_url('/contact/send_sms')?>", true);   
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
 		xhr.send(data);  
@@ -79,7 +79,10 @@
 					alert(xhr.responseText);
 					var data = JSON.parse(xhr.responseText);
 					
-					
+					if (data.status == 1) {
+						successmsg('寄送成功');
+						$('#smsModal').modal('toggle');
+					}
 
 				} else {  
 					errormsg('資料傳送出現問題，等等在試一次.');  
