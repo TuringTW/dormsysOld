@@ -76,12 +76,14 @@
 		function display_data() {  
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
-					alert(xhr.responseText);
+					// alert(xhr.responseText);
 					var data = JSON.parse(xhr.responseText);
 					
 					if (data.status == 1) {
 						successmsg('寄送成功');
 						$('#smsModal').modal('toggle');
+					}else{
+						errormsg('寄送失敗')
 					}
 
 				} else {  
