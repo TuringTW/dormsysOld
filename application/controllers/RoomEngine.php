@@ -31,15 +31,21 @@ class RoomEngine extends CI_Controller
 		// body table
 		$data['dormlist'] = $this->Mutility->get_dorm_list();
 <<<<<<< HEAD
+<<<<<<< HEAD
 		$this->load->view('roomengine/index/search_table', $data);
 		// $data['saleslist'] = $this->Mutility->get_user_list();
 		// $this->load->view('contract/index/viewModel',$data);
 		// $this->load->view('contract/index/checkout');
 =======
+=======
+>>>>>>> parent of f04623b... add roomengine
 		$this->load->view('contract/index/search_table', $data);
 		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/index/viewModel',$data);
 		$this->load->view('contract/index/checkout');
+<<<<<<< HEAD
+>>>>>>> parent of f04623b... add roomengine
+=======
 >>>>>>> parent of f04623b... add roomengine
 
 		// footer
