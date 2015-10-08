@@ -30,13 +30,20 @@ class RoomEngine extends CI_Controller
 		$this->load->view('roomengine/sidebar', $data);
 		// body table
 		$data['dormlist'] = $this->Mutility->get_dorm_list();
+<<<<<<< HEAD
 		$this->load->view('roomengine/index/search_table', $data);
 		// $data['saleslist'] = $this->Mutility->get_user_list();
 		// $this->load->view('contract/index/viewModel',$data);
 		// $this->load->view('contract/index/checkout');
+=======
+		$this->load->view('contract/index/search_table', $data);
+		$data['saleslist'] = $this->Mutility->get_user_list();
+		$this->load->view('contract/index/viewModel',$data);
+		$this->load->view('contract/index/checkout');
+>>>>>>> parent of f04623b... add roomengine
 
 		// footer
-		$this->load->view('roomengine/index/js_section');
+		$this->load->view('contract/index/js_section');
 		$this->load->view('template/footer');
 	}
 	

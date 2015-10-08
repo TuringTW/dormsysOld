@@ -137,8 +137,7 @@
 										text = '封存';
 										break;
 								}
-								$('#view_contract_list').append('<tr><td>'+(i+1)+'</td><td>'+text+'</td><td>'+item.dname+'</td><td>'+item.rname+'</td><td>'+item.s_date+'</td><td>'+item.e_date+'</td><td>'+item.in_date+'</td><td>'+item.out_date+'</td><td><a href="" ="contract_href_' + i + '"><span class="glyphicon glyphicon-file"></span></a></td></tr>');
-								$('#contract_href_'+i).attr('href', '<?=web_url("/contract/index")?>?')
+								$('#view_contract_list').append('<tr><td>'+(i+1)+'</td><td>'+text+'</td><td>'+item.dname+'</td><td>'+item.rname+'</td><td>'+item.s_date+'</td><td>'+item.e_date+'</td><td>'+item.in_date+'</td><td>'+item.out_date+'</td><td><a href="#" onclick="showstuinfo('+item.c_num+')"><span class="glyphicon glyphicon-file"></span></a></td></tr>');
 							};
 						}
 						$('#viewModal').modal('toggle');
