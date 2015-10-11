@@ -29,5 +29,8 @@
 		.modal-sms {
 			z-index: 1100 !important ;
 		}
+		th {
+			text-align: center;
+		}
 	</style>
 

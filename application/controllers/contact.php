@@ -57,7 +57,7 @@ class Contact extends CI_Controller
 		$type = $this->input->post('type', TRUE);
 		$result['state'] = true;
 		if ($type == 0) {
-			$result['result'] = $this->Mstudent->get_stu_info_from_c_id($id);
+			$result['result'] = $this->Mstudent->get_stu_info_from_s_id($id);
 		}else if ($type == 1) {
 			$result['result'] = $this->Mstudent->get_stu_from_room($id);
 		}else{
@@ -91,5 +91,26 @@ class Contact extends CI_Controller
 		$data['json_data'] = $send_result;
 		$this->load->view('template/jsonview', $data);
 	}
+	public function contactbookmobile(){
+		$this->load->helper('dorm_list_helper');
+		$this->view_header();
+		$data['active'] = 1;
+		$this->load->view('contact/sidebar', $data);
+
+		$this->load->view('contact/contactbookmobile/search_table');
+		
+		// footer
+		$this->load->view('contact/contactbookmobile/js_section', $data);
+		$this->load->view('template/footer');
+	}
+	public function mobile_update_auth(){
+		$auth_code = $this->input->post('auth_code', TRUE);
+		$send_result = $this->Mutility->request_auth_num($auth_code, 'for update mobile contactbook');
+
+		$send_result['target_url'] = web_url('/guest/mobile_update_get_data');
+		$data['json_data'] = $send_result;
+		$this->load->view('template/jsonview', $data);
+	}
+
 }
 ?>

@@ -3,103 +3,57 @@
 <script type="text/javascript">
 // for contractlist
 	table_refresh();
-	// 關鍵字搜尋
-	function keyword_serach(){
-		pagemove(0);
-		table_refresh();
-	}
+
 	// 宿舍選擇
 	function dorm_select(dorm_id, dorm_name){
 		$('#lbldorm').html(dorm_name);
 		$('#dorm_select_value').val(dorm_id);
-		pagemove(0);
 		table_refresh();
 	}
-	// 頁碼
-	function pagemove(action){
-		var page = parseInt($('#page_value').val());
-		if (action == 0|| page < 1) {
-			$('#page_value').val(1);
-			$('#page_down').attr( "disabled", true );
+	Date.prototype.addDays = function(days)
+	{
+	    var dat = new Date(this.valueOf());
+	    dat.setDate(dat.getDate() + days);
+	    return dat;
+	}
 
-		}else if(action == -1){
-			if (page !== 1) {
-				$('#page_value').val(page-1);
+	function date_refresh(method){
+		var end_date = $('#end_date').val();
+		var edat = new Date(end_date);
+		var str_date = $('#str_date').val();
+		var dat = new Date(str_date);
+		if (method==0) {
+			if ($('#end_date').val()=='') {
+				
+				dat = dat.addDays(1);
+				var end_date = dat.getFullYear()+'-'+(dat.getMonth()+1)+'-'+dat.getDate();
+				$('#end_date').val(end_date);
 			}
-			if (page-1 == 1) {
+				
+		}else if ($('#str_date').val()=='') {
+			
+			edat = edat.addDays(-1);
+			var str_date = edat.getFullYear()+'-'+(edat.getMonth()+1)+'-'+edat.getDate();
+			$('#str_date').val(str_date);
+		}
 
-				$('#page_down').attr( "disabled", true );
-			};
-		}else{
-			$('#page_value').val(page+1);
-			$('#page_down').attr( "disabled", false );
+		if (edat-dat<=0) {
+			dat = dat.addDays(1);
+			var end_date = dat.getFullYear()+'-'+(dat.getMonth()+1)+'-'+dat.getDate();
+			$('#end_date').val(end_date);
 		}
-		$('#show_page').html($('#page_value').val());
-		table_refresh();
+			
 	}
-	// 即將到期的按鈕
-	function due_select(){
-		var value = $('#due_value').val();
-		if (value==1) {
-			$('#due_value').val(0);
-			$('#btnDue').removeClass('active');
-		}else{
-			$('#due_value').val(1);
-			$('#btnDue').addClass('active');
-			$('#ofd_value').val(0);
-			$('#btnOFD').removeClass('active');
 
-		}
-		pagemove(0);
-		table_refresh();
-	}
-	// 逾期的按鈕
-	function ofd_select(){
-		var value = $('#ofd_value').val();
-		if (value==1) {
-			$('#ofd_value').val(0);
-			$('#btnOFD').removeClass('active');
-		}else{
-			$('#ofd_value').val(1);
-			$('#btnOFD').addClass('active');
-			$('#due_value').val(0);
-			$('#btnDue').removeClass('active');
-		}
-		pagemove(0);
-		table_refresh();
-	}
-	// 更新本月到期跟下月到期的數量
-	function due_ofd_refresh(keyword, dorm){
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "keyword=" + keyword+"&dorm="+dorm;  
-		xhr.open("POST", "<?=web_url('/contract/due_ofd_refresh')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// alert(xhr.responseText); 
-					data = JSON.parse(xhr.responseText) ;
-					$('#view_ofd').html(data.countofd);
-					$('#view_due').html(data.countdue);
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-		xhr.onreadystatechange = display_datas;  
-	}
+	
+
 	// 更新想式的數量
 	function table_refresh(){
-		var keyword = $('#txtkeyword').val();
-		var page = $('#page_value').val();
-		var due_value = $('#due_value').val();
-		var ofd_value = $('#ofd_value').val();
+		var str_date = $('#str_date').val();
+		var end_date = $('#end_date').val();
+		var lprice = $('#lprice').val();
+		var hprice = $('#hprice').val();
+		var type = $('#room_type_value').val();
 		var dorm = $('#dorm_select_value').val();
 		$('#txtkeyword').focus();
 		// if(due_value*ofd_value==1){
@@ -107,11 +61,6 @@
 		// 	ofd_value = 0;
 		// }
 
-		if (page < 0) {
-			page = 1;
-		}
-		// 更新DUE & OFD
-		due_ofd_refresh(keyword, dorm);
 
 		// 傳送
 		var xhr;  
@@ -120,8 +69,8 @@
 		} else if (window.ActiveXObject) { // IE 8 and older  
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 		}  
-		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&dorm="+dorm;  
-		xhr.open("POST", "<?=web_url('/contract/show')?>");
+		var data = "str_date="+str_date+"&end_date="+end_date+"&lprice="+lprice+"&hprice="+hprice+"&type="+type+"&dorm="+dorm;
+		xhr.open("POST", "<?=web_url('/roomengine/show_avail_room')?>");
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
 		xhr.send(data);  
 		function display_datas() {  
@@ -138,20 +87,12 @@
 	}
 	function tableparse(json){
 		data = JSON.parse(json);
-		var page = $('#page_value').val();
 		$('#result_table').html('');
 		for (var i = 0; i < data.length; i++) {
-			var text = '';
-			if (data[i].countp>1) {
-				text = '等'+data[i].countp+'人';
-			};
-			$('#result_table').append('<tr><td>'+(page*30+i-29)+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td><a onclick="showcontract('+data[i].contract_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
+			
+			$('#result_table').append('<tr><td>'+(i+1)+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].type+'</td><td>'+data[i].out_date+'</td><td>'+(data[i].premin>=4000?'':data[i].premin)+'</td><td><a style="'+((data[i].pre_id==''||data[i].pre_id==undefined)?'display:none':'')+'" href="#" onclick="showcontract('+data[i].pre_id+')" title="前合約資料"><span class="glyphicon glyphicon-file"></span></a></td><td>'+data[i].in_date+'</td><td>'+(data[i].postmin>=4000?'':data[i].postmin)+'</td><td><a href="#" style="'+((data[i].post_id==''||data[i].post_id==undefined)?'display:none':'')+'" title="後合約資料" onclick="showcontract('+data[i].post_id+')"><span class="glyphicon glyphicon-file"></span></a></td><td>'+data[i].rent+'</td><td><a href="#" title="房間詳細資料"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
 		};
-		if (data.length<30) {
-			$('#page_up').attr( "disabled", true );
-		}else{
-			$('#page_up').attr( "disabled", false );
-		}	
+	
 	}
 // for 詳細合約資料
 	// AJAX產生合約資料
@@ -294,8 +235,8 @@
 		xhr.onreadystatechange = display_datas;  
 	}
 	// 詳細資料裡的日期選擇
-	$('#view_in_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	$('#view_out_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$('#str_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$('#end_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 	// 合約終止
 	dialogbreak = $( "#dialog-breakcontracr" ).dialog({
 		autoOpen: false,

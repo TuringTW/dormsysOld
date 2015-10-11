@@ -1,26 +1,17 @@
 <?php function js_section(){ ?>
 <script type="text/javascript">
-	function dorm_select(dorm_id){
-		// refresh dorm list
-		$('.dormbtnlist').attr('class', 'btn btn-default dormbtnlist');
-		$('#dorm_select_'+dorm_id).attr('class', "btn btn-default dormbtnlist active");
-		$('#dorm_select_id').val(dorm_id);
-		var type = $('#show_type_select').val();
-		room_stu_show(type, dorm_id);
-	}
-	function room_stu_show(type, dorm_id){
-		$('#room_stu_select').html('');
-		$('#stu_select').html('');
-		$('#stu_info').html('');
-		if (dorm_id>0) {
+
+	function send_auth_code(){
+		var auth_code = $('#auth_code').val();
+		if (Math.floor(Math.log10(auth_code))==3) {
 			var xhr;  
 			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
 				xhr = new XMLHttpRequest();  
 			} else if (window.ActiveXObject) { // IE 8 and older  
 				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 			}  
-			var data = "dorm_id=" + dorm_id + "&type="+type;  
-			xhr.open("POST", "<?=web_url('/contact/room_stu_show')?>");
+			var data = "auth_code=" + auth_code;  
+			xhr.open("POST", "<?=web_url('/contact/mobile_update_auth')?>");
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
 			xhr.send(data);  
 			function display_datas() {  
@@ -31,17 +22,28 @@
 
 						if (data.state===true) {
 							// 更新表格裡的資訊
-							room_show_parse(data.result, type);
+							var senddata = [data.target_url, data.auth_num];
+							var jsondata = encodeURI(JSON.stringify(senddata));
+							$('#qrcode_img').attr('src', 'http://chart.apis.google.com/chart?chs=300x300&chld=L|1&cht=qr&chl='+jsondata)
+							$('#qrcode_img').css('display', '');
+						}else if(data.state==-1){
+							errormsg('授權碼已被使用，請重新產生一組，或五分鐘後再試一次'); 
+							$('#qrcode_img').css('display', 'none'); 
 						}else{
-							errormsg('傳送錯誤，請再試一次'+xhr.responseText);  
+							errormsg('傳送錯誤，請再試一次');  
+							$('#qrcode_img').css('display', 'none');
 						}
 					} else {  
 						errormsg('資料傳送出現問題，等等在試一次.');  
+						$('#qrcode_img').css('display', 'none');
 					}  
 				}  
 			}  
 			xhr.onreadystatechange = display_datas;  
-		};
+		}else{
+			errormsg('認證碼是一個四位數的數字');
+			$('#qrcode_img').css('display', 'none');
+		}
 			
 	}
 	function room_show_parse(data, type){

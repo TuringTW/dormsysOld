@@ -21,7 +21,7 @@ class Contract extends CI_Controller
 		$this->load->view('template/message_dialog');
 		$this->load->view('template/smsModel');
 	}
-	public function index($c_num=0){	
+	public function index($contract_id=0){	
 		$this->load->helper('dorm_list_helper');
 		// header
 		$this->view_header();
@@ -57,28 +57,28 @@ class Contract extends CI_Controller
 		$this->load->view('template/jsonview', $data);
 	}
 	public function show_contract(){
-		$c_num = $this->input->post('c_num', true);
-		$data['json_data'] = $this->Mcontract->get_contract_info($c_num);
+		$contract_id = $this->input->post('contract_id', true);
+		$data['json_data'] = $this->Mcontract->get_contract_info($contract_id);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function edit(){
-		$c_num = $this->input->post('c_num', TRUE);
+		$contract_id = $this->input->post('contract_id', TRUE);
 		$in_date = $this->input->post('in_date', TRUE);
 		$out_date = $this->input->post('out_date', TRUE);
 		$sales = $this->input->post('sales', TRUE);
 		$note = $this->input->post('note', TRUE);
 
-		$result = $this->Mcontract->edit_contract($c_num, $in_date, $out_date, $sales, $note);
+		$result = $this->Mcontract->edit_contract($contract_id, $in_date, $out_date, $sales, $note);
 		if ($result) {
 			$data['json_data'] = $result;
 			$this->load->view('template/jsonview', $data);
 		}
 	}
 	public function break_contract(){
-		$c_num = $this->input->post('c_num',TRUE);
+		$contract_id = $this->input->post('contract_id',TRUE);
 		$b_date = $this->input->post('b_date',TRUE);
 
-		$result = $this->Mcontract->break_contract($c_num, $b_date);
+		$result = $this->Mcontract->break_contract($contract_id, $b_date);
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
@@ -91,8 +91,8 @@ class Contract extends CI_Controller
 		$this->load->view('template/jsonview', $data);
 	}
 	public function checkout_contract(){
-		$c_num = $this->input->post('c_num', TRUE);
-		$result = $this->Mcontract->set_check_out($c_num);
+		$contract_id = $this->input->post('contract_id', TRUE);
+		$result = $this->Mcontract->set_check_out($contract_id);
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);	
 	}
@@ -172,9 +172,9 @@ class Contract extends CI_Controller
 	public function pdf_gen(){
 		$this->load->library(array('pdf'));
 
-		$c_num = $this->input->get('c_num', TRUE);
-		if (!is_null($c_num)&&is_numeric($c_num)) {
-			$data = $this->Mcontract->get_print_data($c_num);
+		$contract_id = $this->input->get('contract_id', TRUE);
+		if (!is_null($contract_id)&&is_numeric($contract_id)) {
+			$data = $this->Mcontract->get_print_data($contract_id);
 			
 
 			$this->pdf->SetAuthor('AunttsaiDormSYS');
@@ -191,7 +191,7 @@ class Contract extends CI_Controller
 
 			$pw = $this->pdf->getPageWidth()*2.5;  
   			$data['wu'] = $pw;
-  			$data['barcodetext'] = date('Y-m-d').'-'.$c_num;
+  			$data['barcodetext'] = date('Y-m-d').'-'.$contract_id;
 			// add a page
 
 			$this->pdf->AddPage();
@@ -205,6 +205,12 @@ class Contract extends CI_Controller
 			ob_end_clean();
 			$this->pdf->Output('My-File-Name.pdf', 'I');
 		}
+	}
+	public function move_to_new_data_base(){
+		
+		$result = $this->Mcontract->move_to_new_data_base();
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);	
 	}
 }
 ?>

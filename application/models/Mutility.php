@@ -6,9 +6,15 @@ class Mutility extends CI_Model
 {
      function __construct()
      {
-          // Call the Model constructor
-          parent::__construct();
+        parent::__construct();
+        $this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
+        $this->load->library('session');
+        $this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mstudent'));
+        // check login & power, and then init the header
+        $required_power = 2;
+        $this->login_check->check_init($required_power);
      }
+     
     function Date_diff($s_date, $e_date){
         $s_date = date('Y-m-d', strtotime('-1 day', strtotime($s_date)));
         $start = date_create($s_date);
@@ -47,6 +53,40 @@ class Mutility extends CI_Model
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    function request_auth_num($auth_code, $usage){
+        if (floor(log10($auth_code))==3) {
+            $this->db->select('auth_id')->from('auth_record');
+            $this->db->where('TIMESTAMPDIFF(MINUTE,`timestamp`,CURRENT_TIMESTAMP())<', 5)->where('auth_code', $auth_code);
+            $query = $this->db->get();
+            if ($query->num_rows()==0) {
+                // delete ci query stream
+                $this->db->flush_cache();
 
+                $m_id = $this->login_check->get_user_id();
+                $auth_num = md5(date('U').'-'.$auth_code.'-mobileapp');
+                $data = array(  'auth_code'=>$auth_code, 
+                                'auth_num'=>$auth_num, 
+                                'usage'=>$usage, 
+                                'm_id'=>$m_id);
+                $this->db->insert('auth_record', $data);
+                if ($this->db->affected_rows()>0) {
+                    $result['state'] = true;
+                    $result['auth_num'] = $auth_num;
+                }else{
+                    $result['state'] = false;
+                }
+            }else{
+                $result['state'] = -1;
+            }
+
+                
+        }else{
+            $result['state'] = false;
+            
+        }
+        return $result;
+        
+    }
+    
 }
 ?>

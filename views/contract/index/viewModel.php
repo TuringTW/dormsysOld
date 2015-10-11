@@ -15,7 +15,7 @@
 									<tbody id = "view_stu_info"></tbody>
 								</table>
 								<table class="table" style="margin-bottom:0px">
-									<input type="hidden" id="c_num" value="0">
+									<input type="hidden" id="contract_id" value="0">
 									<tr>
 			     						<td style="width:15%" align="right">宿舍</td>
 			     						<td>

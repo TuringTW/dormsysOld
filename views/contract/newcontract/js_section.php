@@ -456,8 +456,8 @@
 					// errormsg(xhr.responseText);    
 					data = JSON.parse(xhr.responseText);    
 					document.getElementById("rent").value = data.rent;  
-					$('#final_dorm').html(data.rname);
-					$('#final_room').html(data.dname);
+					$('#final_dorm').html(data.dname);
+					$('#final_room').html(data.rname);
 					final_rent_check();
 				} else {  
 					errormsg('資料傳送出現問題，等等在試一次.');  
@@ -834,7 +834,7 @@
 						$('#tab_print').attr('data-toggle','tab');
 						$('#tab_print').attr('onclick','');
 						$('#tab_print').trigger('click');
-						$('#printFrame').attr('src', '<?=web_url("/contract/pdf_gen")?>?c_num='+result.c_num);
+						$('#printFrame').attr('src', '<?=web_url("/contract/pdf_gen")?>?contract_id='+result.contract_id);
 					}else if(result.state == 0){
 						for (var i = result.error_id.length - 1; i >= 0; i--) {
 							text = text + result.error_id[i] + ',';
@@ -842,6 +842,8 @@
 						errormsg('[儲存時發生錯誤，請再試一次]\n錯誤的學生代碼:'+text+'\n如果持續出現請聯絡Kevin\n');
 					}else if(result.state == -1){
 						errormsg('[資料有誤]\n請重新來一次\n');
+					}else{
+						errormsg('[發生不知名錯誤]\n請聯絡KEVIN');
 					}
 						 
 				} else {  

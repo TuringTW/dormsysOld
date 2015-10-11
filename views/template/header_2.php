@@ -63,20 +63,14 @@
 						</ul>
 					</li>
 					<!-- <li><a href = "#">租屋狀態</a></li> -->
-					<li class="dropdown">
-						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">租屋狀態</a>
-						<ul class="dropdown-menu">
-							<li><a href = "<?=web_url('/roomEngine/index')?>">房間搜尋</a></li>
-							<li><a href = "<?=web_url('/roomEngine/room')?>">時間軸</a></li>
-							<!-- <li><a href = "<?=web_url('/contact/stulist')?>">時間軸</a></li> -->
-						</ul>
-					</li>
+					<li><a href = "<?=web_url('/roomEngine/index')?>">房間搜尋</a></li>
+					
 
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">聯絡通訊</a>
 						<ul class="dropdown-menu">
 							<li><a href = "<?=web_url('/contact/stulist')?>">學生通訊錄</a></li>
-							<!-- <li><a href = "#">常用通訊錄</a></li> -->
+							<li><a href = "<?=web_url('/contact/contactbookmobile')?>">手機通訊錄</a></li>
 							<hr>
 							<li><a href = "#">簡訊</a></li>
 						</ul>

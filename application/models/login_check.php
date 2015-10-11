@@ -39,7 +39,7 @@ class login_check extends CI_Model
 		
     }
     function get_user_id(){
-    	return $this->session->userdata('user');
+    	return $this->session->userdata('m_id');
     }
     function log_out(){
 		$this->load->library('session');

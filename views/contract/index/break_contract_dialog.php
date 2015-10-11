@@ -37,7 +37,7 @@
 				<td style="width:40%"><span id="bstate"></span></td>
 			</tr>
 		</table>
-		<input type="hidden" id="bc_num" name="bc_num" value="0">
+		<input type="hidden" id="bcontract_id" name="bcontract_id" value="0">
 	</form>
 </div>
 
@@ -47,7 +47,7 @@
 <div id="dialog-update-done" title="違約設定狀態">
 	<div class="alert alert-success"><h2><span class="glyphicon glyphicon-ok"></span>成功!!!<span id="bkeepalert"></span></h2></div>
 	<div class="alert alert-warning"><h2><span class="glyphicon glyphicon-star-empty">注意!!!系統不會自動到期結算!!!<br>還是要完成結算的步驟</h2></div>
-	<input type="hidden" id="keep_bc_num" name="bc_num" value="0">
-	<input type="hidden" id="bc_num" name="bc_num" value="0">
+	<input type="hidden" id="keep_bcontract_id" name="bcontract_id" value="0">
+	<input type="hidden" id="bcontract_id" name="bcontract_id" value="0">
 	<input type="hidden" id="keep_b_date" name="b_date" value="0">
 </div>

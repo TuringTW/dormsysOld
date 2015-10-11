@@ -64,4 +64,5 @@ class Mservice extends CI_Model
 		$this->db->insert('mail'); 
 		return TRUE;
 	}
+	
 }?>

@@ -35,4 +35,13 @@
 		return $string;
 		}
 	}
+	if ( ! function_exists('file_url'))
+	{
+		function file_url($uri = '')
+		{
+		$CI =& get_instance();
+		$string = $CI->config->base_url("/style/file".$uri);
+		return $string;
+		}
+	}
  ?>

@@ -27,35 +27,27 @@ class RoomEngine extends CI_Controller
 		$this->view_header();
 		// sidebar
 		$data['active'] = 0;
-		$this->load->view('contract/sidebar', $data);
+		$this->load->view('roomengine/sidebar', $data);
 		// body table
-<<<<<<< HEAD
 		$data['dormlist'] = $this->Mutility->get_dorm_list();
-<<<<<<< HEAD
-<<<<<<< HEAD
 		$this->load->view('roomengine/index/search_table', $data);
-=======
-		// $data['dormlist'] = $this->Mutility->get_dorm_list();
-		// $this->load->view('contract/index/search_table', $data);
->>>>>>> parent of 2803106... wrong commit
-		// $data['saleslist'] = $this->Mutility->get_user_list();
-		// $this->load->view('contract/index/viewModel',$data);
-		// $this->load->view('contract/index/checkout');
-=======
-=======
->>>>>>> parent of f04623b... add roomengine
-		$this->load->view('contract/index/search_table', $data);
 		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/index/viewModel',$data);
-		$this->load->view('contract/index/checkout');
-<<<<<<< HEAD
->>>>>>> parent of f04623b... add roomengine
-=======
->>>>>>> parent of f04623b... add roomengine
 
 		// footer
-		$this->load->view('contract/index/js_section');
+		$this->load->view('roomengine/index/js_section');
 		$this->load->view('template/footer');
+	}
+	public function show_avail_room(){
+		$dorm_id = $this->input->post('dorm', TRUE);
+		$str_date = $this->input->post('str_date', TRUE);
+		$end_date = $this->input->post('end_date', TRUE);
+		$lprice = $this->input->post('lprice', TRUE);
+		$hprice = $this->input->post('hprice', TRUE);
+		$type = $this->input->post('type', TRUE);
+
+		$data['json_data'] = $this->Mcontract->show_avail_room($dorm_id, $str_date, $end_date, $lprice, $hprice, $type);
+		$this->load->view('template/jsonview', $data);
 	}
 	
 }
