@@ -2,7 +2,7 @@
 <div class="modal fade " id="viewModal" tabindex="-1" role="dialog" data-show="1" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" style="width:90%">
 		<div class="modal-content">
-			<form method="POST" action="_add_contract.php">
+
 				<div class="modal-header">
 					<button type="button" id="closebtn" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h4 class="modal-title" id="myModalLabel">合約詳細資料</h4>
@@ -51,7 +51,7 @@
 			     						<td style="width:15%" align="right">遷入日期</td>
 			     						<td style="width:30%">
 			     							<div class="row">
-			     								<div class="col-sm-8"><input class="form-control"  onchange="check_room();change_alert()" id="view_in_date" required="required" style="width:100%" type="text" name="new[]" ></div>
+			     								<div class="col-sm-8"><input class="form-control"  onchange="check_room();change_alert();" id="view_in_date" required="required" style="width:100%" type="text" name="new[]" ></div>
 			     								<div class="col-sm-4"><span class="glyphicon glyphicon-ok" id="view_in_date_check"></span></div>
 			     							</div>
 			     							
@@ -60,7 +60,7 @@
 			     						<td style="width:15%" align="right">遷出日期</td>
 			     						<td style="width:30%">
 			     							<div class="row">
-			     								<div class="col-sm-8"><input class="form-control" onchange="check_room();change_alert()"  id="view_out_date" required="required" style="width:100%" type="text" name="new[]" ></div>
+			     								<div class="col-sm-8"><input class="form-control" onchange="check_room();change_alert();"  id="view_out_date" required="required" style="width:100%" type="text" name="new[]" ></div>
 			     								<div class="col-sm-4"><span class="glyphicon glyphicon-ok" id="view_out_date_check"></span></div>
 			     							</div>
 			     							
@@ -79,7 +79,7 @@
 			     					<tr>
 			     						<td style="width:15%" align="right">帶看人</td>
 			     						<td style="width:30%">
-			     							<select class="form-control" onchange="change_alert()" id="view_sales" required="required" style="width:100%" name="new[]">
+			     							<select class="form-control" onchange="change_alert();" id="view_sales" required="required" style="width:100%" name="new[]">
 		     									<option  class="form-control">請選擇...</option>
 			     								<?php foreach ($saleslist as $key => $value): ?>
 			     									<option  class="form-control" value="<?=$value['m_id']?>" ><?=$value['name']?></option>
@@ -124,7 +124,7 @@
 						</div>
 						<div class="col-md-3">
 							<a id="view_print_btn"  class="btn btn-default btn-lg">列印</a>
-							<a id="edit_btn" onclick="editcontract()" class="btn btn-info btn-lg ">已儲存</a>
+							<a id="edit_btn" href="#" class="btn btn-info btn-lg" onclick="editcontract()">已儲存</a>
 						</div>
 						<div class="col-md-2 pull-right">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -151,7 +151,7 @@
 					</div>
 					
 				</div>
-			</form>
+
 		</div><!-- /.modal-content -->
 		
 	</div><!-- /.modal-dialog -->

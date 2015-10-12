@@ -67,7 +67,7 @@ class Mcontract extends CI_Model
             $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
             $this->db->join('manager','manager.m_id=contract.manager','left');
             $this->db->join('student','student.stu_id=contractpeo.stu_id','left');    
-            $this->db->where('contract.contract_id', $contract_id)->where('seal', 0); 
+            $this->db->where('contract.contract_id', $contract_id)->where('seal<>', 1); 
 
             $query = $this->db->get();
             return $query->result_array();
@@ -148,19 +148,21 @@ class Mcontract extends CI_Model
 
         return $result;
     }
-    function date_check_by_room($room_id, $in_date, $out_date){
-        $sql = "SELECT COUNT(DISTINCT `contract_id`) as `count`,`room_id` from `contract` where `seal`=0 and 
-                            ((DATEDIFF(  `in_date`,'$in_date' ) >=0
-                            AND DATEDIFF(   `out_date`,'$out_date' ) <=0) or 
-                            (DATEDIFF(  `out_date`,'$in_date' ) >=0
-                            AND DATEDIFF(   `out_date`,'$out_date' ) <=0) or 
-                            (DATEDIFF(  `out_date`,'$in_date' ) >=0
-                            AND DATEDIFF(   `in_date`,'$in_date' ) <=0) or 
-                            (DATEDIFF(  `out_date`,'$out_date' ) >=0
-                            AND DATEDIFF(   `in_date`,'$out_date' ) <=0)) group by `room_id` having `room_id` = '$room_id'" ;  
-        $query = $this->db->query($sql);
-        $result = $query->row(0);
-        if ($result->count == 1&&strtotime($out_date)-strtotime($in_date)>0) {
+// 這個不太好
+    function date_check_by_room($room_id, $in_date, $out_date, $contract_id){
+        $this->db->select('contract_id, room_id');
+        $this->db->from('contract');
+        // join
+
+        $this->db->where("((DATEDIFF('$in_date', in_date)>=0 and DATEDIFF(out_date, '$in_date')>=0 )
+            or    (DATEDIFF('$in_date', in_date)<=0 and DATEDIFF(out_date, '$out_date')<=0) 
+            or    (DATEDIFF('$out_date', in_date)>=0 and DATEDIFF(out_date, '$out_date')>=0) )and seal<>1");
+        $this->db->where('contract.room_id', $room_id);
+
+        $query = $this->db->get();
+        $result = $query->result_array();
+
+        if (($query->num_rows() == 0||($query->num_rows()==1&&$result[0]['contract_id']==$contract_id))&&(strtotime($out_date)-strtotime($in_date)>0)) {
             return true;
         }else{
             return false;
@@ -290,7 +292,7 @@ class Mcontract extends CI_Model
                     (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$str_date')>=0 )
             or    (DATEDIFF('$str_date', in_date)<=0 and DATEDIFF(out_date, '$end_date')<=0) 
             or    (DATEDIFF('$end_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0) )and seal<>1 group by room_id) as contractcheck", 'contractcheck.room_id = room.room_id', 'left');
-        $this->db->where('isnull(contractcheck.countc)', 1);
+        $this->db->where('isnull(`contractcheck`.`countc`)', 1);
         
         if ($type<>0) {
             $this->db->where('room.type', $type);
@@ -299,12 +301,13 @@ class Mcontract extends CI_Model
             $this->db->where('dorm.dorm_id=', $dorm_id);
         }
         $this->db->where('rent>=', $lprice)->where('rent<=', $hprice);
-        $this->db->order_by('postcontract.postmin', 'desc');
-        $this->db->order_by('precontract.premin', 'desc');
+        $this->db->order_by('premin');
+        $this->db->order_by('postmin');
+        
         
         $this->db->order_by('dorm.name', 'desc');
         $this->db->order_by('room.name', 'desc');
-        $this->db->limit(100, 0);
+        $this->db->limit(200, 0);
         $query = $this->db->get();
         return $query->result_array();
     }

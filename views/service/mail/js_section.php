@@ -145,7 +145,7 @@
 					table_refresh();
 					name = $('#stu_select_'+stu_id).attr('name');
 					phone = $('#stu_select_'+stu_id).attr('phone');
-					sendsms(name+"同學你好, 請到辦公室領取你的平信", phone);
+					sendsms(name+"同學你好, 請到辦公室領取你的"+type, phone);
 					$('#newmailModal').modal('toggle');
 				} else {  
 					alert('資料傳送出現問題，等等在試一次.');  

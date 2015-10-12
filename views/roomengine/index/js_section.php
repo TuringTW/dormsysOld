@@ -133,6 +133,7 @@
 		     			$('#view_sms_'+i).attr('onclick','sendsms("'+datum.sname+'同學你好,", "'+datum.mobile+'")')
 					};
 					var datum = data[0];
+
 					document.getElementById('view_dorm_href').href = 'dorm.php?view='+datum.dorm_id;
 					document.getElementById('view_dorm').value = datum.dname;
 					document.getElementById('view_room').value = datum.rname;
@@ -164,6 +165,7 @@
 		var in_date = $('#view_in_date').val();
 		var out_date = $('#view_out_date').val();
 		var room_id = $('#room_id').val();
+		var contract_id = $('#contract_id').val();
 
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
@@ -171,7 +173,7 @@
 		} else if (window.ActiveXObject) { // IE 8 and older  
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 		}  
-		var data = "room_id=" + room_id+"&in_date=" + in_date+"&out_date=" + out_date;  
+		var data = "room_id=" + room_id+"&in_date=" + in_date+"&out_date=" + out_date+"&contract_id=" + contract_id;  
 		xhr.open("POST", "<?=web_url('/contract/date_check_by_room')?>", true);   
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
 		xhr.send(data);  

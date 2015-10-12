@@ -256,8 +256,10 @@
 	}
 	// 提示表單有變更
 	function change_alert(){
-		document.getElementById('edit_btn').className = 'btn btn-warning btn-lg';
-		document.getElementById('edit_btn').innerHTML = '未儲存';
+
+
+		$('#edit_btn').attr('className', 'btn btn-warning btn-lg');
+		$('#edit_btn').html('未儲存');
 	}
 	// 修改合約資料
 	function editcontract(){

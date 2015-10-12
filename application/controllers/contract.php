@@ -86,7 +86,8 @@ class Contract extends CI_Controller
 		$in_date = $this->input->post('in_date', TRUE);
 		$out_date = $this->input->post('out_date', TRUE);
 		$room_id = $this->input->post('room_id', TRUE);
-		$result = $this->Mcontract->date_check_by_room($room_id, $in_date, $out_date);
+		$contract_id = $this->input->post('contract_id', TRUE);
+		$result = $this->Mcontract->date_check_by_room($room_id, $in_date, $out_date, $contract_id);
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
