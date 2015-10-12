@@ -18,7 +18,7 @@ class Guest extends CI_Controller
 		if ($this->Mguest->check_auth($auth_num, $auth_code)) {
 			$result = $this->Mguest->mobile_app_update();
 		}else{
-			$result[0] = false;
+			show_404();
 		}
 
 		$data['json_data'] = $result;

@@ -41,6 +41,11 @@ class Mutility extends CI_Model
     	$query = $this->db->query($sql);
     	return $query->result_array();
     }
+    function get_type_list(){
+        $sql = "SELECT `cate`,`cate_id` FROM `itemcate`  WHERE 1";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
     function get_room_info($room_id){
         $sql = "SELECT `room_id`, `room`.`name` as `rname`, `rent`, `dorm`.`name` as `dname` from `room` left join `dorm` on `dorm`.`dorm_id` = `room`.`dorm` where `room_id` = '$room_id'";
         $query = $this->db->query($sql);

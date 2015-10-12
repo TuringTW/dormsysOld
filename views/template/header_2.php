@@ -1,4 +1,4 @@
-<?php $version="6.30" 
+<?php $version="7.1.0" 
 // 	6.1 	新增本月退租檢視功能
 // 			seal 代號 0正常 -1退宿 1刪除 2待結算 3封存
 // 	6.21	測試結算功能
@@ -28,7 +28,10 @@
 			// 可以把關寄至框起來
 // 	6.31	開啟dorm的刪除功能
 // 	7.0.1 	使用CI framework逐步重寫
-
+// 7.1.0 e  更新為CI
+			// 支出管理
+			// receipttype 1發票 2費用 3估價單
+			// 開啟會計支出功能 沒有做require & 刪除 & 新增分類 之後補做
 
 
 
@@ -84,12 +87,12 @@
 							<!-- <li><a href = "">水電費押金</a></li> -->
 						</ul>
 					</li>
-					<!-- 
+					
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">會計</a>
 						<ul class="dropdown-menu">
-							<li><a href = "receipt.php">收據管理</a></li>
-							<li><a href = "item.php">支出管理</a></li>
+							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
+							<li><a href = "<?=web_url('/accounting/expenditure')?>">支出管理</a></li>
 						</ul>
 					</li>
 					<!-- <li class="dropdown">
@@ -99,7 +102,7 @@
 							<li><a href = "dorm.php">宿舍管理</a></li>
 							<hr>
 							
-							<!-- <li><a href = "reward.php">帶看獎金</a></li> -->
+							<!-- <li><a href = "reward.php">帶看獎金</a></li>
 						<!-- </ul>
 					</li> -->
 <!-- 					<li class="dropdown">

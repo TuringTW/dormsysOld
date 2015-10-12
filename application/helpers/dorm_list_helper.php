@@ -67,4 +67,79 @@
 
 		}
 	}
+	if ( ! function_exists('type_list_html'))
+	{
+
+		function type_list_html($typelist){
+			?>
+					<div class="btn-group" style="width:100%">
+						<input type="hidden" id="type_select_value" value="0">
+						<button type="button" class="btn btn-default dropdown-toggle btn-info" data-toggle="dropdown" style="width:100%">
+							類別:<span id="lbltype">全部</span> <span class="caret"></span>
+						</button>
+							
+						<div class="dropdown-menu" role="menu" >
+
+							<ul class="nav navbar" style="width:100%">
+								<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"  onclick="type_select(0,'全部')">全部</a></li>
+								<hr>
+								<?php foreach ($typelist as $key => $value) { ?>
+									<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767" onclick="type_select(<?=$value['cate_id']?>,'<?=$value['cate']?>')"><?=$value['cate']?></a></li>
+								<?php } ?>
+								<hr>
+								<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"  onclick="">新增分類</a></li>
+							</ul>
+						</div>
+					</div>
+				
+
+					<?php 
+
+
+		}
+	}
+	if ( ! function_exists('rtype_list_html'))
+	{
+
+		function rtype_list_html(){
+			?>
+					<div class="btn-group" style="width:100%">
+						<input type="hidden" id="rtype_select_value" value="0">
+						<button type="button" class="btn btn-default dropdown-toggle btn-warning" data-toggle="dropdown" style="width:100%">
+							收據類型:<span id="lblrtype">全部</span> <span class="caret"></span>
+						</button>
+							
+						<div class="dropdown-menu" role="menu" >
+
+							<ul class="nav navbar" style="width:100%">
+								<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"  onclick="rtype_select(0,'全部')">全部</a></li>
+								<hr>
+								<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"  onclick="rtype_select(1,'發票')">發票</a></li>
+								<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"  onclick="rtype_select(2,'費用')">費用</a></li>
+								<li style="font-size:15px;font-weight:bold;"><a href="#" style="color:#003767"  onclick="rtype_select(3,'請款單')">請款單</a></li>
+							</ul>
+						</div>
+					</div>
+				
+
+					<?php 
+
+
+		}
+	}
+	if ( ! function_exists('type_list_select'))
+	{
+
+		function type_list_select($typelist){
+			?>
+			<?php foreach ($typelist as $key => $value): ?>
+				<option class="form-control" value="<?=$value['cate_id']?>"><?=$value['cate']?></option>
+			<?php endforeach ?>
+					
+
+		<?php 
+
+
+		}
+	}
 ?>
