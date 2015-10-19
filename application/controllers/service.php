@@ -1,4 +1,5 @@
 <?php
+// 進行送信等操作
 class Service extends CI_Controller 
 {
 	public function __construct()

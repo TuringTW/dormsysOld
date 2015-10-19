@@ -1,4 +1,5 @@
 <?php
+// 進行學生資料有關的操作
 class Student extends CI_Controller 
 {
 	public function __construct()

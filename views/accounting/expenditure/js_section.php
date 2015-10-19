@@ -95,7 +95,6 @@
 		var page = $('#page_value').val();
 		$('#result_table').html('');
 		for (var i = 0; i < data.length; i++) {
-			alert()
 			switch(data[i].receipttype){
 				case '1':
 					data[i].rtype = '發票';

@@ -81,6 +81,62 @@ class Accounting extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
+// 租金
+	public function show_rent_detail(){
+		$contract_id = $this->input->post('contract_id', TRUE);
+		if (!is_null($contract_id)&&$contract_id>=0) {
+			$result = $this->Mfinance->show_rent_detail($contract_id, 0);
+		}else{
+			$result['state'] = false;
+		}
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+	}
+	public function add_rent_record(){
+		$type = $this->input->post('type', TRUE);
+		$value = $this->input->post('value', TRUE);
+		$date = $this->input->post('date', TRUE);
+		$description = $this->input->post('description', TRUE);
+		$contract_id = $this->input->post('contract_id', TRUE);
+
+		if (!is_null($contract_id)&&$contract_id>=0) {
+			$result = $this->Mfinance->add_rent_record($type, $value, $date, $description, $contract_id);
+		}else{
+			$result['state'] = false;
+		}
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+
+	}
+
+	public function show_pay_rent_detail(){
+		$contract_id = $this->input->post('contract_id', TRUE);
+		if (!is_null($contract_id)&&$contract_id>=0) {
+			$result = $this->Mfinance->show_rent_detail($contract_id, 1);
+		}else{
+			$result['state'] = false;
+		}
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+	}
+	public function add_pay_rent_record(){
+		$source = $this->input->post('source', TRUE);
+		$value = $this->input->post('value', TRUE);
+		$from = $this->input->post('from', TRUE);
+		$date = $this->input->post('date', TRUE);
+		$r_id = $this->input->post('r_id', TRUE);
+		$description = $this->input->post('description', TRUE);
+		$contract_id = $this->input->post('contract_id', TRUE);
+
+		if (!is_null($contract_id)&&$contract_id>=0) {
+			$result = $this->Mfinance->add_pay_rent_record($source, $value, $from, $date, $r_id, $description, $contract_id);
+		}else{
+			$result['state'] = false;
+		}
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+
+	}
 	
 }
 ?>

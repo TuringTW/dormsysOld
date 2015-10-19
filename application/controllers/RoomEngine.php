@@ -1,4 +1,5 @@
 <?php
+// 搜尋房間、時間軸等
 class Roomengine extends CI_Controller 
 {
 	public function __construct(){

@@ -7,9 +7,10 @@
 <ul class="nav nav-tabs" role="tablist">
 	<li class="active "><a id="tab_stuinfo" href="#stuinfo" role="tab" data-toggle="tab">Step1.房客資料</a></li>
 	<li><a id="tab_contract" href="#contract" role="tab" data-toggle="tab">Step2.合約資料</a></li>
-	<li><a id="tab_financialplan" href="#financialplan" role="tab" data-toggle="tab" onClick="">Step3.付款計畫</a></li>
-	<li><a id="tab_finalcheck" href="#finalcheck" role="tab" data-toggle="tab" onClick="">Step4.確認合約</a></li>
-	<li><a id="tab_print" href="#print" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step5.列印</a></li>
+	<li><a id="tab_finalcheck" href="#finalcheck" role="tab" data-toggle="tab" onClick="">Step3.確認合約</a></li>
+	<li><a id="tab_finalcheck" href="#finalcheck" role="tab" data-toggle="tab" onClick="">Step4.房間物品</a></li>
+	<li><a id="tab_financialplan" href="#financialplan" role="tab" data-toggle="tab" onClick="">Step5.租金計算</a></li>
+	<li><a id="tab_print" href="#print" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step6.列印</a></li>
 </ul>
 <br>
 <!-- Tab panes -->

@@ -9,7 +9,7 @@
 	<br>
 	<hr> -->
 			<!-- 搜尋結果 -->
-	<div class="row" style="height:350px; ">
+	<div class="row" style="height:450px; ">
 		<div class="col-md-3 " style="height:100%;">
 			<a href="#" class="btn btn-default" style="width:100%" disabled>宿舍</a>
 			<input type="hidden" id="dorm_select_id" value="0">
@@ -45,8 +45,9 @@
 		<div class="col-md-4" style="height:100%;">
 			<a href="#" class="btn btn-default" style="width:100%" disabled>學生資料</a>
 			<hr>
-			<div class="btn-group-vertical well" style="height:100%;width:100%" role="group" aria-label="..." id="stu_info">
-
+			<div class=" well" style="height:100%;width:100%" role="group" aria-label="...">
+				<div class="btn-group-vertical" style=";width:100%"id="stu_info"></div>
+				
 			</div>
 		</div>
 	</div>

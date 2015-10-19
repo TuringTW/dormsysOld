@@ -93,6 +93,15 @@
 						<ul class="dropdown-menu">
 							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
 							<li><a href = "<?=web_url('/accounting/expenditure')?>">支出管理</a></li>
+							<hr>
+							<li><a href = "<?=web_url('/accounting/expenditure')?>">房租繳費</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">水電費/押金</a>
+						<ul class="dropdown-menu">
+							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
+							<li><a href = "<?=web_url('/accounting/expenditure')?>">紀錄表</a></li>
 						</ul>
 					</li>
 					<!-- <li class="dropdown">
@@ -145,7 +154,13 @@
 
 				<ul class = "nav navbar-nav navbar-right">
 					<li><a id="showbox"></a></li>
-					<li><a href = "#"><?="使用者:".$user?></a></li>
+					<li class="dropdown">
+						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown"><?="使用者:".$user?></a>
+						<ul class="dropdown-menu">
+							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
+							<li><a href = "<?=web_url('#')?>">修改密碼</a></li>
+						</ul>
+					</li>
 					<li><a  href="<?=web_url('/index/logout')?>">登出</a></li>				
 				</ul>
 			</div>

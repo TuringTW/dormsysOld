@@ -1,6 +1,6 @@
 
 <div class="modal fade " id="viewModal" tabindex="-1" role="dialog" data-show="1" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" style="width:90%">
+	<div class="modal-dialog modal-lg" style="width:90%;">
 		<div class="modal-content">
 
 				<div class="modal-header">
@@ -21,7 +21,7 @@
 			     						<td>
 			     							<div class="row">
 			     								<div class="col-md-8"><input class="form-control" id="view_dorm" disabled required="required" style="width:100%" type="text" name="new[]" value=""></div>
-			     								<div class="col-md-4"><a href="#" id="view_dorm_href" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-tower"></span></a></div>
+			     								<div class="col-md-4"><a href="#" id="view_dorm_href" class="btn btn-default" style="width:100%" title="檢視宿舍資訊"><span class="glyphicon glyphicon-tower"></span></a></div>
 			     							</div>
 			     						</td>
 			     						<td style="width:15%" align="right">房號</td>
@@ -29,7 +29,7 @@
 			     							<div class="row">
 			     								<input type="hidden" id="room_id" value="0">
 			     								<div class="col-md-8"><input class="form-control" id="view_room" disabled required="required" style="width:100%" type="text" name="new[]" ></div>
-			     								<div class="col-md-4"><a href="#" id="view_room_href" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-home"></span></a></div>
+			     								<div class="col-md-4"><a href="#" id="view_room_href" class="btn btn-default" style="width:100%" title="檢視房間資訊"><span class="glyphicon glyphicon-home"></span></a></div>
 			     	
 			     							</div>
 			     						</td>
@@ -102,11 +102,50 @@
 							<div class="col-sm-6">
 								<ul class="nav nav-tabs">
 									<li class="active"><a href="#contract" data-toggle="tab">租金明細</a></li>
+									<li><a href="#pay_detail" data-toggle="tab">繳費明細</a></li>
 									<li><a href="#deposit" data-toggle="tab">押金紀錄</a></li>
 								</ul>
-								<div class="tab-content">
+								<div class="tab-content"  style="overflow-y:scroll;overflow-x:hidden;height:450px">
 									<div class="tab-pane active" id="contract">
-									
+										<br>
+										<div class="row">
+											<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#rentModal').modal('toggle');">新增額外費用/獎勵</a></div>
+											<div class="col-sm-3"><h4>租金總額:</h4></div>
+											<div class="col-sm-4"><h4><span id="rent_total">0</span>元</h4></div>
+										</div>
+										<!-- <hr> -->
+										<table class="table">
+											<thead>
+												<th>#</th>
+												<th>類型</th>
+												<th>+/-</th>
+												<th>費用</th>
+												<th>描述</th>
+												<th>新增日期</th>
+											</thead>
+											<tbody id="rent_detail" style="text-align:center"></tbody>
+										</table>
+									</div>
+									<div class="tab-pane" id="pay_detail" >									
+										<br>
+										<div class="row">
+											<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#payrentModal').modal('toggle');">新增繳費紀錄</a></div>
+											<div class="col-sm-3"><h4>已繳租金總額:</h4></div>
+											<div class="col-sm-4"><h4><span id="pay_rent_total">0</span>元</h4></div>
+										</div>
+										<!-- <hr> -->
+										<table class="table">
+											<thead>
+												<th>#</th>
+												<th>來源</th>
+												<th>繳款人</th>
+												<th>金額</th>
+												<th>收據#</th>
+												<th>描述</th>
+												<th>入帳日期</th>
+											</thead>
+											<tbody id="pay_rent_detail" style="text-align:center"></tbody>
+										</table>
 									</div>
 									<div class="tab-pane" id="deposit">									
 									

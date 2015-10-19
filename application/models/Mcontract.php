@@ -60,7 +60,7 @@ class Mcontract extends CI_Model
     // 取得單筆合約資料
     function get_contract_info($contract_id){
         if (!is_nan($contract_id)) {
-            $this->db->select('dorm.name as dname, dorm.dorm_id, room.name as rname, room.room_id, student.name as sname, student.stu_id, contract.contract_id, s_date, e_date, in_date, out_date, student.id_num, c_date, contract.note, contract.rent, contract.sales, manager.name as mname, student.mobile, payed_rent');
+            $this->db->select('dorm.name as dname, dorm.dorm_id, room.name as rname, room.room_id, student.name as sname, student.stu_id, contract.contract_id, s_date, e_date, in_date, out_date, student.id_num, c_date, contract.note, contract.rent, contract.sales, manager.name as mname, student.mobile');
             $this->db->from('contract');
             $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
             $this->db->join('room','room.room_id=contract.room_id','left');

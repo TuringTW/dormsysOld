@@ -1,6 +1,6 @@
 
 <div class="modal fade " id="viewModal" tabindex="-1" role="dialog" data-show="1" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" style="width:90%">
+	<div class="modal-dialog" style="width:60%">
 		<div class="modal-content">
 
 				<div class="modal-header">
@@ -10,10 +10,10 @@
 				<div class="modal-body">
 					
 						<div class="row">
-							<div class="col-sm-6">
+							<div class="col-sm-5">
 								<table class="table table-hover">
 									<tr>
-			     						<td style="width:15%" align="right">*收據類型</td>
+			     						<td style="width:40%" align="right">*收據類型</td>
 			     						<td>				
 			     							<select id="view_rtype" onchange="change_alert()"class="form-control" required="required" style="width:100%" type="text">	
 			     								<option class="form-control" value="1">發票</option>
@@ -23,13 +23,13 @@
 			     						</td>
 			     					</tr>
 			     					<tr>
-			     						<td style="width:15%" align="right">*支出名稱</td>
+			     						<td style="width:40%" align="right">*支出名稱</td>
 			     						<td>
 			     							<input id="view_item" placeholder="請輸入支出名稱" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text" >
 			     						</td>
 			     					</tr>
 			     					<tr>
-			     						<td style="width:15%" align="right">*類別</td>
+			     						<td style="width:40%" align="right">*類別</td>
 			     						<td>
 			     							<select id="view_type" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text">
 			     								<?php echo type_list_select($typelist); ?>
@@ -37,7 +37,7 @@
 			     						</td>
 			     					</tr>
 			     					<tr>
-			     						<td style="width:15%" align="right">操作人員</td>
+			     						<td style="width:40%" align="right">操作人員</td>
 			     						<td>
 			     							<select disabled id="view_manager" class="form-control" required="required" style="width:100%" type="text">	
 			     								<?php foreach ($manager as $key => $value): ?>
@@ -47,7 +47,7 @@
 			     						</td>
 			     					</tr>
 			     					<tr>
-			     						<td style="width:15%" align="right">備註</td>
+			     						<td style="width:40%" align="right">備註</td>
 			     						<td>
 			     							<textarea id="view_note" onchange="change_alert()" class="form-control" style="resize: none;"  style="width:100%"row="10"></textarea>
 
@@ -55,32 +55,32 @@
 			     					</tr>
 			     				</table>
 							</div>
-							<div class="col-md-6">
+							<div class="col-md-7">
 								<table class="table table-hover">
 									<tr>
-			     						<td style="width:15%" align="right">*請款單位</td>
+			     						<td style="width:20%" align="right">*請款單位</td>
 			     						<td>
 			     							<input id="view_company" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text">
 			     						</td>
 			     					</tr>
 				     				<tr>
-			     						<td style="width:15%" align="right">*廠商請款</td>
+			     						<td style="width:20%" align="right">*廠商請款</td>
 			     						<td>
 											<input id="view_money" onchange="change_alert()" class="form-control" placeholder="廠商請款金額" required="required" style="width:100%" type="text">
 			     						</td>
 			     					</tr>
 			     					<tr>
-			     						<td style="width:15%" align="right">*房東請款</td>
+			     						<td style="width:20%" align="right">*房東請款</td>
 			     						<td>
 			     							<div class="row">
 												<div class="col-xs-4">
-													<label class="radio-inline"><input onchange="change_alert()" name="isrequest"required="required" class="" type="radio" value="1" >是，服務費+廠商</label>
+													<label class="radio-inline"><input onchange="change_alert()" name="isrequest"required="required" class="" type="radio" value="1" >服務費+廠商</label>
 												</div>
 												<div class="col-xs-3">
-													<label class="radio-inline"><input onchange="change_alert()" name="isrequest"required="required" class="" type="radio" value="2" >是，服務費</label>
+													<label class="radio-inline"><input onchange="change_alert()" name="isrequest"required="required" class="" type="radio" value="2" >服務費</label>
 												</div>
 												<div class="col-xs-3">
-													<label class="radio-inline"><input onchange="change_alert()" name="isrequest"required="required" class="" type="radio" value="3" >是，廠商</label>
+													<label class="radio-inline"><input onchange="change_alert()" name="isrequest"required="required" class="" type="radio" value="3" >廠商</label>
 												</div>
 												<div class="col-xs-2">
 													<label class="radio-inline"><input onchange="change_alert()" name="isrequest"required="required" class="" type="radio" value="0" >否</label>
@@ -102,13 +102,13 @@
 			     						</td>
 			     					</tr>
 			     					<tr>
-			     						<td style="width:15%" align="right">*請款時間</td>
+			     						<td style="width:20%" align="right">*請款時間</td>
 			     						<td>
 			     							<input class="form-control" onchange="change_alert()" id="view_date" required="required" style="width:100%" type="text"  >
 			     						</td>
 			     					</tr>
 			     					<tr>
-			     						<td style="width:15%" align="right">*使用宿舍</td>
+			     						<td style="width:20%" align="right">*使用宿舍</td>
 			     						<td>
 			     							<select id="view_dorm" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text" >
 			     								<option class="form-control" value="">請選擇宿舍...</option>

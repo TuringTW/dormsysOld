@@ -35,7 +35,7 @@ class Contract extends CI_Controller
 		$this->load->view('contract/index/viewModel',$data);
 		$this->load->view('contract/index/break_contract_dialog');
 		$this->load->view('contract/index/checkout');
-
+		$this->load->view('contract/index/rentdepositModal');
 		// footer
 		$this->load->view('contract/index/js_section');
 		$this->load->view('template/footer');

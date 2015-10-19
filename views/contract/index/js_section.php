@@ -128,6 +128,7 @@
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
 					// alert(xhr.responseText);   
+
 					tableparse(xhr.responseText);
 				} else {  
 					alert('資料傳送出現問題，等等在試一次.');  
@@ -209,6 +210,9 @@
 					document.getElementById('view_change_btn').setAttribute('data-cnum',datum.contract_id);   
 					document.getElementById('contract_id').value = datum.contract_id;    
 					//document.getElementById("room_select").innerHTML = xhr.responseText;  
+
+					show_rent_detail(contract_id);
+					show_pay_rent_detail(contract_id);
 				} else {  
 					alert('資料傳送出現問題，等等在試一次.');  
 				}  
@@ -223,6 +227,7 @@
 		var in_date = $('#view_in_date').val();
 		var out_date = $('#view_out_date').val();
 		var room_id = $('#room_id').val();
+		var contract_id = $('#contract_id').val();
 
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
@@ -230,7 +235,7 @@
 		} else if (window.ActiveXObject) { // IE 8 and older  
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 		}  
-		var data = "room_id=" + room_id+"&in_date=" + in_date+"&out_date=" + out_date;  
+		var data = "room_id=" + room_id+"&in_date=" + in_date+"&out_date=" + out_date + '&contract_id='+contract_id;  
 		xhr.open("POST", "<?=web_url('/contract/date_check_by_room')?>", true);   
 		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
 		xhr.send(data);  
@@ -258,6 +263,8 @@
 	function change_alert(){
 
 
+		$('#edit_btn').addClass('active');
+		// alert($('#edit_btn').attr('class'));
 		$('#edit_btn').attr('className', 'btn btn-warning btn-lg');
 		$('#edit_btn').html('未儲存');
 	}
@@ -298,6 +305,9 @@
 	// 詳細資料裡的日期選擇
 	$('#view_in_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 	$('#view_out_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$('#new_rent_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$('#new_pay_rent_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	
 	// 合約終止
 	dialogbreak = $( "#dialog-breakcontracr" ).dialog({
 		autoOpen: false,
@@ -482,13 +492,20 @@
 // 結算
 	// 檢查可否結算
 	function checkout_check(){
-		$('#dialog-check-out-comfirm').dialog( "open" );
-		$('#ccontract_id').val($('#contract_id').val());
-		$(document).ready(function() {
-	        $('#viewModal').modal('toggle');
-			$('body').removeClass('modal-open');
-			$('.modal-backdrop').remove();
-	    });
+		var e_date = Date.parse($('#view_e_date').val()+' 00:00:00');
+		var today = new Date();
+		if (Math.round((today - e_date)/1000000)<0) {
+			errormsg('合約尚未到期!!!');
+		}else{
+			$('#dialog-check-out-comfirm').dialog( "open" );
+			$('#ccontract_id').val($('#contract_id').val());
+			$(document).ready(function() {
+		        $('#viewModal').modal('toggle');
+				$('body').removeClass('modal-open');
+				$('.modal-backdrop').remove();
+		    });
+		}
+			
 	}
 	// 確認結算
 	dialogbreakdone = $( "#dialog-check-out-comfirm" ).dialog({
@@ -587,6 +604,236 @@
     function keep_contract(contract_id){
     	window.location = "<?=web_url('/contract/newcontract')?>?keep="+contract_id;
     }
+
+
+// 租金
+	function show_rent_detail(contract_id){
+
+		// 傳送
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "contract_id=" + contract_id;  
+		xhr.open("POST", "<?=web_url('/accounting/show_rent_detail')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);
+					data = JSON.parse(xhr.responseText);
+					$('#rent_detail').html('');
+					var total_rent = 0;
+					if (data.state===true) {
+						for (var i = 0; i < data.data.length; i++) {
+						  	var datum = data.data[i];
+						  	switch(datum.type){
+						  		case '1':
+						  			datum.typename = '租金';
+						  			break;
+						  		case '2':
+						  			datum.typename = '額外';
+						  			break;
+						  		case '3':
+						  			datum.typename = '獎學金';
+						  			break;
+						  		case '4':
+						  			datum.typename = '其他+';
+						  			break;
+						  		case '5':
+						  			datum.typename = '其他-';
+						  			break;
+						  		default:
+						  			datum.typename = '';
+						  	}
+						  	$('#rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.typename+'</td><td>'+((datum.pm==1)?'<span class="glyphicon glyphicon-plus"></span>':'<span class="glyphicon glyphicon-minus"></span>')+'</td><td>'+datum.value+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
+							total_rent = total_rent + ((datum.pm=='1')?1:-1)*parseInt(datum.value);
+						};  
+						$('#rent_total').html(total_rent);
+					}
+				} else {  
+					alert('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;  
+	
+	}
+	function submit_new_rent(){
+		var type = $('#new_rent_type_select').val();
+		var value = parseInt($('#new_rent_value').val());
+		var date = $('#new_rent_date').val();
+		var description = $('#new_rent_description').val();
+		var contract_id = $('#contract_id').val();
+
+		var state = 1;
+		if ((type==4||type==5)&&description=='') {
+			errormsg('選擇"其他"請輸入描述或備註');
+			state = 0;
+		};
+		if (date=='') {
+			errormsg('請輸入日期');
+			state = 0;
+		};
+		if (!Number.isInteger(value)||value<=0||value=='') {
+			errormsg('請輸入正整數金額');
+			state = 0;
+		}
+		if (type=='') {
+			errormsg('請選擇類別');
+			state = 0;
+		};
+		
+// 傳送
+		if (state == 1) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = "contract_id=" + contract_id+'&type='+type+'&value='+value+'&date='+date+'&description='+description;  	
+			xhr.open("POST", "<?=web_url('/accounting/add_rent_record')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);
+						data = JSON.parse(xhr.responseText);
+
+						if (data.state===true) {
+							successmsg('新增成功');
+							show_rent_detail(contract_id);
+							$('#rentModal').modal('toggle');
+						}else{
+							errormsg('新增失敗');
+						}
+					} else {  
+						alert('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+			xhr.onreadystatechange = display_datas;  
+		};
+	}
+
+	function show_pay_rent_detail(contract_id){
+
+		// 傳送
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "contract_id=" + contract_id;  
+		xhr.open("POST", "<?=web_url('/accounting/show_pay_rent_detail')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);
+					data = JSON.parse(xhr.responseText);
+					$('#pay_rent_detail').html('');
+					var total_rent = 0;
+					if (data.state===true) {
+						for (var i = 0; i < data.data.length; i++) {
+						  	var datum = data.data[i];
+						  	switch(datum.source){
+						  		case '1':
+						  			datum.sourcename = '轉帳';
+						  			break;
+						  		case '2':
+						  			datum.sourcename = '支票';
+						  			break;
+						  		case '3':
+						  			datum.sourcename = '現金';
+						  			break;
+						  		
+						  		default:
+						  			datum.sourcename = '';
+						  	}
+						  	$('#pay_rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.sourcename+'</td><td>'+datum.from+'</td><td>'+datum.value+'</td><td>'+(datum.receipt_id==0?'':datum.receipt_id)+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
+							total_rent = total_rent + parseInt(datum.value);
+						};  
+						$('#pay_rent_total').html(total_rent);
+					}
+				} else {  
+					alert('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;  
+	
+	}
+	function submit_new_pay_rent(){
+		var source = $('#new_pay_rent_source').val();
+		var value = parseInt($('#new_pay_rent_value').val());
+		var from = $('#new_pay_rent_from').val();
+		var date = $('#new_pay_rent_date').val();
+		var r_id = $('#new_pay_rent_r_id').val();
+		var description = $('#new_pay_rent_description').val();
+		var contract_id = $('#contract_id').val();
+		var state = 1;
+		if ((source==3)&&r_id=='') {
+			errormsg('選擇"現金"請輸入收據編號');
+			state = 0;
+		};
+		if (date=='') {
+			errormsg('請輸入日期');
+			state = 0;
+		};
+		if (from=='') {
+			errormsg('請輸入繳款人');
+			state = 0;
+		};
+		if (!Number.isInteger(value)||value<=0||value=='') {
+			errormsg('請輸入正整數金額');
+			state = 0;
+		}
+		if (source=='') {
+			errormsg('請選擇類別');
+			state = 0;
+		};
+		
+// 傳送
+		if (state == 1) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = "contract_id=" + contract_id+ '&source='+source+'&value='+value+'&from='+from+'&date='+date+'&r_id='+r_id+'&description='+description;
+			xhr.open("POST", "<?=web_url('/accounting/add_pay_rent_record')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);
+						data = JSON.parse(xhr.responseText);
+
+						if (data.state===true) {
+							successmsg('新增成功');
+							show_pay_rent_detail(contract_id);
+							$('#payrentModal').modal('toggle');
+						}else{
+							errormsg('新增失敗');
+						}
+					} else {  
+						alert('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+			xhr.onreadystatechange = display_datas;  
+		};
+	}
 </script>
 
 <?php } ?>

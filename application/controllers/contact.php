@@ -31,7 +31,7 @@ class Contact extends CI_Controller
 		$this->load->view('contact/stulist/search_table', $data);
 
 		$this->load->view('contact/stulist/viewModel', $data);
-
+		$this->load->view('service/mail/mail_modal', $data);
 		
 		// footer
 		$this->load->view('contact/stulist/js_section', $data);
