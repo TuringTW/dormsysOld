@@ -30,7 +30,7 @@
 			<!-- 搜尋結果 -->
 
 	<div class="table-responsive">
-		<table class="table table-hover" >
+		<table class="table table-hover" style="text-align:center">
 			
 				<thead>
 					<tr>
@@ -42,6 +42,7 @@
 						<th>合約結束</th>
 						<th>遷入日期</th>
 						<th>遷出日期</th>
+						<th>新增日期</th>
 						<th style="width:5%">詳細</th>
 					</tr>
 				</thead>

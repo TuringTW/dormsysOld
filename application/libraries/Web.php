@@ -8,7 +8,7 @@
  * @author      Turing
  */
 
-class Sms
+class Web
 {
 
     public function __construct()
@@ -28,7 +28,7 @@ class Sms
               "phone" => "$rx"
             );
 
-            $response = $this->cURL($toURL,$data);
+            $response = $this->cURL($toURL,$data, 'post');
             $temp = json_decode($response,true);
             switch ($temp['error_code']) {
                 case '000':
@@ -75,30 +75,34 @@ class Sms
         }
         return $kevin;
     }
-    protected function cURL($url, $post)
+    public function cURL($url, $post, $method)
     {
         $header=NULL;
         $cookie=NULL;
         //$user_agent = $_SERVER['HTTP_USER_AGENT']; 
         $user_agent = 'Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2';
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_HEADER, $header);
-        curl_setopt($ch, CURLOPT_NOBODY, $header);
+        // curl_setopt($ch, CURLOPT_HEADER, $header);
+        // curl_setopt($ch, CURLOPT_NOBODY, $header);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_COOKIE, $cookie);
+        // curl_setopt($ch, CURLOPT_COOKIE, $cookie);
         curl_setopt($ch, CURLOPT_USERAGENT, $user_agent);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+        // curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         
-        // if ($post) {
-        //     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        // if ($method = 'post') {
         //     curl_setopt($ch, CURLOPT_POST, 1);
-        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        //     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         // }
+        
+        
+        if ($post) {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        }
         $result = curl_exec($ch);
         $error = curl_error($ch);
         curl_close($ch);

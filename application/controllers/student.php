@@ -98,7 +98,13 @@ class Student extends CI_Controller
 
 		$data['json_data'] = $this->Mstudent->edit_stu_info($stu_id, $reg_address, $mailing_address, $name, $school, $mobile, $home, $email, $id_num, $birthday, $emg_name, $emg_phone, $note);
 		$this->load->view('template/jsonview', $data);
+	}
+	public function update_from_type_form(){
 
+		$result = $this->Mstudent->update_from_type_form();
+		
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
 
 	}
 }

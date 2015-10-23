@@ -37,7 +37,6 @@
 
 ?>
 
-</head>
 <body onload="ShowTime();" style="overflow-x:hidden;overflow-y:scroll;">
 	<div class = "navbar navbar-inverse navbar-fixed-top">
 		<div class = "container-fluid">

@@ -4,7 +4,7 @@ class Contact extends CI_Controller
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
-		$this->load->library('session');
+		$this->load->library(array('session'));
 		$this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mstudent'));
 		// check login & power, and then init the header
 		$required_power = 2;
@@ -75,14 +75,14 @@ class Contact extends CI_Controller
 	}
 	public function send_sms(){
 		$this->load->model('Mservice');
-		$this->load->library(array('sms', 'smsapidata'));
+		$this->load->library(array('web', 'smsapidata'));
 		$userdata = $this->smsapidata->getsmsAPIdata();
 
 		$rx = $this->input->post('rx', TRUE);
 		$content = $this->input->post('content', TRUE);
 		$note = $this->input->post('note', TRUE);
 
-		$send_result = $this->sms->send_sms($rx, 0927619822, $content, $note, $userdata);
+		$send_result = $this->web->send_sms($rx, 0927619822, $content, $note, $userdata);
 		if ($send_result['status']==1) {
 			$result = $this->Mservice->add_sms_record($content,$rx,$note,$send_result['status'],$send_result['error_code']);
 		}

@@ -146,7 +146,7 @@
 			if (data[i].countp>1) {
 				text = '等'+data[i].countp+'人';
 			};
-			$('#result_table').append('<tr><td>'+(page*30+i-29)+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td><a onclick="showcontract('+data[i].contract_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
+			$('#result_table').append('<tr><td>'+(page*30+i-29)+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td>'+data[i].c_date+'</td><td><a onclick="showcontract('+data[i].contract_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
 		};
 		if (data.length<30) {
 			$('#page_up').attr( "disabled", true );

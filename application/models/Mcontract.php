@@ -17,7 +17,7 @@ class Mcontract extends CI_Model
     // 取得合約列表
     function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page)
     {
-        $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, COUNT(contract.contract_id) as countp, seal')->from('contract');
+        $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal')->from('contract');
         $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
         $this->db->join('room','room.room_id=contract.room_id','left');
         $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
@@ -228,19 +228,28 @@ class Mcontract extends CI_Model
                                 'note'=>$data['note']);
         $this->db->insert('contract', $insertdata);
         $contract_id = $this->db->insert_id();
+        if ($this->db->affected_rows()>0) {
+            $insertdata = array();
+            for ($i=0; $i < count($data['stu_id']); $i++) { 
+                $insertdatum = array('contract_id'=> $contract_id, 'stu_id'=>$data['stu_id'][$i]);
+                array_push($insertdata, $insertdatum);
+            }
 
-        $insertdata = array();
-        for ($i=0; $i < count($data['stu_id']); $i++) { 
-            $insertdatum = array('contract_id'=> $contract_id, 'stu_id'=>$data['stu_id'][$i]);
-            array_push($insertdata, $insertdatum);
-        }
-        $this->db->insert_batch('contractpeo', $insertdata);
-        if ( $this->db->affected_rows()>0) {
-            $result['state'] = 1;
-            $result['contract_id'] = $contract_id;
+            $this->db->insert_batch('contractpeo', $insertdata);
+            
+            if ( $this->db->affected_rows()>0) {
+                $rent = $this->Mfinance->rent_cal($data['rent'], $data['s_date'], $data['e_date'], count($data['stu_id']));
+                $output = $this->Mfinance->add_rent_record(1, $rent['rent_result']['total_rent'], date('Y-m-d'), '租金', $contract_id);
+                $result['state'] = $output['state'];
+                $result['contract_id'] = $contract_id;
+                
+            }else{
+                $result['state'] = -1;
+            }
         }else{
-            $result['state'] = -1;
+            $result['state'] = 0;
         }
+            
         return $result;
         
             

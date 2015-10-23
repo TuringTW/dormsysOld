@@ -41,11 +41,13 @@ class login_check extends CI_Model
     function get_user_id(){
     	return $this->session->userdata('m_id');
     }
-    function log_out(){
-		$this->load->library('session');
-		$this->session->sess_destroy();
+    function log_out($method=0){
+  		$this->load->library('session');
+  		$this->session->sess_destroy();
+  		if ($method==0) {
+        redirect('/login');
+      }
 		
-		redirect('/login');
 		
     }
 }?>

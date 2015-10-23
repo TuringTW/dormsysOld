@@ -4,8 +4,8 @@ class Guest extends CI_Controller
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
-		$this->load->model(array('Mguest'));
-
+		$this->load->model(array('Mguest', 'login_check'));
+		$this->login_check->log_out(1);
 	}
 
 
@@ -24,6 +24,12 @@ class Guest extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 
+	}
+
+	public function student_input(){
+		$data['title'] = '房客資料輸入';
+		$this->load->view('template/header', $data);
+		$this->load->view('guest/guest_input/index');
 	}
 }
 ?>

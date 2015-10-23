@@ -2,15 +2,15 @@
 
 <h1 class="page-header">新合約/續約</h1>
 <!-- 搜尋列 次導覽列 -->
-
+<input type="hidden" id="new_contract_id" value="0">
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
 	<li class="active "><a id="tab_stuinfo" href="#stuinfo" role="tab" data-toggle="tab">Step1.房客資料</a></li>
 	<li><a id="tab_contract" href="#contract" role="tab" data-toggle="tab">Step2.合約資料</a></li>
 	<li><a id="tab_finalcheck" href="#finalcheck" role="tab" data-toggle="tab" onClick="">Step3.確認合約</a></li>
-	<li><a id="tab_finalcheck" href="#finalcheck" role="tab" data-toggle="tab" onClick="">Step4.房間物品</a></li>
-	<li><a id="tab_financialplan" href="#financialplan" role="tab" data-toggle="tab" onClick="">Step5.租金計算</a></li>
-	<li><a id="tab_print" href="#print" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step6.列印</a></li>
+	<li><a id="tab_thingsplan" href="#thingsplan" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step4.房間物品</a></li>
+	<li><a id="tab_financialplan" href="#financialplan" role="tab" data-toggle="none" onClick="errormsg('請先確認房間物品')">Step5.計算租金</a></li>
+	<li><a id="tab_print" href="#print" role="tab" data-toggle="none" onClick="errormsg('請先計算租金')">Step6.列印</a></li>
 </ul>
 <br>
 <!-- Tab panes -->
@@ -27,8 +27,11 @@
 				</div>
 			</div>
 			<div class="col-md-1" >
-				<a href="#" id="add_stu_info_section" class="btn btn-default" style="width:100%" onClick="addstuinfo(0);"class=""><span class="glyphicon glyphicon-plus"></span></a>
+				<a href="#" id="add_stu_info_section" class="btn btn-default" title="新增一個空白的資料" style="width:100%" onClick="addstuinfo(0);"class=""><span class="glyphicon glyphicon-plus"></span></a>
 				<input type="hidden" id="key" value="0">
+			</div>
+			<div class="col-md-1" >
+				<a href="#"  class="btn btn-default" style="width:100%" onClick="refresh();" title="更新學生自己輸入的資料"><span class="glyphicon glyphicon-refresh"></span></a>
 			</div>
 		</div>
 	</div>
@@ -172,9 +175,7 @@
 			
 		</form>
 	</div>
-	<div class="tab-pane" id="financialplan">
 
-	</div>
 	<div class="tab-pane" id="finalcheck">
 		<div clas="row">
 			<div class="col-sm-3">
@@ -233,13 +234,13 @@
 			<div class="col-sm-3">
 				<table style="width:100%">
 					<tr>
-						<td><h4>付款計畫</h4></td>
+						<td><h4>租金計算</h4></td>
 						<td class=" pull-right"><a title="確認付款計畫無誤" class="btn btn-warning" onclick="final_check(5)" id="btnfinalcheck_5">CHECK</a></td>
 					</tr>
 				</table>
 				<table class="table table-hover">
 					<tr>
-						<th>應繳租金</th>
+						<th>房間租金</th>
 						<td id="final_tr">合約日期未填</td>
 					</tr>
 				</table>
@@ -255,6 +256,62 @@
 		</div>
 		
 
+	</div>
+	<div class="tab-pane" id="thingsplan">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-7"><h3>房間物品列表</h3></div>
+					
+					<!-- <div class="col-sm-1"><a href="#" class="btn btn-info" title="重新整理房間物品列表" onclick=""><span class="glyphicon glyphicon-refresh"></span></a></div> -->
+					<!-- <div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#rentModal').modal('toggle')">新增額外費用/獎勵</a></div> -->
+				</div>
+				
+				<!-- 
+				<table class='table table-hover' style="text-align:center">
+					<thead>
+						<th>#</th>
+						<th>類型</th>
+						<th>+/-</th>
+						<th>費用</th>
+						<th>描述</th>
+						<th>新增日期</th>
+					</thead>
+					<tbody id="rent_detail"></tbody>
+				</table> -->
+			</div>
+			<div class="col-sm-2"><a href="#" class="btn btn-primary btn-lg" onclick="things_check()">確認</a></div>
+
+		</div>
+	</div>
+	<div class="tab-pane" id="financialplan">
+		<div class="row">
+			<div class="col-sm-6">
+				<div class="row">
+					<div class="col-sm-7"><h3>租金項目列表</h3></div>
+					<div class="col-sm-1"><a href="#" class="btn btn-info" title="重新整理租金項目列表" onclick="show_rent_detail()"><span class="glyphicon glyphicon-refresh"></span></a></div>
+					<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#rentModal').modal('toggle')">新增額外費用/獎勵</a></div>
+				</div>
+				
+				
+				<table class='table table-hover' style="text-align:center">
+					<thead>
+						<th>#</th>
+						<th>類型</th>
+						<th>+/-</th>
+						<th>費用</th>
+						<th>描述</th>
+						<th>新增日期</th>
+					</thead>
+					<tbody id="rent_detail"></tbody>
+				</table>
+			</div>
+			<div class="col-sm-6">
+				<h3>租金總額:&nbsp;&nbsp;<span id="rent_total">0</span>元整</h3>
+				<hr>
+				<a href="#" class="btn btn-primary btn-lg pull-right" onclick="finance_check()">確認</a>
+			</div>
+		</div>
 	</div>
 	<div class="tab-pane" id="print">
 		<div class="row">

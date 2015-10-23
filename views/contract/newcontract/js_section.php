@@ -20,7 +20,7 @@
 					// errormsg(xhr.responseText);        
 					var data = JSON.parse(xhr.responseText);
 					var htmltext = '';
-					htmltext += "<div class='list-group' style='position: relative; width: 100%; max-height: 180px; overflow: auto;'>";
+					htmltext += "<div class='list-group' style='position: relative; width: 100%; max-height: 300px; overflow: auto;'>";
 					if (data.today.length>0) {
 						htmltext += "<a class='list-group-item' style='background-color:lightgray'>今日新增</a>";
 						for (var i = data.today.length - 1; i >= 0; i--) {
@@ -194,7 +194,7 @@
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:25%" align="right">*生日</td>'
-						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_birthday" placeholder="(1900-1-1)" style="" type="text"  value="'+data.id_num+'" onChange="bannerrefresh('+key+',2)"></td>'
+						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_birthday" placeholder="(1900-1-1)" style="" type="text"  value="'+data.birthday+'" onChange="bannerrefresh('+key+',2)"></td>'
 						htmltext+=' </tr>'
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:25%" align="right">備註</td>'
@@ -767,8 +767,6 @@
 			$('#btnfinalcheck_'+key).attr('disabled', true);
 			$('#btnfinalcheck_'+key).html('OK');
 			$('#btnfinalcheck_'+key).attr('class','btn btn-success');
-			$('#tab_financialplan').attr('data-toggle','none');
-			$('#tab_financialplan').attr('onClick','errormsg("已鎖定")');
 			return true;
 		}else{
 			if (show) {
@@ -830,28 +828,199 @@
 					// errormsg(xhr.responseText);  
 					result = JSON.parse(xhr.responseText);
 					if (result.state == 1) {
+
 						successmsg('新增完成。請列印合約');
-						$('#tab_print').attr('data-toggle','tab');
-						$('#tab_print').attr('onclick','');
-						$('#tab_print').trigger('click');
-						$('#printFrame').attr('src', '<?=web_url("/contract/pdf_gen")?>?contract_id='+result.contract_id);
+						$('#tab_thingsplan').attr('data-toggle','tab');
+						$('#tab_thingsplan').attr('onclick','');
+						$('#tab_thingsplan').trigger('click');
+						$('#new_contract_id').val(result.contract_id);
 					}else if(result.state == 0){
 						for (var i = result.error_id.length - 1; i >= 0; i--) {
 							text = text + result.error_id[i] + ',';
 						};
+						$('#submitbtn').attr('disabled','false');
 						errormsg('[儲存時發生錯誤，請再試一次]\n錯誤的學生代碼:'+text+'\n如果持續出現請聯絡Kevin\n');
 					}else if(result.state == -1){
 						errormsg('[資料有誤]\n請重新來一次\n');
+						$('#submitbtn').attr('disabled','false');
 					}else{
 						errormsg('[發生不知名錯誤]\n請聯絡KEVIN');
+						$('#submitbtn').attr('disabled','false');
 					}
 						 
 				} else {  
 					errormsg('資料傳送出現問題，等等在試一次.');  
+					$('#submitbtn').attr('disabled','false');
 				}  
 			}  
 		}
 	}
+	function show_rent_detail(contract_id){
+		if (contract_id==null) {
+			var contract_id = $('#new_contract_id').val();
+		}
+		// 傳送
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "contract_id=" + contract_id;  
+		xhr.open("POST", "<?=web_url('/accounting/show_rent_detail')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);
+					data = JSON.parse(xhr.responseText);
+					$('#rent_detail').html('');
+					var total_rent = 0;
+					if (data.state===true) {
+						for (var i = 0; i < data.data.length; i++) {
+						  	var datum = data.data[i];
+						  	switch(datum.type){
+						  		case '1':
+						  			datum.typename = '租金';
+						  			break;
+						  		case '2':
+						  			datum.typename = '額外';
+						  			break;
+						  		case '3':
+						  			datum.typename = '獎學金';
+						  			break;
+						  		case '4':
+						  			datum.typename = '其他+';
+						  			break;
+						  		case '5':
+						  			datum.typename = '其他-';
+						  			break;
+						  		default:
+						  			datum.typename = '';
+						  	}
+						  	$('#rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.typename+'</td><td>'+((datum.pm==1)?'<span class="glyphicon glyphicon-plus"></span>':'<span class="glyphicon glyphicon-minus"></span>')+'</td><td>'+datum.value+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
+							total_rent = total_rent + ((datum.pm=='1')?1:-1)*parseInt(datum.value);
+						};  
+						$('#rent_total').html(total_rent);
+					}
+				} else {  
+					alert('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;  
+	
+	}
+	function submit_new_rent(){
+		var type = $('#new_rent_type_select').val();
+		var value = parseInt($('#new_rent_value').val());
+		var date = $('#new_rent_date').val();
+		var description = $('#new_rent_description').val();
+		var contract_id = $('#new_contract_id').val();
+
+		var state = 1;
+		if ((type==4||type==5)&&description=='') {
+			errormsg('選擇"其他"請輸入描述或備註');
+			state = 0;
+		};
+		if (date=='') {
+			errormsg('請輸入日期');
+			state = 0;
+		};
+		if (!Number.isInteger(value)||value<=0||value=='') {
+			errormsg('請輸入正整數金額');
+			state = 0;
+		}
+		if (type=='') {
+			errormsg('請選擇類別');
+			state = 0;
+		};
+		
+// 傳送
+		if (state == 1) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = "contract_id=" + contract_id+'&type='+type+'&value='+value+'&date='+date+'&description='+description;  	
+			xhr.open("POST", "<?=web_url('/accounting/add_rent_record')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);
+						data = JSON.parse(xhr.responseText);
+
+						if (data.state===true) {
+							successmsg('新增成功');
+							show_rent_detail(contract_id);
+							$('#rentModal').modal('toggle');
+						}else{
+							errormsg('新增失敗');
+						}
+					} else {  
+						alert('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+			xhr.onreadystatechange = display_datas;  
+		};
+	}
+
+	function things_check(){
+		var contract_id = $('#new_contract_id').val();
+		$('#tab_financialplan').attr('data-toggle','tab');
+		$('#tab_financialplan').attr('onclick','');
+		$('#tab_financialplan').trigger('click');
+		show_rent_detail(contract_id);
+		// alert(contract_id);
+	}
+	function finance_check(){
+		var contract_id = $('#new_contract_id').val();
+		$('#tab_print').attr('data-toggle','tab');
+		$('#tab_print').attr('onclick','');
+		$('#tab_print').trigger('click');
+		$('#printFrame').attr('src', '<?=web_url("/contract/pdf_gen")?>?contract_id='+contract_id);
+	}
+
+	function refresh(){
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "";
+		xhr.open("POST", "<?=web_url('/student/update_from_type_form')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);
+					data = JSON.parse(xhr.responseText);
+					
+					if (data.state===true) {
+						if (data.chrows==0) {
+							errormsg('不要亂按，請先確定學生有新增了<br>(只有最近的10筆會被同步)')
+						}else{
+							successmsg('更新成功，新增了'+data.chrows+'筆');
+							stu_suggestion();
+						}
+					}
+				} else {  
+					alert('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;
+	}
+
+
 	$('#keepbtn').click();
 
 
@@ -859,6 +1028,8 @@
 	$( '#datepickerEnd' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 	$( '#datepickerIn' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 	$( '#datepickerOut' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#new_rent_date' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	
 </script>
 <?php } ?>
 

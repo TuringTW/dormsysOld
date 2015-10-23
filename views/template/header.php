@@ -2,7 +2,7 @@
 	header("Content-Type:text/html; charset=utf-8");
 ?>
 <!DOCTYPE html>
-<html>
+<html style="height:100%">
 <head>
 	<meta charset="utf-8">
 	<meta name="author" content="KEVIN">
@@ -34,3 +34,4 @@
 		}
 	</style>
 
+</head>

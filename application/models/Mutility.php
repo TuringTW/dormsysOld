@@ -92,6 +92,11 @@ class Mutility extends CI_Model
         return $result;
         
     }
+    function getparameters($id){
+        $this->db->select('value')->from('parameter')->where('id', $id);
+        $query = $this->db->get();
+        return $query->result_array()[0]['value'];
+    }
     
 }
 ?>

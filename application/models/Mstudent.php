@@ -19,7 +19,7 @@ class Mstudent extends CI_Model
 	{
 		// echo "<div class='list-group' style='position: relative; width: 100%; max-height: 180px; overflow: auto;'>";
 		// 今日新增
-		$sql = "select `stu_id`,`name`,`mobile` from `student` where (`name` like binary '%$keyword' or `mobile` like binary '%$keyword' or `name` like binary '%$keyword%' or `mobile` like binary '%$keyword%' or `name` like binary '$keyword%' or `mobile` like binary '$keyword%') and(Year(`ctime`)='".date('Y')."' and MONTH(`ctime`)='".date('m')."' and Day(`ctime`)='".date('d')."')";  
+		$sql = "select `stu_id`,`name`,`mobile` from `student` where (`name` like binary '%$keyword' or `mobile` like binary '%$keyword' or `name` like binary '%$keyword%' or `mobile` like binary '%$keyword%' or `name` like binary '$keyword%' or `mobile` like binary '$keyword%') and(Year(`ctime`)='".date('Y')."' and MONTH(`ctime`)='".date('m')."' and Day(`ctime`)='".date('j')."')";  
 		$query = $this->db->query($sql);
 		$result['today'] = $query->result_array();
 		// echo "$sql";
@@ -178,5 +178,43 @@ class Mstudent extends CI_Model
 		$query = $this->db->get();
         return $query->result_array();
 	}
-	
+	function update_from_type_form(){
+		$this->load->library(array('web'));
+		$key = $this->Mutility->getparameters(1);
+		$url = "https://api.typeform.com/v0/form/tWEk2z?key=".$key."&completed=true&order_by[]=date_land,desc&limit=10";
+		$curl_result = json_decode($this->web->cURL($url, array(), 'get'));
+		$data = array();
+		foreach ($curl_result->responses as $key => $value) {
+			$this->db->from('student')->where('n_id', $value->token);
+			if ($this->db->count_all_results()==0) {
+				array_push($data, array(
+					'name' => $value->answers->textfield_12545150,
+					'sex' => '',
+					'school' => $value->answers->textfield_12545151,
+					'mobile' => $value->answers->textarea_12545543,
+					'home' => $value->answers->textfield_12545648,
+					'reg_address' => $value->answers->textfield_12545553,
+					'mailing_address' => $value->answers->textfield_12545574,
+					'email' => $value->answers->email_12545152,
+					'id_num' => $value->answers->textfield_12545462,
+					'birthday' => date('Y-m-d', mktime(0, 0, 0, $value->answers->number_12545429, $value->answers->number_12545433, $value->answers->number_12545423)),
+					'emg_name' => $value->answers->textfield_12545584,
+					'emg_phone' => $value->answers->textfield_12545601,
+					'note' => '',
+					'n_id' => $value->token,
+					));
+
+			}
+			$this->db->flush_cache();
+		}
+		$this->db->flush_cache();
+		if (count($data)>0) {
+			$this->db->insert_batch('student', $data);
+		}
+		
+
+		$result['state'] = true;
+		$result['chrows'] = count($data);
+		return $result;
+	}
 }?>

@@ -136,7 +136,7 @@ class Contract extends CI_Controller
 		$this->load->view('contract/newcontract/newcontract', $data);
 		$this->load->view('contract/newcontract/overlapModal');
 		
-
+		$this->load->view('contract/index/rentdepositModal');
 
 		$this->load->view('contract/newcontract/js_section');
 		$this->load->view('template/footer');
