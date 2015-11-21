@@ -25,7 +25,7 @@
 				     					<tr>
 				     						<td style="width:15%" align="right">收件人</td>
 				     						<td>
-				     							<select class="form-control" id="stu_select" required="required" style="width:100%" type="text" name="new[]">
+				     							<select class="form-control" id="mail_stu_select" required="required" style="width:100%" type="text" name="new[]">
 				     								
 				     									
 				     							</select>

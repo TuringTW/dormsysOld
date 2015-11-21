@@ -97,6 +97,18 @@ class Mutility extends CI_Model
         $query = $this->db->get();
         return $query->result_array()[0]['value'];
     }
+    function document_gcp_print($document){
+        $this->load->library(array('GoogleCloudPrint'));
+        $this->db->select('value')->from('parameter')->where('id', 2);
+        $query = $this->db->get();
+        $gcp_user = $query->result_array()[0]['value'];
+
+        $this->db->select('value')->from('parameter')->where('id', 3);
+        $query = $this->db->get();
+        $gcp_pass = $query->result_array()[0]['value'];
+
+
+    }
     
 }
 ?>

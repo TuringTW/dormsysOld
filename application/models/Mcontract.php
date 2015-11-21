@@ -239,7 +239,7 @@ class Mcontract extends CI_Model
             
             if ( $this->db->affected_rows()>0) {
                 $rent = $this->Mfinance->rent_cal($data['rent'], $data['s_date'], $data['e_date'], count($data['stu_id']));
-                $output = $this->Mfinance->add_rent_record(1, $rent['rent_result']['total_rent'], date('Y-m-d'), '租金', $contract_id);
+                $output = $this->Mfinance->add_rent_record(1, $rent['rent_result']['total_rent'], date('Y-m-d'), '房屋/房間租金總額', $contract_id);
                 $result['state'] = $output['state'];
                 $result['contract_id'] = $contract_id;
                 
@@ -271,6 +271,11 @@ class Mcontract extends CI_Model
         $datum = $result['data'][0];
         $result['rent'] = $this->Mfinance->rent_cal($datum['rent'], $datum['s_date'], $datum['e_date'], $countpeo);
         $result['countday'] = $this->Mutility->Date_diff($datum['s_date'], $datum['e_date']);
+        
+        $this->db->flush_cache();
+        $this->db->select('*')->from('rent')->where('contract_id', $contract_id);
+        $query = $this->db->get();
+        $result['rent_list'] = $query->result_array();
         return $result;
     }
     function get_keep_info($contract_id){

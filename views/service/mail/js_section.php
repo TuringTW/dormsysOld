@@ -106,11 +106,11 @@
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
 					// alert(xhr.responseText);   
-					$('#stu_select').html('');
+					$('#mail_stu_select').html('');
 					var data = JSON.parse(xhr.responseText).all;
 
 					for (var i = data.length - 1; i >= 0; i--) {
-						$('#stu_select').append('<option id="stu_select_'+data[i].stu_id+'" name="'+data[i].name+'" phone="'+data[i].mobile+'" value="'+data[i].stu_id+'">'+data[i].name+'-'+data[i].mobile+'</option>');
+						$('#mail_stu_select').append('<option id="mail_stu_select_'+data[i].stu_id+'" name="'+data[i].name+'" phone="'+data[i].mobile+'" value="'+data[i].stu_id+'">'+data[i].name+'-'+data[i].mobile+'</option>');
 					};
 				} else {  
 					alert('資料傳送出現問題，等等在試一次.');  
@@ -122,7 +122,7 @@
 	table_refresh();
 
 	function add_mail_stu(){
-		var stu_id = $('#stu_select').val();
+		var stu_id = $('#mail_stu_select').val();
 		var type = $('#type').val();
 		var date = $('#date').val();
 		var note = $('#note').val();
@@ -143,8 +143,8 @@
 				if (xhr.status == 200) {  
 					// alert(xhr.responseText);   
 					table_refresh();
-					name = $('#stu_select_'+stu_id).attr('name');
-					phone = $('#stu_select_'+stu_id).attr('phone');
+					name = $('#mail_stu_select_'+stu_id).attr('name');
+					phone = $('#mail_stu_select_'+stu_id).attr('phone');
 					sendsms(name+"同學你好, 請到辦公室領取你的"+type, phone);
 					$('#newmailModal').modal('toggle');
 				} else {  

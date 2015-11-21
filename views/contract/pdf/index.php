@@ -28,7 +28,7 @@
 				<th  style="width:<?=$wu*25/100?>" rowspan="1">承租人</th>
 				<th  style="width:<?=$wu*25/100?>">身分證字號</th>
 				<th style="width:<?=$wu*20/100?>">出生年月日</th>
-				<th style="width:<?=$wu*25/100?>">手機</th>
+				<th style="width:<?=$wu*(1-75/100)?>">手機</th>
 				<!-- <th style="width:<?=$wu*14/100?>">住家電話</th>
 				<th style="width:<?=$wu*13/100?>">緊急聯絡人</th>
 				<th style="width:<?=$wu*14/100?>">聯絡電話</th> -->
@@ -97,12 +97,69 @@
 		</tr>
 	</table>
 
-	<p style="font-weight:bold">第三條：租金</p>
+	<p style="font-weight:bold">第三條：租金與額外費用</p>
+	<table cellpadding="1" cellspacing="1" border="1px" style="width:<?=$wu*100/100?>;text-align:left;">
+		<tr>
+			<td style="width:<?=$wu*8/100?>;text-align:center" >#</td>
+			<td style="width:<?=$wu*25/100?>;text-align:center" >類型</td>
+			<td style="width:<?=$wu*12/100?>;text-align:center" >+/-</td>
+			<td style="width:<?=$wu*25/100?>;text-align:center" >金額</td>
+			<td style="width:<?=$wu*30/100?>;text-align:center" >描述</td>			
+		</tr>
+		<?php $total = 0; ?>
+		<?php foreach ($rent_list as $key => $value) { ?>
+			
+				<?php 
+					switch ($value['type']) {
+						case '1':
+							$value['type_name'] = '租金';
+							break;
+						case '2':
+							$value['type_name'] = '額外';
+							break;
+						
+						case '3':
+							$value['type_name'] = '獎勵';
+							break;
+						case '4':
+							$value['type_name'] = '其他+';
+							break;
+						case '5':
+							$value['type_name'] = '其他-';
+							break;
+						
+						
+						default:
+							$value['type_name'] = '';
+							break;
 
+					}
+					$total += (($value['pm']==1)?1:-1)*$value['value'];
+				 ?>
+			<tr>
+				<td style="width:<?=$wu*8/100?>;text-align:center" ><?=$key+1?></td>
+				<td style="width:<?=$wu*25/100?>;text-align:center" ><?=$value['type_name']?></td>
+				<td style="width:<?=$wu*12/100?>;text-align:center" ><?=(($value['pm']==1)?'+':'-')?></td>
+				<td style="width:<?=$wu*25/100?>;text-align:center" ><?=$value['value']?></td>
+				<td style="width:<?=$wu*30/100?>;text-align:center" ><?=$value['description']?></td>			
+			</tr>	
+		<?php } ?>
+		<tr>
+			<td style="width:<?=$wu*8/100?>;text-align:center" >合計</td>
+			<td style="width:<?=$wu*25/100?>;text-align:center" >應繳總額</td>
+			<td style="width:<?=$wu*12/100?>;text-align:center" ></td>
+			<td style="width:<?=$wu*25/100?>;text-align:center" ><?=$total?></td>
+			<td style="width:<?=$wu*30/100?>;text-align:center" ></td>			
+		</tr>	
+	</table>
 	<table cellpadding="1" cellspacing="1" border="0" style="width:<?=$wu*100/100?>;text-align:left;">
 		<tr>
 			<td style="width:<?=$wu*5/100?>"></td>
-			<td style="width:<?=$wu*95/100?>" >租金全額未稅每人每月總共<?=$data[0]['rent']?>元整，共<?=$countpeo?>人，每月總共新台幣<?=$data[0]['rent']*$countpeo?>元整（以下同)。總共需付新台幣<?=$rent['rent_result']['total_rent']?>元整。</td>
+			<td style="width:<?=$wu*95/100?>" >租金全額未稅總共<?=$total?>元整（以下同)。若日後於租屋期間有額外費用，則另列表計算。</td>
+		</tr>
+		<tr>
+			<td style="width:<?=$wu*5/100?>"></td>
+			<td style="width:<?=$wu*95/100?>" >註：房屋租金未稅每人每月總共<?=$data[0]['rent']?>元整，共<?=$countpeo?>人，每月總共新台幣<?=$data[0]['rent']*$countpeo?>元整（以下同)。總共需付新台幣<?=$rent['rent_result']['total_rent']?>元整。</td>
 		</tr>
 
 	</table>

@@ -141,9 +141,10 @@
 								+'<tr><th style="width:40%">緊急電話</th><td colspan="2">'+data[0].emg_phone+'</td></tr>'
 								+'<tr><th style="width:40%">通訊地址</th><td colspan="2">'+data[0].mailing_address+'</td></tr>'
 								+'</table>'
-								+'<h5>功能</h5><div class="row"><div class="col-sm-1"></div><div class="col-sm-6"><a onclick="" class="btn btn-default">信件通知&nbsp;&nbsp;<span class="glyphicon glyphicon-mail"></span></a></div></div>');
+								+'<h5>功能</h5><div class="row"><div class="col-sm-1"></div><div class="col-sm-6"><a id="mail_btn" class="btn btn-default">信件通知&nbsp;&nbsp;<span class="glyphicon glyphicon-mail"></span></a></div></div>');
 		$('#stu_info_href').attr('href', '<?=web_url("/student/index")?>?view='+data[0].stu_id);
 		$('#stu_info_sms').click(function(){sendsms(data[0].sname+'同學你好,', data[0].mobile)});
+		$('#mail_btn').click(function(){open_mail_modal(data[0].stu_id, data[0].sname, data[0].mobile)})
 	}
 
 	function searchstu(){
@@ -178,7 +179,48 @@
 		};
 			
 	}
-	
+	function open_mail_modal(stu_id, sname, mobile){
+		$('#mail_stu_select').html('');
+		$('#mail_stu_select').append('<option id="mail_stu_select_'+stu_id+'" name="'+sname+'" phone="'+mobile+'" value="'+stu_id+'">'+sname+'-'+mobile+'</option>');
+		$('#newmailModal').modal('toggle');
+
+	}
+	function add_mail_stu(){
+		var stu_id = $('#mail_stu_select').val();
+		var type = $('#type').val();
+		var date = $('#date').val();
+		var note = $('#note').val();
+
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = 'stu_id='+stu_id+'&type='+type+'&date='+date+'&note='+note;
+
+		xhr.open("POST", "<?=web_url('/service/add_stu_mail')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);   
+					// table_refresh();
+					name = $('#mail_stu_select_'+stu_id).attr('name');
+					phone = $('#mail_stu_select_'+stu_id).attr('phone');
+					sendsms(name+"同學你好, 請到辦公室領取你的"+type, phone);
+					$('#newmailModal').modal('toggle');
+				} else {  
+					alert('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;
+	}
+	function add_mail_nstu(){
+		errormsg('這裡無法新增非學生信件')
+	}
 </script>
 
 
