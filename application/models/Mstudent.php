@@ -184,11 +184,14 @@ class Mstudent extends CI_Model
 		$today = mktime(0,0,0,Date('m'), Date('d'), Date('Y'));
 		$url = "https://api.typeform.com/v0/form/tWEk2z?key=".$key."&completed=true&order_by[]=date_land,desc&since=".$today."&limit=10";
 		$curl_result = json_decode($this->web->cURL($url, array(), 'get'));
-		$data = array();
+		$success_add = 0;
 		foreach ($curl_result->responses as $key => $value) {
 			$this->db->from('student')->where('n_id', $value->token);
-			if ($this->db->count_all_results()==0) {
-				array_push($data, array(
+			$this->db->or_where('( 1',NULL, false)->where('name', $value->answers->textfield_12545150)->where('id_num', $value->answers->textfield_12545462)->where('1 )',NULL, false); //for logic ;
+			$count = $this->db->count_all_results();
+			
+			if ($count==0) {
+				$data = array(
 					'name' => $value->answers->textfield_12545150,
 					'sex' => '',
 					'school' => $value->answers->textfield_12545151,
@@ -203,19 +206,19 @@ class Mstudent extends CI_Model
 					'emg_phone' => $value->answers->textfield_12545601,
 					'note' => '',
 					'n_id' => $value->token,
-					));
+					);
+				$this->db->flush_cache();
+				$this->db->insert('student', $data);
+				$success_add += 1;
 
 			}
 			$this->db->flush_cache();
 		}
-		$this->db->flush_cache();
-		if (count($data)>0) {
-			$this->db->insert_batch('student', $data);
-		}
+
 		
 
 		$result['state'] = true;
-		$result['chrows'] = count($data);
+		$result['chrows'] = $success_add;
 		return $result;
 	}
 }?>

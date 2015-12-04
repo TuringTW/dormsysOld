@@ -360,5 +360,51 @@ class Mcontract extends CI_Model
 
         return 1;
     }
+    function pdf_gen($contract_id, $method){
+        $this->load->library(array('pdf'));
+        
+        if (!is_null($contract_id)&&is_numeric($contract_id)) {
+            $data = $this->Mcontract->get_print_data($contract_id);
+            
+            $this->pdf->SetAuthor('AunttsaiDormSYS');
+            $this->pdf->SetTitle('蔡阿姨宿舍租賃合約');
+            $this->pdf->SetSubject('蔡阿姨宿舍租賃合約');
+            $this->pdf->SetKeywords('租賃,合約');
+            $this->pdf->SetHeaderMargin(0);
+            $this->pdf->SetTopMargin(5);
+            $this->pdf->setFooterMargin(0);
+            $this->pdf->SetAutoPageBreak(true);
+            $this->pdf->SetDisplayMode('real', 'default');
+
+            
+            
+
+            $pw = $this->pdf->getPageWidth()*2.5;  
+            $data['wu'] = $pw;
+            $data['barcodetext'] = date('Y-m-d').'-'.$contract_id;
+            // add a page
+
+            $this->pdf->AddPage();
+            // $this->pdf->SetFont('msungstdlight', '', 12);
+            $this->pdf->load_view('contract/pdf/index', $data);
+            ob_end_clean();
+            if ($method == 0) {
+                //client side
+                $this->pdf->Output('My-File-Name.pdf', 'I');
+                return 0;
+            }else if($method == 1){
+                //server side
+                $root = $_SERVER['SCRIPT_FILENAME'];
+                $root = mb_substr($root,0,strpos($root,'index.php'));
+
+                $this->pdf->Output($root.'/contract_pdf/contract_'.$contract_id.'.pdf', 'F');
+                $path = $root.'/contract_pdf/contract_'.$contract_id.'.pdf';
+                return $path;
+            }
+            
+        }else{
+            return false;
+        }
+    }
     
 }?>

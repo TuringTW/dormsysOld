@@ -1006,9 +1006,9 @@
 					
 					if (data.state===true) {
 						if (data.chrows==0) {
-							errormsg('不要亂按，請先確定學生有新增了<br>(只有最近的10筆會被同步)')
+							errormsg('不要亂按，請先確定學生有新增了<br>(只有最近的10筆會被同步)<br>如果沒有匯入成功可能是資料庫中已有此人')
 						}else{
-							successmsg('更新成功，新增了'+data.chrows+'筆');
+							successmsg('更新成功，新增了'+data.chrows+'筆<br>如果沒有匯入成功可能是資料庫中已有此人');
 							stu_suggestion();
 						}
 					}
