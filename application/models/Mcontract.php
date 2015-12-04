@@ -385,7 +385,7 @@ class Mcontract extends CI_Model
             // add a page
 
             $this->pdf->AddPage();
-            // $this->pdf->SetFont('msungstdlight', '', 12);
+            $this->pdf->SetFont('cid0jp', '', 12, true);
             $this->pdf->load_view('contract/pdf/index', $data);
             ob_end_clean();
             if ($method == 0) {

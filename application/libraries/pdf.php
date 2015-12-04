@@ -6,9 +6,9 @@ class Pdf extends TCPDF
     function __construct()
     {
         parent::__construct();
-        $this->addTTFfont('tcpdf/fonts/big5/msjh.ttf', 'TrueTypeUnicode');
-		$this->SetFont('msjh', '', 12, true);
-		define ('PDF_FONT_NAME_MAIN', 'msjh');
+  //       $this->addTTFfont('tcpdf/fonts/big5/msjh.ttf', 'TrueTypeUnicode');
+		// $this->SetFont('msjh', '', 12, true);
+		// define ('PDF_FONT_NAME_MAIN', 'msjh');
     }
 
     protected function ci()
