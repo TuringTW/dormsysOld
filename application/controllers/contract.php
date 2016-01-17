@@ -15,7 +15,6 @@ class Contract extends CI_Controller
 						'user' => $this->session->userdata('user'),
 						'power' => $this->session->userdata('power')
 					);
-
 		$this->load->view('template/header', $data);
 		$this->load->view('template/header_2', $data);
 		$this->load->view('template/message_dialog');

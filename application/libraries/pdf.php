@@ -6,9 +6,6 @@ class Pdf extends TCPDF
     function __construct()
     {
         parent::__construct();
-        $this->addTTFfont('tcpdf/fonts/big5/msjh.ttf', 'TrueTypeUnicode');
-		$this->SetFont('msjh', '', 12, true);
-		define ('PDF_FONT_NAME_MAIN', 'msjh');
     }
 
     protected function ci()
@@ -27,7 +24,7 @@ class Pdf extends TCPDF
 	public function load_view($view, $data = array())
 	{
 		$html = $this->ci()->load->view($view, $data, TRUE);
-
+		$this->SetFont('msungstdlight', 'B');
 		$this->writeHTML($html, true, false, true, false, '');
 	}
 
