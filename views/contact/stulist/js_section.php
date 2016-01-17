@@ -81,7 +81,7 @@
 
 		show_stu_list(room_id, 1);		
 	}
-	function show_stu_list(id, type){
+	function show_stu_list(id, type, contract_id){
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
 			xhr = new XMLHttpRequest();  
@@ -107,10 +107,10 @@
 						if (type == 1) {
 							stu_parse(data.result);
 						}else{
-							show_stu_info(data.result, type)
+							show_stu_info(data.result, type, contract_id)
 							if (type==2) {
 								$('.stubtnlist').attr('class', 'btn btn-default stubtnlist');
-								$('#stu_info_'+id).attr('class', 'btn btn-default stubtnlist active');						
+								$('#stu_info_'+contract_id).attr('class', 'btn btn-default stubtnlist active');						
 							};
 						}
 					}else{
@@ -125,10 +125,10 @@
 	}
 	function stu_parse(data){
 		for (var i = 0; i < data.length ;  i++) {
-			$('#stu_select').append('<a href="#" class="btn btn-default stubtnlist" id="stu_info_'+data[i].stu_id+'" style="color:#003767; text-align:left; width:100%" onclick="show_stu_list('+data[i].stu_id+',2)">'+data[i].sname+'&nbsp;&nbsp;['+data[i].in_date+']</a>');
+			$('#stu_select').append('<a href="#" class="btn btn-default stubtnlist" id="stu_info_'+data[i].contract_id+'" style="color:#003767; text-align:left; width:100%" onclick="show_stu_list('+data[i].stu_id+',2, '+data[i].contract_id+')">'+data[i].sname+'&nbsp;&nbsp;['+data[i].in_date+']</a>');
 		};
 	}
-	function show_stu_info(data, type){
+	function show_stu_info(data, type, contract_id){
 		if (type == 0) {
 			$('#stu_select').append('<a href="#" class="btn btn-default stubtnlist active" id="stu_info_'+data[0].stu_id+'" style="color:#003767; text-align:left; width:100%" onclick="show_stu_info('+data[0].stu_id+')">'+data[0].sname+'</a>')
 		}
@@ -141,10 +141,14 @@
 								+'<tr><th style="width:40%">緊急電話</th><td colspan="2">'+data[0].emg_phone+'</td></tr>'
 								+'<tr><th style="width:40%">通訊地址</th><td colspan="2">'+data[0].mailing_address+'</td></tr>'
 								+'</table>'
-								+'<h5>功能</h5><div class="row"><div class="col-sm-1"></div><div class="col-sm-6"><a id="mail_btn" class="btn btn-default">信件通知&nbsp;&nbsp;<span class="glyphicon glyphicon-mail"></span></a></div></div>');
+								+'<h5>功能</h5><div class="row"><div class="col-sm-1"></div><div class="col-sm-8 btn-group"><a id="mail_btn" title="通知有信件或包裹到了" class="btn btn-default">信件通知&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope"></span></a><a id="contract_btn" title="查看這筆聯絡資料對應的合約" class="btn btn-default">查看合約&nbsp;&nbsp;<span class="glyphicon glyphicon-file"></span></a></div></div>');
 		$('#stu_info_href').attr('href', '<?=web_url("/student/index")?>?view='+data[0].stu_id);
 		$('#stu_info_sms').click(function(){sendsms(data[0].sname+'同學你好,', data[0].mobile)});
 		$('#mail_btn').click(function(){open_mail_modal(data[0].stu_id, data[0].sname, data[0].mobile)})
+		if (contract_id==undefined) {
+			contract_id = data[0].contract_id;
+		}
+		$('#contract_btn').attr('href', '<?=web_url("/contract/index")?>?contract_id='+contract_id)
 	}
 
 	function searchstu(){

@@ -834,6 +834,11 @@
 			xhr.onreadystatechange = display_datas;  
 		};
 	}
+	if ($("#view_contract_id").val()==-1) {
+		errormsg("查看合約代碼錯誤，請紀錄步驟，通知Kevin");
+	}else if($("#view_contract_id").val()!=0){
+		showcontract($("#view_contract_id").val());
+	}
 </script>
 
 <?php } ?>

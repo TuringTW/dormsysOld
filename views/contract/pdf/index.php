@@ -154,7 +154,7 @@
 		</tr>
 		<tr>
 			<td style="width:<?=$wu*5/100?>"></td>
-			<td style="width:<?=$wu*95/100?>" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;共<?=$countpeo?>人，每月總共新台幣<?=$data[0]['rent']*$countpeo?>元整（以下同)。總共需付新台幣<?=$rent['rent_result']['total_rent']?>元整。</td>
+			<td style="width:<?=$wu*95/100?>" >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;共<?=$countpeo?>人，每月總共新台幣<?=$data[0]['rent']*$countpeo?>元整（以下同)。總共需付新台幣<?=$rent['rent_result']['total_rent']?>元整。</td>
 		</tr>
 
 

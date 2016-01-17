@@ -1,5 +1,8 @@
 <h1 class="page-header">合約列表</h1>
 <!-- 搜尋列 次導覽列 -->
+	<!-- for view -->
+	<input type="hidden" id="view_contract_id" value="<?=$view_contract_id?>">
+
 	<div class="form-group">
 		<div class="col-sm-3">
 			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="Enter搜:宿舍、房號、姓名、手機" value="">

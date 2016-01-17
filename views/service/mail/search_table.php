@@ -17,12 +17,12 @@
 					<tr>
 						<th style="text-align:center; width:5%">#</th>
 						<th style="text-align:center; width:15%">收件人姓名</th>
-						<th style="text-align:center; width:20%">電話</th>
-						<th style="text-align:center; width:5%">再次通知</th>
+						<th style="text-align:center; width:18%">電話</th>
+						<th style="text-align:center; width:7%">再次通知</th>
 						<th style="text-align:center; width:10%">類型</th>
 						<th style="text-align:center; width:20%">收件時間</th>
-						<th style="text-align:center; width:10%">拖延時間</th>
-						<th style="text-align:center; width:5%">送達</th>
+						<th style="text-align:center; width:7%">拖延時間</th>
+						<th style="text-align:center; width:8%">是否送達?</th>
 						<th style="text-align:center; width:5%">刪除</th>
 					</tr>
 				</thead>

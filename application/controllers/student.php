@@ -59,7 +59,7 @@ class Student extends CI_Controller
 			$data['stu_id'] = 0;
 		}
 		$this->view_header();
-		$data['active'] = 4;
+		$data['active'] = 2;
 		$this->load->view('contract/sidebar', $data);
 		$this->load->view('/student/search_table');
 		$this->load->view('/student/viewModal');

@@ -46,7 +46,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">蔡阿姨管理系統beta<?=" ".$version." "?></a>
+				<a class="navbar-brand" href="<?=web_url('/index/index')?>" title="首頁、控制面板">蔡阿姨管理系統beta<?=" ".$version." "?></a>
 			</div>			
 			<div class = "collapse navbar-collapse navHeadercollapse">
 				<ul class = "nav navbar-nav navbar-left" id="nav">

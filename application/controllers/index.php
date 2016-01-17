@@ -12,10 +12,7 @@ class Index extends CI_Controller
 		$this->login_check->check_init($required_power);
 
 	}
-
-	public function index()
-	{
-		// header
+	private function view_header(){
 		$data = array(	'title' => 'Home', 
 						'user' => $this->session->userdata('user'),
 						'power' => $this->session->userdata('power')
@@ -23,10 +20,20 @@ class Index extends CI_Controller
 
 		$this->load->view('template/header', $data);
 		$this->load->view('template/header_2', $data);
+		$this->load->view('template/message_dialog');
+		$this->load->view('template/smsModel');
+	}
+	public function index()
+	{
+		// header
+		$this->view_header();
+		$this->load->view('index/index/sidebar');
+		$this->load->view('index/index/control_panel');
 
 
 
-
+		$this->load->view('service/mail/mail_modal');
+		$this->load->view('index/index/js_section');
 		$this->load->view('template/footer');
 	}
 

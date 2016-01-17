@@ -32,6 +32,9 @@
 		th {
 			text-align: center;
 		}
+		.nav-sidebar > li > a{ 
+			padding-right: 0px;
+		}
 	</style>
 
 </head>

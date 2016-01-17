@@ -830,9 +830,10 @@
 					if (result.state == 1) {
 
 						successmsg('新增完成。請列印合約');
-						$('#tab_thingsplan').attr('data-toggle','tab');
-						$('#tab_thingsplan').attr('onclick','');
-						$('#tab_thingsplan').trigger('click');
+						show_rent_detail(result.contract_id);
+						$('#tab_financialplan').attr('data-toggle','tab');
+						$('#tab_financialplan').attr('onclick','');
+						$('#tab_financialplan').trigger('click');
 						$('#new_contract_id').val(result.contract_id);
 					}else if(result.state == 0){
 						for (var i = result.error_id.length - 1; i >= 0; i--) {
@@ -971,14 +972,14 @@
 		};
 	}
 
-	function things_check(){
-		var contract_id = $('#new_contract_id').val();
-		$('#tab_financialplan').attr('data-toggle','tab');
-		$('#tab_financialplan').attr('onclick','');
-		$('#tab_financialplan').trigger('click');
-		show_rent_detail(contract_id);
-		// alert(contract_id);
-	}
+	// function things_check(){
+	// 	var contract_id = $('#new_contract_id').val();
+	// 	$('#tab_financialplan').attr('data-toggle','tab');
+	// 	$('#tab_financialplan').attr('onclick','');
+	// 	$('#tab_financialplan').trigger('click');
+	// 	show_rent_detail(contract_id);
+	// 	// alert(contract_id);
+	// }
 	function finance_check(){
 		var contract_id = $('#new_contract_id').val();
 		$('#tab_print').attr('data-toggle','tab');

@@ -8,7 +8,7 @@
 	<li class="active "><a id="tab_stuinfo" href="#stuinfo" role="tab" data-toggle="tab">Step1.房客資料</a></li>
 	<li><a id="tab_contract" href="#contract" role="tab" data-toggle="tab">Step2.合約資料</a></li>
 	<li><a id="tab_finalcheck" href="#finalcheck" role="tab" data-toggle="tab" onClick="">Step3.確認合約</a></li>
-	<li><a id="tab_thingsplan" href="#thingsplan" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step4.房間物品</a></li>
+	<!-- <li><a id="tab_thingsplan" href="#thingsplan" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step4.房間物品</a></li> -->
 	<li><a id="tab_financialplan" href="#financialplan" role="tab" data-toggle="none" onClick="errormsg('請先確認房間物品')">Step5.計算租金</a></li>
 	<li><a id="tab_print" href="#print" role="tab" data-toggle="none" onClick="errormsg('請先計算租金')">Step6.列印</a></li>
 </ul>
@@ -240,7 +240,7 @@
 				</table>
 				<table class="table table-hover">
 					<tr>
-						<th>房間租金</th>
+						<th>房間每人每月租金</th>
 						<td id="final_tr">合約日期未填</td>
 					</tr>
 				</table>
@@ -257,15 +257,15 @@
 		
 
 	</div>
-	<div class="tab-pane" id="thingsplan">
-		<div class="row">
-			<div class="col-sm-6">
-				<div class="row">
-					<div class="col-sm-7"><h3>房間物品列表</h3></div>
+	<!-- <div class="tab-pane" id="thingsplan"> -->
+		<!-- <div class="row"> -->
+			<!-- <div class="col-sm-6"> -->
+				<!-- <div class="row"> -->
+					<!-- <div class="col-sm-7"><h3>房間物品列表</h3></div> -->
 					
 					<!-- <div class="col-sm-1"><a href="#" class="btn btn-info" title="重新整理房間物品列表" onclick=""><span class="glyphicon glyphicon-refresh"></span></a></div> -->
 					<!-- <div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#rentModal').modal('toggle')">新增額外費用/獎勵</a></div> -->
-				</div>
+				<!-- </div> -->
 				
 				<!-- 
 				<table class='table table-hover' style="text-align:center">
@@ -279,11 +279,11 @@
 					</thead>
 					<tbody id="rent_detail"></tbody>
 				</table> -->
-			</div>
-			<div class="col-sm-2"><a href="#" class="btn btn-primary btn-lg" onclick="things_check()">確認</a></div>
+			<!-- </div> -->
+			<!-- <div class="col-sm-2"><a href="#" class="btn btn-primary btn-lg" onclick="things_check()">確認</a></div> -->
 
-		</div>
-	</div>
+		<!-- </div> -->
+	<!-- </div> -->
 	<div class="tab-pane" id="financialplan">
 		<div class="row">
 			<div class="col-sm-6">

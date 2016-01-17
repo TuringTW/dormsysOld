@@ -21,6 +21,15 @@ class Contract extends CI_Controller
 		$this->load->view('template/smsModel');
 	}
 	public function index($contract_id=0){	
+		// get contract_id
+		$data['view_contract_id'] = $this->input->get('contract_id', TRUE);
+		if (is_null($data['view_contract_id'])) {
+			$data['view_contract_id'] = 0;
+		}
+		if (!is_numeric($data['view_contract_id'])||$data['view_contract_id']<0) {
+			$data['view_contract_id'] = -1;
+		}
+
 		$this->load->helper('dorm_list_helper');
 		// header
 		$this->view_header();
@@ -36,7 +45,7 @@ class Contract extends CI_Controller
 		$this->load->view('contract/index/checkout');
 		$this->load->view('contract/index/rentdepositModal');
 		// footer
-		$this->load->view('contract/index/js_section');
+		$this->load->view('contract/index/js_section', $data);
 		$this->load->view('template/footer');
 	}
 	public function show(){
@@ -128,7 +137,7 @@ class Contract extends CI_Controller
 		
 		$this->load->model('Mstudent');
 		$this->view_header();
-		$data['active'] = 3;
+		$data['active'] = 1;
 		$this->load->view('contract/sidebar', $data);
 		$data['dormlist'] = $this->Mutility->get_dorm_list();
 		$data['saleslist'] = $this->Mutility->get_user_list();
