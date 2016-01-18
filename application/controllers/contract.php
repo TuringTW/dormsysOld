@@ -135,6 +135,7 @@ class Contract extends CI_Controller
 			$data['keep_result'] = array();
 		}
 		
+
 		$this->load->model('Mstudent');
 		$this->view_header();
 		$data['active'] = 1;

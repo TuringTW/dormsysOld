@@ -103,6 +103,16 @@
 							<li><a href = "<?=web_url('/accounting/expenditure')?>">紀錄表</a></li>
 						</ul>
 					</li>
+					<li class="dropdown">
+						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">系統問題</a>
+						<ul class="dropdown-menu">
+							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
+							<li><a onclick="window.open('https://docs.google.com/forms/d/1lIxLxN-y9bh3Z2-9wVjaVbhozisY3BHMfYONhreRZTk/viewform')">問題回報</a></li>
+							<li><a href = "<?=web_url('/system/qna')?>">Q&A</a></li>
+						</ul>
+					</li>
+					
+
 					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">管理</a>
 						<ul class="dropdown-menu">
@@ -144,7 +154,6 @@
 							<?php if ($power==0): ?>
 								<li><a href="#" onclick="window.open('//127.0.0.1/phpmyadmin/');">PHPMYADMIN</a></li>								
 							<?php endif ?>
-							<li><a onclick="window.open('ErrorRsp.php')">錯誤回報</a></li> -->
 							
 							
 					<!-- 	</ul>

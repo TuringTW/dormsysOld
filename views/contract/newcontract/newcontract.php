@@ -9,8 +9,8 @@
 	<li><a id="tab_contract" href="#contract" role="tab" data-toggle="tab">Step2.合約資料</a></li>
 	<li><a id="tab_finalcheck" href="#finalcheck" role="tab" data-toggle="tab" onClick="">Step3.確認合約</a></li>
 	<!-- <li><a id="tab_thingsplan" href="#thingsplan" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step4.房間物品</a></li> -->
-	<li><a id="tab_financialplan" href="#financialplan" role="tab" data-toggle="none" onClick="errormsg('請先確認房間物品')">Step5.計算租金</a></li>
-	<li><a id="tab_print" href="#print" role="tab" data-toggle="none" onClick="errormsg('請先計算租金')">Step6.列印</a></li>
+	<li><a id="tab_financialplan" href="#financialplan" role="tab" data-toggle="none" onClick="errormsg('請先送出合約')">Step4.計算租金</a></li>
+	<li><a id="tab_print" href="#print" role="tab" data-toggle="none" onClick="errormsg('請先計算租金')">Step5.列印</a></li>
 </ul>
 <br>
 <!-- Tab panes -->
@@ -355,9 +355,9 @@
 <?php if(!is_null($keep)){ foreach ($keep_result as $key => $value) {?>
 	addstuinfo(<?=$value['stu_id']?>);
 <?php } ?>;
-document.getElementById('dorm_select').value = <?=$keep_result[0]['dorm_id']?>;room_suggestion();
-document.getElementById('room_select').value = <?=$keep_result[0]['room_id']?>;
-room_data_suggestion();
+document.getElementById('dorm_select').value = <?=$keep_result[0]['dorm_id']?>;
+room_suggestion(<?=$keep_result[0]['room_id']?>);
+
 $('#datepickerStart').val('<?=$keep_result[0][0]?>');
 $('#datepickerIn').val('<?=$keep_result[0][1]?>'); <?php } ?>"></a></button>
 
