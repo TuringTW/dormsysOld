@@ -87,7 +87,7 @@
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
 					// alert(xhr.responseText);   
-					table_refresh();
+					// table_refresh();
 					sendsms(recname+"同學你好, 請到辦公室領取你的平信", phone);
 					$('#newmailModal').modal('toggle');
 				} else {  
