@@ -46,7 +46,7 @@
 						<table class="table table-hover">
 	     					<tr>
 	     						<td style="width:15%" align="right">房號</td>
-	     						<td><input id="room_name" class="form-control" required="required" style="width:100%" type="text" value=""></td>
+	     						<td><input id="room_name" placeholder="請設一個簡短好記的" class="form-control" required="required" style="width:100%" type="text" value=""></td>
 	     					
 	     						</td>
 	     					</tr>
@@ -65,7 +65,7 @@
 	     					</tr>
 	     					<tr>
 	     						<td style="width:15%" align="right">房租</td>
-	     						<td><input id="rent" class="form-control" required="required" style="width:100%" type="text" value=""></td>
+	     						<td><input id="rent" class="form-control" placeholder="每人每月房租" required="required" style="width:100%" type="text" value=""></td>
 	     					
 	     						</td>
 	     					</tr>
