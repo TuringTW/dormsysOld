@@ -104,6 +104,13 @@
 						</ul>
 					</li>
 					<li class="dropdown">
+						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">管理</a>
+						<ul class="dropdown-menu">
+							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
+							<li><a href = "<?=web_url('/database/room')?>">宿舍/房間管理</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">系統問題</a>
 						<ul class="dropdown-menu">
 							<!-- <li><a href = "receipt.php">收據管理</a></li> -->

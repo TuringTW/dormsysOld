@@ -423,18 +423,23 @@
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
 					// errormsg(xhr.responseText);        
-					data = JSON.parse(xhr.responseText);
-					var htmltext = "";
-					for (var i = data.length - 1; i >= 0; i--) {
-						htmltext += "<option class='form-control' value='"+data[i].room_id+"'>"+data[i].name+"</option>";
-					};
+					original_data = JSON.parse(xhr.responseText);
+					if (original_data.state==true) {
+						var data = original_data.result;
+						var htmltext = "";
+						for (var i = data.length - 1; i >= 0; i--) {
+							htmltext += "<option class='form-control' value='"+data[i].room_id+"'>"+data[i].name+"</option>";
+						};
 
-					document.getElementById("room_select").innerHTML = htmltext; 
-					if (keeproom!=0) {
-						document.getElementById('room_select').value = keeproom;
-						room_data_suggestion()
-					}; 
-					// room_data_suggestion();
+						document.getElementById("room_select").innerHTML = htmltext; 
+						if (typeof(keeproom)!=='undefined') {
+							document.getElementById('room_select').value = keeproom;
+							room_data_suggestion();
+						}; 
+						// room_data_suggestion();
+					}else{
+						errormsg("傳輸出現問題"+xhr.responseText);
+					}
 				} else {  
 					errormsg('資料傳送出現問題，等等在試一次.');  
 				}  

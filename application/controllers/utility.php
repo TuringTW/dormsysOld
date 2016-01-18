@@ -14,7 +14,8 @@ class Utility extends CI_Controller
 	}
 	public function room_suggestion(){
 		$dorm_id = $this->input->post('dorm_id', true);
-		$result = $this->Mutility->get_room_list($dorm_id);
+		$result['result'] = $this->Mutility->get_room_list($dorm_id);
+		$result['state'] = true;
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}

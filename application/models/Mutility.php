@@ -47,11 +47,37 @@ class Mutility extends CI_Model
         return $query->result_array();
     }
     function get_room_info($room_id){
-        $sql = "SELECT `room_id`, `room`.`name` as `rname`, `rent`, `dorm`.`name` as `dname` from `room` left join `dorm` on `dorm`.`dorm_id` = `room`.`dorm` where `room_id` = '$room_id'";
+        $sql = "SELECT `room_id`, `room`.`name` as `rname`, `rent`, `dorm`.`name` as `dname`, `room`.`note`, `room`.`type` from `room` left join `dorm` on `dorm`.`dorm_id` = `room`.`dorm` where `room_id` = '$room_id'";
         $query = $this->db->query($sql);
         return $query->row(0);
     }
-
+    function edit_room_info($room_name, $rent, $type, $note, $room_id, $dorm_id){
+        if ($this->is_in_the_dorm($dorm_id)) {
+            $data=array(    'name'=>$room_name,
+                            'dorm'=>$dorm_id,
+                            'rent'=>$rent,
+                            'type'=>$type,
+                            'note'=>$note);
+            if ($room_id == 0) {
+                $this->db->insert('room', $data);
+            }else{
+                $this->db->where('room_id', $room_id);
+                $this->db->update('room', $data); 
+            }
+            $result['state'] = true;
+        }else{
+            $result['state'] = false;
+            $result['dorm'] = $dorm_id;
+        }
+        return $result;
+    }   
+    function is_in_the_dorm($dorm_id){
+        if ($this->db->from('dorm')->where('dorm_id', $dorm_id)->count_all_results()==1) {
+            return true;
+        }else{
+            return false;
+        }
+    }
     function get_user_list()
     {
         $sql = "SELECT `m_id`,`name` from `manager` where `active` = 1";
