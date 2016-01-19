@@ -6,7 +6,7 @@ class Index extends CI_Controller
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url'));
 		$this->load->library('session');
-		$this->load->model('login_check');
+		$this->load->model(array('login_check', 'Mcontract'));
 		// check login & power, and then init the header
 		$required_power = 2;
 		$this->login_check->check_init($required_power);
@@ -28,7 +28,11 @@ class Index extends CI_Controller
 		// header
 		$this->view_header();
 		$this->load->view('index/index/sidebar');
-		$this->load->view('index/index/control_panel');
+		$data['count_ofd_due'] = $this->Mcontract->count_ofd_due(0, '');
+		$data['contract_due'] = $this->Mcontract->show_contract_list('', 0, 0, 1, 0, 1, 2, 1);
+		$data['contract_due_in_a_month'] = $this->Mcontract->show_contract_list('', 0, 0, 2, 0, 1, 1, 1);
+
+		$this->load->view('index/index/control_panel', $data);
 
 
 

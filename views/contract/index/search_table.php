@@ -2,6 +2,7 @@
 <!-- 搜尋列 次導覽列 -->
 	<!-- for view -->
 	<input type="hidden" id="view_contract_id" value="<?=$view_contract_id?>">
+	<input type="hidden" id="view_option" value="<?=$view_ofd_contract?>">
 
 	<div class="form-group">
 		<div class="col-sm-3">

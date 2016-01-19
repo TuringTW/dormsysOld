@@ -839,6 +839,15 @@
 	}else if($("#view_contract_id").val()!=0){
 		showcontract($("#view_contract_id").val());
 	}
+
+	if ($("#view_option").val()==1) {
+		ofd_select();
+	}
+	if ($("#view_option").val()==2) {
+		due_select();
+	}
+
+	
 </script>
 
 <?php } ?>

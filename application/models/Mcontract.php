@@ -15,9 +15,9 @@ class Mcontract extends CI_Model
 
     }
     // 取得合約列表
-    function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page)
+    function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page, $order_rule=0, $page_rule=0)
     {
-        $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal')->from('contract');
+        $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal, student.name as sname, mobile')->from('contract');
         $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
         $this->db->join('room','room.room_id=contract.room_id','left');
         $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
@@ -37,21 +37,46 @@ class Mcontract extends CI_Model
             $duerule = "(Month(`e_date`)=".date('m')." and Year(`e_date`)=".date('Y').")";
             $this->db->where($duerule);
         }
+        //一個月內遷出
+        if ($due==2) {
+            $duerule = "(DATEDIFF(`out_date`, '".date("Y-m-d")."')<30 and DATEDIFF(`out_date`, '".date("Y-m-d")."')>=0)";
+            $this->db->where($duerule);
+        }
+
         // 宿舍
         if ($dorm != 0&&!is_null($dorm)) {
             $dormrule = "`dorm`.`dorm_id` = '$dorm'";
             $this->db->where($dormrule);
         }
         $this->db->group_by('contract.contract_id');
-        $this->db->order_by("dorm.name", "desc"); 
-        $this->db->order_by("room.name", "desc"); 
-        $this->db->order_by("in_date", "desc"); 
-        // 頁數
-        if ($page <= 0) {
-            $page = 1;
+        // 排序規則
+        if ($order_rule==0) {
+            $this->db->order_by("dorm.name", "desc"); 
+            $this->db->order_by("room.name", "desc"); 
+            $this->db->order_by("in_date", "desc"); 
         }
-        $pages = 30*$page-30;
-        $this->db->limit(30,$pages);
+
+        if ($order_rule = 1) {
+            $this->db->order_by("out_date");
+            $this->db->order_by("dorm.name", "desc"); 
+            $this->db->order_by("room.name", "desc"); 
+        }
+         if ($order_rule = 2) {
+            $this->db->order_by("e_date");
+            $this->db->order_by("dorm.name", "desc"); 
+            $this->db->order_by("room.name", "desc"); 
+        }
+
+        // 頁數
+        if ($page_rule == 0) {        
+            if ($page <= 0) {
+                $page = 1;
+            }
+            $pages = 30*$page-30;
+            $this->db->limit(30,$pages);
+        }
+
+
 
         $query = $this->db->get();
         return $query->result_array();
@@ -145,7 +170,27 @@ class Mcontract extends CI_Model
             $this->db->where($dormrule);
         }
         $result['countdue'] = $this->db->count_all_results();
-
+    //一個月內到期
+        $this->db->distinct()->select('contract.contract_id')->from('contract');    
+        // join
+        $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
+        $this->db->join('room','room.room_id = contract.room_id','left');
+        $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
+        $this->db->join('student','student.stu_id=contractpeo.stu_id','left');
+        //where 
+        $this->db->where('( 0',NULL, false); //for logic 
+        $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword);
+        $this->db->or_where('0 )',NULL, false);
+        $this->db->where('seal',0);
+        // 本月到期
+        $duerule = "(DATEDIFF(`out_date`, '".date("Y-m-d")."')<30 and DATEDIFF(`out_date`, '".date("Y-m-d")."')>=0)";
+        $this->db->where($duerule);
+        // 宿舍
+        if ($dorm != 0&&!is_null($dorm)) {
+            $dormrule = "`dorm`.`dorm_id` = '$dorm'";
+            $this->db->where($dormrule);
+        }
+        $result['countdue_in_1_m'] = $this->db->count_all_results();
         return $result;
     }
 // 這個不太好

@@ -29,6 +29,13 @@ class Contract extends CI_Controller
 		if (!is_numeric($data['view_contract_id'])||$data['view_contract_id']<0) {
 			$data['view_contract_id'] = -1;
 		}
+		$data['view_ofd_contract'] = $this->input->get('option', TRUE);
+		if (is_null($data['view_ofd_contract'])) {
+			$data['view_ofd_contract'] = 0;
+		}
+		if (!is_numeric($data['view_ofd_contract'])||$data['view_ofd_contract']<0) {
+			$data['view_ofd_contract'] = 0;
+		}
 
 		$this->load->helper('dorm_list_helper');
 		// header
