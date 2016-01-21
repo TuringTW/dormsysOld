@@ -174,7 +174,7 @@
 	}
 	// 修改合約資料
 	function edititem(){
-		
+		var state = 1;
 		var rtype = document.getElementById('view_rtype').value
 		var item = document.getElementById('view_item').value
 		var type = document.getElementById('view_type').value
@@ -185,34 +185,61 @@
 		var dorm = document.getElementById('view_dorm').value
 		var billing = document.getElementById('view_billing').value
 		var item_id = document.getElementById('view_item_id').value
+		var errorstate = '';
+		if (rtype==0) {
+			errorstate+='收據類型沒填<br>';
+			state=0;
+		}else if (item==0) {
+			errorstate+='名稱沒填<br>';
+			state=0;
+		}else if (type==0) {
+			errorstate+='類別沒填<br>';
+			state=0;
+		}else if (company==0) {
+			errorstate+='請款單位沒填<br>';
+			state=0;
+		}else if (money==0) {
+			errorstate+='支出金額沒填<br>';
+			state=0;
+		}else if (date==0) {
+			errorstate+='請款日期沒填<br>';
+			state=0;
+		}else if (dorm==0) {
+			errorstate+='宿舍沒填<br>';
+			state=0;
+		}
 
-
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = 'rtype='+rtype+'&item='+item+'&type='+type+'&note='+note+'&company='+company+'&money='+money+'&date='+date+'&dorm='+dorm+'&billing='+billing+'&item_id='+item_id;
-		xhr.open("POST", "<?=web_url('/accounting/itemedit')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// alert(xhr.responseText);
-					if (JSON.parse(xhr.responseText.trim()).state===true) {
-						document.getElementById('edit_btn').className = 'btn btn-info btn-lg';
-						document.getElementById('edit_btn').innerHTML = '已儲存';
-						// 更新表格裡的資訊
-						table_refresh();
-					}
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
+		if (state) {
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = 'rtype='+rtype+'&item='+item+'&type='+type+'&note='+note+'&company='+company+'&money='+money+'&date='+date+'&dorm='+dorm+'&billing='+billing+'&item_id='+item_id;
+			xhr.open("POST", "<?=web_url('/accounting/itemedit')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);
+						if (JSON.parse(xhr.responseText.trim()).state===true) {
+							document.getElementById('edit_btn').className = 'btn btn-info btn-lg';
+							document.getElementById('edit_btn').innerHTML = '已儲存';
+							// 更新表格裡的資訊
+							table_refresh();
+							$('#viewModal').modal('toggle');
+						}
+					} else {  
+						alert('資料傳送出現問題，等等在試一次.');  
+					}  
 				}  
 			}  
-		}  
-		xhr.onreadystatechange = display_datas;  
+			xhr.onreadystatechange = display_datas;  
+		}else{
+			errormsg(errorstate);
+		}
 	}
 	// 詳細資料裡的日期選擇
 	$('#view_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
