@@ -2,7 +2,7 @@
 
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Msite extends CI_Model
+class Mcontract extends CI_Model
 {
      function __construct()
      {
@@ -14,16 +14,6 @@ class Msite extends CI_Model
         parent::__construct();
 
     }
-    function show_all_site(){
-        $this->db->select('site.name, lati, longi, owner, type, user.team')->from('site');
-        $this->db->join('user', 'user.id=site.owner', 'left');
-        $query = $this->db->get();
-        return $query->result_array();
-
-    }
-
-
-
     // 取得合約列表
     function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page, $order_rule=0, $page_rule=0)
     {
