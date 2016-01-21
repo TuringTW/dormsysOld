@@ -1,5 +1,8 @@
 <?php function js_section(){ ?>
 <script type="text/javascript">
+// contract
+	// function 
+// mail
 	function show_mail_modal(){
 		$("#newmailModal").modal('toggle');
 	}
@@ -33,8 +36,6 @@
 		}  
 		xhr.onreadystatechange = display_datas;
 	}
-
-
 	function add_mail_stu(){
 		var stu_id = $('#mail_stu_select').val();
 		var type = $('#type').val();
