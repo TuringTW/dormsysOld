@@ -15,7 +15,7 @@ class Mcontract extends CI_Model
 
     }
     // 取得合約列表
-    function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page, $order_rule=0, $page_rule=0)
+    function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page, $order_method=0, $order_law=0, $page_rule=0)
     {
         $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal, student.name as sname, mobile')->from('contract');
         $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
@@ -50,22 +50,77 @@ class Mcontract extends CI_Model
         }
         $this->db->group_by('contract.contract_id');
         // 排序規則
-        if ($order_rule==0) {
-            $this->db->order_by("dorm.name", "desc"); 
-            $this->db->order_by("room.name", "desc"); 
-            $this->db->order_by("in_date", "desc"); 
+        $order_rule="desc";
+        if ($order_law==1) {
+            $order_rule="asc";
         }
-
-        if ($order_rule = 1) {
-            $this->db->order_by("out_date");
-            $this->db->order_by("dorm.name", "desc"); 
-            $this->db->order_by("room.name", "desc"); 
+        switch ($order_method) {
+            case 1:
+                $this->db->order_by("BINARY `student`.`name`", $order_rule, false); 
+                break;
+            case 2:
+                $this->db->order_by("BINARY `dorm`.`name`", $order_rule, false); 
+                $this->db->order_by("BINARY `room`.`name`", "asc", false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 3:
+                $this->db->order_by("BINARY `dorm`.`name`", $order_rule, false); 
+                $this->db->order_by("BINARY `room`.`name`", $order_rule, false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 4:
+                $this->db->order_by("s_date", $order_rule); 
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 5:
+                $this->db->order_by("e_date", $order_rule); 
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 6:
+                $this->db->order_by("in_date", $order_rule); 
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 7:
+                $this->db->order_by("out_date", $order_rule); 
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 8:
+                $this->db->order_by("c_date", $order_rule); 
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 9:
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
+            case 10:
+                $this->db->order_by("out_date");
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                break; 
+            case 11:
+                $this->db->order_by("e_date");
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false); 
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                break; 
+            
+            default:
+                $this->db->order_by("dorm.name", "desc"); 
+                $this->db->order_by("room.name", "desc"); 
+                $this->db->order_by("in_date", "desc"); 
+                break;
         }
-         if ($order_rule = 2) {
-            $this->db->order_by("e_date");
-            $this->db->order_by("dorm.name", "desc"); 
-            $this->db->order_by("room.name", "desc"); 
-        }
+        
 
         // 頁數
         if ($page_rule == 0) {        

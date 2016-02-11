@@ -162,7 +162,7 @@
 						<div class="col-md-3">
 						</div>
 						<div class="col-md-3">
-							<a id="view_print_btn"  class="btn btn-default btn-lg">列印</a>
+							<a id="view_print_btn"  class="btn btn-default btn-lg" onclick="printmodel()">列印</a>
 							<a id="edit_btn" href="#" class="btn btn-info btn-lg" onclick="editcontract()">已儲存</a>
 						</div>
 						<div class="col-md-2 pull-right">

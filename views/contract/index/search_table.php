@@ -37,16 +37,18 @@
 		<table class="table table-hover" style="text-align:center">
 			
 				<thead>
+					<input type="hidden" id="order_law" value="false"> <?php //0是遞增 1是遞減 ?>
+					<input type="hidden" id="order_method" value="0"> <?php // ?>
 					<tr>
-						<th>#</th>
-						<th>學生姓名</th>
-						<th>宿舍</th>
-						<th>房號</th>
-						<th>合約開始</th>
-						<th>合約結束</th>
-						<th>遷入日期</th>
-						<th>遷出日期</th>
-						<th>新增日期</th>
+						<th><a href="#" title="依預設方式排列" onclick="table_order(0)">#</a></th>
+						<th><a href="#" title="依照學生姓名遞增/遞減排列" onclick="table_order(1)">學生姓名<span class="order_marker" id="order_marker_1" style="display:none;"></span></a></th>
+						<th><a href="#" title="依照宿舍遞增/遞減排列" onclick="table_order(2)">宿舍<span class="order_marker" id="order_marker_2" style="display:none;"></span></a></th>
+						<th><a href="#" title="依照房號遞增/遞減排列" onclick="table_order(3)">房號<span class="order_marker" id="order_marker_3" style="display:none;"></span></a></th>
+						<th><a href="#" title="依照合約開始遞增/遞減排列" onclick="table_order(4)">合約開始<span class="order_marker" id="order_marker_4" style="display:none;"></span></a></th>
+						<th><a href="#" title="依照合約結束遞增/遞減排列" onclick="table_order(5)">合約結束<span class="order_marker" id="order_marker_5" style="display:none;"></span></a></th>
+						<th><a href="#" title="依照遷入日期遞增/遞減排列" onclick="table_order(6)">遷入日期<span class="order_marker" id="order_marker_6" style="display:none;"></span></a></th>
+						<th><a href="#" title="依照遷出日期遞增/遞減排列" onclick="table_order(7)">遷出日期<span class="order_marker" id="order_marker_7" style="display:none;"></span></a></th>
+						<th><a href="#" title="依照新增日期遞增/遞減排列" onclick="table_order(8)">新增日期<span class="order_marker" id="order_marker_8" style="display:none;"></span></a></th>
 						<th style="width:5%">詳細</th>
 					</tr>
 				</thead>

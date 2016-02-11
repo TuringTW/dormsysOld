@@ -2,8 +2,17 @@
 
 <script type="text/javascript">
 // for contractlist
+	
+	function printmodel(){
+
+		contract_id = $('#contract_id').val();
+		$('#print_iframe').attr('src', '<?=web_url("/contract/pdf_gen?contract_id=")?>'+contract_id);
+		$('#printModal').modal('toggle');
+	}
+	
 	table_refresh();
 	// 關鍵字搜尋
+
 	function keyword_serach(){
 		pagemove(0);
 		table_refresh();
@@ -94,6 +103,38 @@
 		}  
 		xhr.onreadystatechange = display_datas;  
 	}
+	// 更新排列方式
+	function table_order(order_method){
+		$('.order_marker').html("+");
+		$('.order_marker').css("display", "none");
+		
+		if (order_method==$('#order_method').val()) {
+			var law_now = $("#order_law").val();	
+			if (law_now=="true") {
+				law_now=1;
+				if (order_method!=0) {
+					$('#order_marker_'+order_method).html('-');
+					$("#order_marker_"+order_method).css("display", "inline");
+				};
+			}else{
+				law_now=0;
+				if (order_method!=0) {
+					$('#order_marker_'+order_method).html('+');
+					$("#order_marker_"+order_method).css("display", "inline");
+				};
+			}
+			$('#order_law').val(!law_now);
+		}else{
+			$("#order_method").val(order_method);
+			$("#order_law").val(0);	
+			$('#order_marker_'+order_method).html('-');
+			$("#order_marker_"+order_method).css("display", "inline");
+		}
+
+
+		table_refresh();
+
+	}
 	// 更新想式的數量
 	function table_refresh(){
 		var keyword = $('#txtkeyword').val();
@@ -101,6 +142,15 @@
 		var due_value = $('#due_value').val();
 		var ofd_value = $('#ofd_value').val();
 		var dorm = $('#dorm_select_value').val();
+		var order_method = $('#order_method').val();//排序方法
+		var order_law = $('#order_law').val(); //遞增或遞減
+
+		if (order_law=="true") {
+			order_law=1;
+		}else{
+			order_law=0;
+		}
+
 		$('#txtkeyword').focus();
 		// if(due_value*ofd_value==1){
 		// 	due_value = 0;
@@ -120,7 +170,7 @@
 		} else if (window.ActiveXObject) { // IE 8 and older  
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 		}  
-		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&dorm="+dorm;  
+		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law;  
 		xhr.open("POST", "<?=web_url('/contract/show')?>");
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
 		xhr.send(data);  
@@ -834,6 +884,11 @@
 			xhr.onreadystatechange = display_datas;  
 		};
 	}
+	
+
+
+
+
 	if ($("#view_contract_id").val()==-1) {
 		errormsg("查看合約代碼錯誤，請紀錄步驟，通知Kevin");
 	}else if($("#view_contract_id").val()!=0){

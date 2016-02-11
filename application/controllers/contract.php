@@ -48,9 +48,13 @@ class Contract extends CI_Controller
 		$this->load->view('contract/index/search_table', $data);
 		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/index/viewModel',$data);
+		$this->load->view('contract/index/printModel');
 		$this->load->view('contract/index/break_contract_dialog');
 		$this->load->view('contract/index/checkout');
 		$this->load->view('contract/index/rentdepositModal');
+		// die("321");
+
+
 		// footer
 		$this->load->view('contract/index/js_section', $data);
 		$this->load->view('template/footer');
@@ -61,8 +65,10 @@ class Contract extends CI_Controller
 		$due = $this->input->post("due_value", TRUE);
 		$ofd = $this->input->post("ofd_value", TRUE);
 		$dorm = $this->input->post("dorm", TRUE);
+		$order_method = $this->input->post("order_method", TRUE);
+		$order_law = $this->input->post("order_law", TRUE);
 		
-		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $page);
+		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $page, $order_method, $order_law);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function due_ofd_refresh(){

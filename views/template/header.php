@@ -35,6 +35,9 @@
 		.nav-sidebar > li > a{ 
 			padding-right: 0px;
 		}
+		.table-hover tbody tr:hover td{
+			background-color: #F7D358;
+		}
 	</style>
 
 </head>

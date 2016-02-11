@@ -29,8 +29,9 @@ class Index extends CI_Controller
 		$this->view_header();
 		$this->load->view('index/index/sidebar');
 		$data['count_ofd_due'] = $this->Mcontract->count_ofd_due(0, '');
-		$data['contract_due'] = $this->Mcontract->show_contract_list('', 0, 0, 1, 0, 1, 2, 1);
-		$data['contract_due_in_a_month'] = $this->Mcontract->show_contract_list('', 0, 0, 2, 0, 1, 1, 1);
+		$data['contract_due'] = $this->Mcontract->show_contract_list('', 0, 0, 2, 0, 1, 11, 0, 1);
+		// 一個月內遷出
+		$data['contract_due_in_a_month'] = $this->Mcontract->show_contract_list('', 0, 0, 2, 0, 1, 10, 0, 1);
 
 		$this->load->view('index/index/control_panel', $data);
 
