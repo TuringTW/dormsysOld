@@ -325,7 +325,8 @@ class Mcontract extends CI_Model
                                 'manager'=>$manager,
                                 'rent'=>$data['rent'],
                                 'sales'=>$data['sales'],
-                                'note'=>$data['note']);
+                                'note'=>$data['note'],
+                                'p_c_id'=>$data['prev_contract_id']);
         $this->db->insert('contract', $insertdata);
         $contract_id = $this->db->insert_id();
         if ($this->db->affected_rows()>0) {
@@ -380,7 +381,7 @@ class Mcontract extends CI_Model
     }
     function get_keep_info($contract_id){
 
-        $this->db->select('contract.room_id, dorm as dorm_id, e_date, out_date, stu_id, room.rent')->from('contract');
+        $this->db->select('contract.contract_id, contract.room_id, dorm as dorm_id, e_date, out_date, stu_id, room.rent')->from('contract');
         $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
         $this->db->join('room','room.room_id = contract.room_id','left');
         $this->db->where('contract.contract_id=', $contract_id);

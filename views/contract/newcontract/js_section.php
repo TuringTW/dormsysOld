@@ -819,6 +819,7 @@
 		cdata.out_date = $('#datepickerOut').val();
 		cdata.note = $('#note').val()+'';
 		cdata.sales = $('#sales').val();
+		cdata.prev_contract_id=$('#prev_contract_id').val();
 		json_data = JSON.stringify(cdata);
 		data = "json_data="+json_data;
 		var xhr;  

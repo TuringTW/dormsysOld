@@ -251,6 +251,7 @@
 				
 			</div>
 			<div class="col-md-2 pull-right">
+				<input type="hidden" id="prev_contract_id" value="0">
 				<a id="submitbtn" name="newcontractsubmit"  class="btn btn-primary btn-lg" disabled onclick="submitcontract()">送出</a>
 			</div>
 		</div>
@@ -359,6 +360,7 @@ document.getElementById('dorm_select').value = <?=$keep_result[0]['dorm_id']?>;
 room_suggestion(<?=$keep_result[0]['room_id']?>);
 
 $('#datepickerStart').val('<?=$keep_result[0][0]?>');
-$('#datepickerIn').val('<?=$keep_result[0][1]?>'); <?php } ?>"></a></button>
+$('#datepickerIn').val('<?=$keep_result[0][1]?>');
+$('#prev_contract_id').val(<?=$keep_result[0]['contract_id']?>) <?php } ?>"></a></button>
 
 

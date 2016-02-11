@@ -668,7 +668,7 @@
 		function display_datas() {  
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
-					alert(xhr.responseText);
+					// alert(xhr.responseText);
 					data = JSON.parse(xhr.responseText);
 					if (data==true) {
 						window.location = "<?=web_url('/contract/newcontract')?>?keep="+contract_id;
