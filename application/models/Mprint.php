@@ -22,7 +22,7 @@ class Mprint extends CI_Model
 
 
         $redirectConfig = array(
-        'client_id'     => '',
+        'client_id'     => '406257612531-hpmjol9bdt3hirjrbstsvpelrq059k17.apps.googleusercontent.com',
         'redirect_uri'  => 'http://127.0.0.1/gcptest/oAuthRedirect.php',
         'response_type' => 'code',
         'scope'         => 'https://www.googleapis.com/auth/cloudprint',
@@ -30,8 +30,8 @@ class Mprint extends CI_Model
 
         $authConfig = array(
             'code' => '',
-            'client_id'     => '',
-            'client_secret' => '',
+            'client_id'     => '406257612531-hpmjol9bdt3hirjrbstsvpelrq059k17.apps.googleusercontent.com',
+            'client_secret' => 'sBtFbcmMAAygx2X_1TPpml5v',
             'redirect_uri'  => 'http://127.0.0.1/gcptest/oAuthRedirect.php',
             "grant_type"    => "authorization_code"
         );
@@ -42,8 +42,8 @@ class Mprint extends CI_Model
 
         $refreshTokenConfig = array(
 
-            'refresh_token' => "",
-            // 'refresh_token' => "",
+            'refresh_token' => "1/TGPLy-5CXysd-WAiU2bGNo0jv3cO3XFZofvf5OxfqCg",
+            // 'refresh_token' => "1/NNLpkxEmfe4BO5HmPy6wIlIvHP7WC111MtUDWKyIQ3Q",
             'client_id' => $authConfig['client_id'],
             'client_secret' => $authConfig['client_secret'],
             'grant_type' => "refresh_token"

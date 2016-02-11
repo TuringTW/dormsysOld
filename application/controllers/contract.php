@@ -200,12 +200,7 @@ class Contract extends CI_Controller
 			$this->Mcontract->pdf_gen($contract_id, 0);
 		}
 	}
-	public function move_to_new_data_base(){
-		
-		$result = $this->Mcontract->move_to_new_data_base();
-		$data['json_data'] = $result;
-		$this->load->view('template/jsonview', $data);	
-	}
+
 	public function print_contract(){
 		$contract_id = $this->input->get('contract_id', TRUE);
 		$printer_id = $this->input->post('printer_id', TRUE);

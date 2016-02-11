@@ -163,7 +163,7 @@
 						</div>
 						<div class="col-md-3">
 							<a id="view_print_btn"  class="btn btn-default btn-lg" onclick="printmodel()">列印</a>
-							<a id="edit_btn" href="#" class="btn btn-info btn-lg" onclick="editcontract()">已儲存</a>
+							<a  href="#" id="edit_btn" class="btn btn-info btn-lg" onclick="editcontract();">已儲存</a>
 						</div>
 						<div class="col-md-2 pull-right">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

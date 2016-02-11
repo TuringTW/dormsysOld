@@ -312,11 +312,13 @@
 	// 提示表單有變更
 	function change_alert(){
 
-
-		$('#edit_btn').addClass('active');
+		var $btn = $('#edit_btn');
+		$btn.html("未儲存");
+		// $('#edit_btn').addClass('active');
 		// alert($('#edit_btn').attr('class'));
-		$('#edit_btn').attr('className', 'btn btn-warning btn-lg');
-		$('#edit_btn').html('未儲存');
+		// $('#edit_btn').attr('class', 'btn btn-warning btn-lg');
+		// $('#edit_btn').html('未儲存');
+		// alert($('#edit_btn').html());
 	}
 	// 修改合約資料
 	function editcontract(){

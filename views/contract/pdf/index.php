@@ -25,13 +25,13 @@
 		<table cellpadding="1" cellspacing="1" border="1px" style="width:<?=$wu*100/100?>;text-align:center;">
 			<tr style="text-align:center">
 				<th style="width:<?=$wu*5/100?>" rowspan="1">編號</th>
-				<th  style="width:<?=$wu*30/100?>" rowspan="1">承租人</th>
-				<th  style="width:<?=$wu*20/100?>">身分證字號</th>
-				<th style="width:<?=$wu*20/100?>">出生年月日</th>
-				<th style="width:<?=$wu*(1-75/100)?>">手機</th>
-				<!-- <th style="width:<?=$wu*14/100?>">住家電話</th>
-				<th style="width:<?=$wu*13/100?>">緊急聯絡人</th>
-				<th style="width:<?=$wu*14/100?>">聯絡電話</th> -->
+				<th  style="width:<?=$wu*21/100?>" rowspan="1">承租人</th>
+				<th  style="width:<?=$wu*15/100?>">身分證字號</th>
+				<th style="width:<?=$wu*15/100?>">出生年月日</th>
+				<th style="width:<?=$wu*(20/100)?>">手機</th>
+				 <!-- <th style="width:<?=$wu*14/100?>">住家電話</th> -->
+				<th style="width:<?=$wu*10/100?>">聯絡人</th>
+				<th style="width:<?=$wu*14/100?>">緊急電話</th>
 			</tr>
 			<!-- <tr>
 				<td  colspan="3">戶籍地址</td>
@@ -44,9 +44,10 @@
 					<td><?=ucwords(trim($datum['id_num']))?></td>
 					<td>民<?=(trim((new DateTime($datum['birthday']))-> modify('-1911 year') -> format('Y-m-d'),'0'))?></td>
 					<td><span style="font-size:18px"><?=($datum['mobile'])?></span></td>
-					<!-- <td><?=($datum['home'])?></td>
+					<!-- <td><?=($datum['home'])?></td> -->
 					<td><?=($datum['emg_name'])?></td>
-					<td><?=($datum['emg_phone'])?></td> -->
+					
+ 					<td><?=($datum['emg_phone'])?></td>
 				</tr>
 				<!-- <tr>
 					<td  colspan="3"><?=($datum['reg_address'])?>&nbsp;</td>
