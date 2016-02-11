@@ -210,5 +210,21 @@ class Contract extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
+	public function keep_contract_check(){
+		$contract_id = $this->input->post('contract_id', TRUE);
+		// 檢查有可不可以續約
+		if (true) {
+			// 可以續約 先把原合約結算
+			$result = $this->Mcontract->set_check_out($contract_id);
+
+
+		}else{
+			// 不可續約
+			$result = false;
+		}
+
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>

@@ -425,41 +425,7 @@ class Mcontract extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-    function move_to_new_data_base(){
-        $link = mysqli_connect('127.0.0.1','client','1qaz2wsx','dorm2');
-        mysqli_query($link,"SET NAMES 'UTF8'");
 
-        $sql = "SELECT distinct `c_num`, `room_id`, `s_date`, `e_date`, `c_date`, `in_date`, `out_date`, `rent`, `payed_rent`, `timestamp`, `seal`, `sales`, `keep`, `bank_id`, `return`, `manager`, `note` from `contract` where 1 group by `c_num`";
-        $result = mysqli_query($link, $sql);
-
-        $contract = array();
-        while($row = mysqli_fetch_assoc($result)){
-            array_push($contract, $row);
-        }
-
-        foreach ($contract as $key => $value) {
-        
-            $this->db->insert('contract', $value);
-            $c_num = $value['c_num'];
-            $contract_id = $this->db->insert_id();
-            $sql = "SELECT `stu_id` from `contract` where `c_num` = '$c_num'";
-            $result = mysqli_query($link, $sql);
-
-            $stulist = array();
-            while($row = mysqli_fetch_assoc($result)){
-                $row['contract_id'] = $contract_id;
-                array_push($stulist, $row);
-            }
-
-            $this->db->insert_batch('contractpeo', $stulist);
-
-        }
-
-
-
-
-        return 1;
-    }
     function pdf_gen($contract_id, $method){
         $this->load->library(array('pdf'));
         

@@ -654,7 +654,36 @@
       }
     });
     function keep_contract(contract_id){
-    	window.location = "<?=web_url('/contract/newcontract')?>?keep="+contract_id;
+    	// 傳送
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "contract_id=" + contract_id;  
+		xhr.open("POST", "<?=web_url('/contract/keep_contract_check')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					alert(xhr.responseText);
+					data = JSON.parse(xhr.responseText);
+					if (data==true) {
+						window.location = "<?=web_url('/contract/newcontract')?>?keep="+contract_id;
+					}else{
+						errormsg('續約時發生錯誤，可能是租金尚未結清。');
+					}
+				} else {  
+					errormsg('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;
+
+
+    	
     }
 
 
