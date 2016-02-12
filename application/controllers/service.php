@@ -28,7 +28,7 @@ class Service extends CI_Controller
 		$this->view_header();
 		// sidebar
 		$data['active'] = 0;
-		$this->load->view('service/mail/sidebar', $data);
+		$this->load->view('service/sidebar', $data);
 		$data['mail_list'] = $this->Mservice->show_mail_list();
 		$this->load->view('service/mail/search_table', $data);
 
@@ -71,6 +71,27 @@ class Service extends CI_Controller
 		$data['json_data'] = $this->Mservice->add_nstu_mail($recname, $phone, $type, $date, $note);
 		$this->load->view('template/jsonview', $data);
 
+	}
+	public function sms(){
+		$this->view_header();
+		// sidebar
+		$data['active'] = 1;
+		$this->load->view('service/sidebar', $data);
+		$data['mail_list'] = $this->Mservice->show_mail_list();
+		$this->load->view('service/sms/search_table', $data);
+
+		// $this->load->view('service/sms/mail_modal', $data);
+		
+		$this->load->view('service/sms/js_section', $data);
+		$this->load->view('template/footer');
+	}
+	public function show_sms(){
+		$keyword = $this->input->post("keyword", TRUE);
+		$page = $this->input->post("page", TRUE);
+		
+		$data['json_data'] = $this->Mservice->show_sms_list($keyword, $page);
+
+		$this->load->view('template/jsonview', $data);
 	}
 }
 ?>

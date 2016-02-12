@@ -17,7 +17,7 @@ class Mcontract extends CI_Model
     // 取得合約列表
     function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $page, $order_method=0, $order_law=0, $page_rule=0)
     {
-        $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal, student.name as sname, mobile')->from('contract');
+        $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal, student.name as sname, mobile, p_c_id')->from('contract');
         $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
         $this->db->join('room','room.room_id=contract.room_id','left');
         $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
@@ -25,7 +25,13 @@ class Mcontract extends CI_Model
         $this->db->where('( 0',NULL, false); //for logic 
         $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword);
         $this->db->or_where('0 )',NULL, false);
-        $this->db->where('seal',0);
+        $this->db->where('( 0',NULL, false); //for logic 
+            $this->db->or_where('seal', 0);
+            $this->db->or_where('( 0',NULL, false); //for logic 
+                $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+
+            $this->db->or_where('0 )',NULL, false);
+        $this->db->or_where('0 )',NULL, false);
 
         // 逾期
         if ($outofdate==1) {
@@ -215,7 +221,13 @@ class Mcontract extends CI_Model
         $this->db->where('( 0',NULL, false); //for logic 
         $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword);
         $this->db->or_where('0 )',NULL, false);
-        $this->db->where('seal',0);
+        $this->db->where('( 0',NULL, false); //for logic 
+            $this->db->or_where('seal', 0);
+            $this->db->or_where('( 0',NULL, false); //for logic 
+                $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+
+            $this->db->or_where('0 )',NULL, false);
+        $this->db->or_where('0 )',NULL, false);
         // 本月到期
         $duerule = "(Month(`e_date`)=".date('m')." and Year(`e_date`)=".date('Y').")";
         $this->db->where($duerule);

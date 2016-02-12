@@ -64,5 +64,20 @@ class Mservice extends CI_Model
 		$this->db->insert('mail'); 
 		return TRUE;
 	}
-	
+	function show_sms_list($keyword, $page){
+		$this->db->select('*')->from('smsdata');
+        $this->db->where('( 0',NULL, false); //for logic 
+        $this->db->or_like('smsdata.phone',$keyword)->or_like('smsdata.content',$keyword);
+        $this->db->or_where('0 )',NULL, false);
+        $this->db->order_by("send_time", "desc"); 
+        // 頁數
+        if ($page <= 0) {
+            $page = 1;
+        }
+        $pages = 30*$page-30;
+        $this->db->limit(30,$pages);
+
+        $query = $this->db->get();
+        return $query->result_array();
+	}
 }?>

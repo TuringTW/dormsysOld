@@ -1,6 +1,6 @@
 <?php $version="7.1.0" 
 // 	6.1 	新增本月退租檢視功能
-// 			seal 代號 0正常 -1退宿 1刪除 2待結算 3封存
+// 			seal 代號 0正常  -1退宿 1刪除 2待結算 3封存
 // 	6.21	測試結算功能
 //	6.22	結算功能完成 新增快速簡訊 新增封存 
 // 	6.23 	更新房間宿舍電錶管理 可直接查看合約與房間清單
@@ -82,6 +82,7 @@
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">服務</a>
 						<ul class="dropdown-menu">
 							<li><a href = "<?=web_url('/service/mail')?>">信件通知</a></li>
+							<li><a href = "<?=web_url('/service/sms')?>">簡訊紀錄</a></li>
 							<!-- <li><a href = "">維修</a></li> -->
 							<!-- <li><a href = "">水電費押金</a></li> -->
 						</ul>

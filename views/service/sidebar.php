@@ -5,6 +5,13 @@ $sidebardata = array(array(	'name'=>'信件通知',
 								array('icon'=>'','url'=>web_url("/service/mail"),'text'=>'信件'),	
 								
 							)
+						),
+					array(	'name'=>'簡訊',
+							'style'=>'alert-success',
+							'data'=>array(
+								array('icon'=>'','url'=>web_url("/service/sms"),'text'=>'簡訊紀錄'),	
+								
+							)
 						)
 					);
 echo sidebar($sidebardata, $active);

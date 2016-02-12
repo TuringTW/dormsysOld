@@ -196,7 +196,29 @@
 			if (data[i].countp>1) {
 				text = '等'+data[i].countp+'人';
 			};
-			$('#result_table').append('<tr><td>'+(page*30+i-29)+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td>'+data[i].c_date+'</td><td><a onclick="showcontract('+data[i].contract_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
+			var classrule = "";
+			var state = 0;
+			switch(data[i].seal){
+				case '0': 
+					//正常
+					classrule="";
+					state = "有效"; 
+					break;
+				case '2':
+					//待結算
+					var e_date = new Date(data[i].e_date);
+
+					if (Math.floor((e_date.getTime()-Date.now())/1000/86400)+1>=0) {
+						classrule="class='success'" ;
+						state = "已續約";
+					}else{
+						classrule="class='warning'" ;
+						state = "待結算";
+					}
+						
+					break;
+			}
+			$('#result_table').append('<tr '+classrule+'><td>'+(page*30+i-29)+'</td><td>'+state+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td>'+data[i].c_date+'</td><td><a onclick="showcontract('+data[i].contract_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
 		};
 		if (data.length<30) {
 			$('#page_up').attr( "disabled", true );
@@ -544,10 +566,10 @@
 // 結算
 	// 檢查可否結算
 	function checkout_check(){
-		var e_date = Date.parse($('#view_e_date').val()+' 00:00:00');
+		var out_date = Date.parse($('#view_out_date').val()+' 00:00:00');
 		var today = new Date();
-		if (Math.round((today - e_date)/1000000)<0) {
-			errormsg('合約尚未到期!!!');
+		if (Math.round((today - out_date)/1000000)<0) {
+			errormsg('學生尚未退房!!!若提早退房請先修改遷出時間');
 		}else{
 			$('#dialog-check-out-comfirm').dialog( "open" );
 			$('#ccontract_id').val($('#contract_id').val());
