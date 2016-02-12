@@ -77,7 +77,6 @@ class Service extends CI_Controller
 		// sidebar
 		$data['active'] = 1;
 		$this->load->view('service/sidebar', $data);
-		$data['mail_list'] = $this->Mservice->show_mail_list();
 		$this->load->view('service/sms/search_table', $data);
 
 		// $this->load->view('service/sms/mail_modal', $data);
@@ -93,5 +92,30 @@ class Service extends CI_Controller
 
 		$this->load->view('template/jsonview', $data);
 	}
+	public function smscollection(){
+		$this->view_header();
+		// sidebar
+		$data['active'] = 2;
+		$this->load->view('service/sidebar', $data);
+		$data['mail_list'] = $this->Mservice->show_mail_list();
+		$this->load->view('service/smscollection/search_table', $data);
+
+		// $this->load->view('service/sms/mail_modal', $data);
+		$this->load->view('service/smscollection/new_collection_modal', $data);
+		$this->load->view('service/smscollection/js_section', $data);
+		$this->load->view('template/footer');
+	}
+	public function show_sms_collection(){
+		$data['json_data'] = $this->Mservice->show_sms_collection();
+		$this->load->view('template/jsonview', $data);
+	}
+	public function add_sms_collection(){
+		$content = $this->input->post('content', TRUE);
+		$type = $this->input->post('type', TRUE);
+
+		$data['json_data'] = $this->Mservice->add_sms_collection($content, $type);
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>
+

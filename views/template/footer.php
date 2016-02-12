@@ -110,6 +110,41 @@
 			document.getElementById('showbox').innerHTML = y+'/'+mo +'/'+d+' '+ h+':'+m+':'+s;
 			setTimeout('ShowTime()',1000);
 		}
+		function get_sms_collection(){
+			var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = "";  
+			xhr.open("POST", "<?=web_url('/service/show_sms_collection')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);   
+						$('#smscollectionselection').html('<option>請選擇...</option>');
+						var data = JSON.parse(xhr.responseText);
+
+						for (var i = data.length - 1; i >= 0; i--) {
+							$('#smscollectionselection').append('<option id="smscollectionoption'+data[i].sc_id+'" value="'+data[i].sc_id+'">'+data[i].content+'</option>');
+						};
+					} else {  
+						errormsg('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+			xhr.onreadystatechange = display_datas;
+		}
+		get_sms_collection();
+		function fill_in_sms(){
+			var sc_id = $('#smscollectionselection').val();
+			if (sc_id>0) {
+				$('#sms_content').val($('#sms_content').val()+$("#smscollectionoption"+sc_id).html());
+			}
+		}
 	</script> 
 	<!-- 讓每一頁可以寫不同script的方法 -->
 	<?php if(function_exists("js_section")){ js_section(); } ?>

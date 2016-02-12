@@ -80,4 +80,16 @@ class Mservice extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
 	}
+	function show_sms_collection(){
+		$this->db->select('*')->from('smscollection');
+		$query = $this->db->get();
+        return $query->result_array();
+	}
+	function add_sms_collection($content, $type){
+		$data = array(	'content' => $content ,
+						'type' => $type);
+		$this->db->set($data);
+		$this->db->insert('smscollection'); 
+		return TRUE;
+	}
 }?>

@@ -11,6 +11,11 @@
 					<h5>簡訊內容</h5>
 					<textarea class="form-control" id="sms_content" style="resize: none;"  style="width:100%" name="new[]" rows="5"></textarea>	
     				<br>
+    				<h5>插入罐頭簡訊</h5>
+    				<select class="form-control" id="smscollectionselection" onchange="fill_in_sms()">
+    					
+    				</select>
+    				<br>
     				<h5>收件人(逗號隔開)</h5>
     				<textarea class="form-control" id="sms_receiver" style="resize: none;"  style="width:100%" name="new[]" rows="5"></textarea>	
      				
@@ -25,9 +30,6 @@
 							<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Close</button>
 						</div>
 
-						
-						
-						
 						<div class="col-md-2 pull-right">
 							
 						</div>
