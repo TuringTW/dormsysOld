@@ -1,9 +1,9 @@
 <h1 class="page-header">罐頭簡訊列表</h1>
 <!-- 搜尋列 次導覽列 -->
 	<div class="form-group">
-		<div class="col-sm-5">
+		<!-- <div class="col-sm-5">
 			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="Enter電話、內容" value="">
-		</div>
+		</div> -->
 		<div class="col-sm-2 btn-group">
 			<a href="#" class="btn btn-default" onclick="sendsms('', '')" >新簡訊</a>
 

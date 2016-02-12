@@ -102,6 +102,7 @@
 					// alert(xhr.responseText);   
 					table_refresh();
 					successmsg("新增成功");
+					$("#newcollectionModal").modal("toggle");
 				} else {  
 					errormsg('資料傳送出現問題，等等在試一次.');  
 				}  
