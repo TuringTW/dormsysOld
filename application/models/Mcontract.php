@@ -176,7 +176,7 @@ class Mcontract extends CI_Model
             $m_id = $this->session->userdata('m_id');
             $time = Date('Y-m-d h:i:s');
 
-            $sql = "UPDATE `contract` set `e_date` = '$b_date', `out_data`= '$b_date', `note` = CONCAT(`note`,'bc at $time by $m_id,') 
+            $sql = "UPDATE `contract` set `e_date` = '$b_date', `out_date`= '$b_date', `note` = CONCAT(`note`,'bc at $time by $m_id,') 
                     where `contract_id` = '$contract_id'";
             $query = $this->db->query($sql);
             return true;
