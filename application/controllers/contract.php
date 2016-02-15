@@ -226,5 +226,11 @@ class Contract extends CI_Controller
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
+	public function delete_contract(){
+		$contract_id = $this->input->post("contract_id", TRUE);
+		$result = $this->Mcontract->delete_contract($contract_id);
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);	
+	}	
 }
 ?>

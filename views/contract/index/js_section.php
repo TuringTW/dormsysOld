@@ -392,6 +392,7 @@
 		buttons: {
 		"原合約終止後續約":breaknkeep,
 		"原合約終止": breakonly,
+		"刪除此合約":delete_confirm,
 		"取消": function() {
 				dialogbreak.dialog( "close" );
 			}
@@ -418,6 +419,40 @@
 	    }
 	    dialogbreak.dialog( "open" );   	
     });
+    function delete_confirm(){
+    	if (confirm("確定要刪除?")) {
+    		var contract_id = $('#bcontract_id').val();
+    		var xhr;  
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+				xhr = new XMLHttpRequest();  
+			} else if (window.ActiveXObject) { // IE 8 and older  
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+			}  
+			var data = "contract_id=" + contract_id;  
+			xhr.open("POST", "<?=web_url('/contract/delete_contract')?>", true);   
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);        
+						data = JSON.parse(xhr.responseText);
+						if (data==true) {
+							successmsg("刪除成功");
+							table_refresh();
+							dialogbreak.dialog( "close" );
+						}else{
+							errormsg("發生問題，在試一次");
+							dialogbreak.dialog( "close" );
+						}
+					} else {  
+						alert('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+			xhr.onreadystatechange = display_datas;  	
+    	}
+	}
     function getbcontract(contract_id){
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
@@ -553,7 +588,7 @@
           		var b_date = $('#keep_b_date').val();
           		var tomorrow = new Date(Date.parse(b_date));
 				tomorrow.setDate(tomorrow.getDate()+1);
-          		window.location.assign('newContract.php?keep='+contract_id+'&sdate='+(tomorrow.getFullYear())+'-'+(tomorrow.getMonth()+1)+'-'+(tomorrow.getDate())+'&searchsubmit=')
+          		window.location.assign('<?=web_url("/contract/newcontract")?>?keep='+contract_id);
 
           	}
           

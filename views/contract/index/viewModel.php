@@ -170,9 +170,9 @@
 						</div>
 						
 						<div class="col-md-4 pull-right">
-							<a id="view_keep_btn"  name="checkoutsubmit" onclick="keep_check()"class="btn btn-success btn-lg keep">續約</a>
-							<a id="view_check_out_btn"  name="checkoutsubmit" onclick="checkout_check()" class="btn btn-primary btn-lg checkout">結算</a>
-							<a id="view_change_btn"  name="checkoutsubmit" data-cnum="0" class="btn  btn-lg btn-danger">合約更動、取消</a>
+							<a id="view_keep_btn"  name="checkoutsubmit" title="續約" onclick="keep_check()"class="btn btn-success btn-lg keep">續約</a>
+							<a id="view_check_out_btn"  name="checkoutsubmit" title="移到結算列表" onclick="checkout_check()" class="btn btn-primary btn-lg checkout">結算此合約</a>
+							<a id="view_change_btn"  name="checkoutsubmit" data-cnum="0" title="違約提早結束、手滑打錯要刪除、要換房間"class="btn  btn-lg btn-danger">合約更動、取消</a>
 						</div> 
     					<div class="col-md-1 pull-right">
 							
