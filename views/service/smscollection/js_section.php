@@ -103,6 +103,7 @@
 					table_refresh();
 					successmsg("新增成功");
 					$("#newcollectionModal").modal("toggle");
+					get_sms_collection();
 				} else {  
 					errormsg('資料傳送出現問題，等等在試一次.');  
 				}  
