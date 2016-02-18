@@ -92,4 +92,17 @@ class Mservice extends CI_Model
 		$this->db->insert('smscollection'); 
 		return TRUE;
 	}
+	function show_fix_list(){
+		$this->db->select('fr_id, dorm.dorm_id, room, sname, mobile, fix_item, fix_detail, is_allow, dorm.name as dname, timestamp')->from('fix_record')->join('dorm', 'dorm.dorm_id = fix_record.dorm_id', 'left')->where('done', 0);
+		$query = $this->db->get();
+        return $query->result_array();
+	}
+	function show_fix_item($fr_id){
+		$this->db->select('fr_id, dorm.dorm_id, room, sname, mobile, fix_item, fix_detail, is_allow, dorm.name as dname, timestamp')->from('fix_record')->join('dorm', 'dorm.dorm_id = fix_record.dorm_id', 'left')->where('fix_record.fr_id', $fr_id);
+		// die($fr_id);
+		$query = $this->db->get();
+		$result['state'] = true;
+		$result['result'] = $query->row(0);
+        return $result;	
+	}
 }?>

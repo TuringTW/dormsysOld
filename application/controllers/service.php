@@ -5,7 +5,7 @@ class Service extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
+		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper', 'dorm_list_helper'));
 		$this->load->library('session');
 		$this->load->model(array('login_check', 'Mstudent', 'Mservice'));
 		// check login & power, and then init the header
@@ -114,6 +114,29 @@ class Service extends CI_Controller
 		$type = $this->input->post('type', TRUE);
 
 		$data['json_data'] = $this->Mservice->add_sms_collection($content, $type);
+		$this->load->view('template/jsonview', $data);
+	}
+	public function fix_record(){
+		$this->view_header();
+		$data['active'] = 3;
+		
+		$this->load->view('service/sidebar', $data);
+		$data['dormlist'] = $this->Mutility->get_dorm_list();
+		$this->load->view("service/fix/search_table", $data);
+		
+		$this->load->view('service/fix/viewModel',$data);
+		$this->load->view("service/fix/js_section", $data);
+
+
+		$this->load->view("template/footer");
+	}	
+	public function show_fix_list(){
+		$data['json_data'] = $this->Mservice->show_fix_list();
+		$this->load->view('template/jsonview', $data);
+	}
+	public function show_fix_item(){
+		$fr_id = $this->input->post('fr_id', TRUE);
+		$data['json_data'] = $this->Mservice->show_fix_item($fr_id);
 		$this->load->view('template/jsonview', $data);
 	}
 }
