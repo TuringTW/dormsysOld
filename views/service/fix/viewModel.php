@@ -111,6 +111,8 @@
 								</div>
 								<div class="col-sm-5">
 									<h4><span id="view_new_solution_lbl">新增</span>處理方式細節</h4>
+									<input id="view_sr_id" type="hidden" value="0">
+
 									<table class="table table-hover">
 										<tr>
 											<td style="width:25%">類別</td>
@@ -153,8 +155,8 @@
 										
 									</table>
 									<hr>
-									<a href="#" id="edit_btn" class="btn btn-warning" onclick="save_solution()">儲存</a>
-									<a href="#" id="add_to_template_btn"class="btn btn-default">新增為模板</a>
+									<a href="#" id="edit_btn" class="btn btn-warning" onclick="save_solution(0)">儲存</a>
+									<a href="#" id="add_to_template_btn"class="btn btn-default" style="display:none" onclick="save_solution(1)">新增為模板</a>
 								</div>
 							</div>
 						</div>

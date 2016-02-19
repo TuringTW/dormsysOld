@@ -117,15 +117,15 @@
 		$('#edit_btn').html('未儲存');
 	}
 	// 修改合約資料
-	function save_solution(){
+	function save_solution(method){
 		var state = 1;
+		var sr_id = document.getElementById('view_sr_id').value
 		var fr_id = document.getElementById('view_fr_id').value
 		var type = document.getElementById('soln_view_type').value
 		var solution = document.getElementById('soln_view_solution').value
 		var cost = document.getElementById('soln_view_cost').value
 		var salary = document.getElementById('soln_view_salary').value
 		var date = document.getElementById('soln_view_date').value
-		
 		var errorstate = '';
 		if (type==null) {
 			errorstate+='分類沒填<br>';
@@ -151,8 +151,13 @@
 			} else if (window.ActiveXObject) { // IE 8 and older  
 				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 			}  
-			var data = 'type='+type+'&solution='+solution+'&cost='+cost+'&salary='+salary+'&fr_id='+fr_id;
-			xhr.open("POST", "<?=web_url('/accounting/itemedit')?>");
+			var data = 'type='+type+'&solution='+solution+'&cost='+cost+'&salary='+salary+'&date='+date+'&fr_id='+fr_id+'&sr_id='+sr_id;
+			if (method==0) {
+				xhr.open("POST", "<?=web_url('/service/save_solution')?>");
+			}else{
+				xhr.open("POST", "<?=web_url('/service/new_template')?>");
+			}
+			
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
 			xhr.send(data);  
 			function display_datas() {  
@@ -160,12 +165,16 @@
 					if (xhr.status == 200) {  
 						// alert(xhr.responseText);
 						if (JSON.parse(xhr.responseText.trim()).state===true) {
-							document.getElementById('edit_btn').className = 'btn btn-info btn-lg';
-							document.getElementById('edit_btn').innerHTML = '已儲存';
-							// 更新表格裡的資訊
-							table_refresh();
+							if (method==0) {
+								document.getElementById('edit_btn').className = 'btn btn-info btn-lg';
+								document.getElementById('edit_btn').innerHTML = '已儲存';
+								// 更新表格裡的資訊
+								solution_table_refresh();
+							}else{
+								successmsg('新增成功');
+							}
+								
 
-							$('#viewModal').modal('toggle');
 						}
 					} else {  
 						alert('資料傳送出現問題，等等在試一次.');  
@@ -187,6 +196,7 @@
 		document.getElementById('soln_view_cost').value = null;
 		document.getElementById('soln_view_salary').value = null;
 		document.getElementById('soln_view_date').value = null;
+		$('#view_sr_id').val(0);
 		$('#soln_view_template').html('<option  class="form-control">請選擇...</option>');
 		$('#soln_view_template').removeAttr('disabled');
 
@@ -241,8 +251,6 @@
 		$("#add_to_template_btn").css("display", "inline");
 		$('#soln_view_template').html('<option  class="form-control">請選擇...</option>');
 		$('#soln_view_template').attr('disabled', 'true');
-
-						soln_view_date
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
 			xhr = new XMLHttpRequest();  
@@ -260,10 +268,13 @@
 					var data = JSON.parse(xhr.responseText);
 					if (data.state == true) {
 						var datum = data.result
-						document.getElementById('soln_view_type').value = datum[0].type;
-						document.getElementById('soln_view_solution').value = datum[0].solution;
-						document.getElementById('soln_view_cost').value = datum[0].cost;
-						document.getElementById('soln_view_salary').value = datum[0].salary;
+						document.getElementById('soln_view_type').value = datum.type;
+						document.getElementById('soln_view_solution').value = datum.solution;
+						document.getElementById('soln_view_cost').value = datum.cost;
+						document.getElementById('soln_view_salary').value = datum.salary;
+						document.getElementById('soln_view_date').value = datum.date;
+						$('#view_sr_id').val(datum.sr_id);
+						$("#add_to_template_btn").css("display", "inline");
 					};
 					
 				} else {  
@@ -339,7 +350,40 @@
 		}  
 		xhr.onreadystatechange = display_datas;
 	}
-
+	function removesoltion(sr_id){
+		var template = $('#soln_view_template').val();
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		} 
+		if (confirm('確定要刪除嗎?')) {
+			var data = "sr_id="+sr_id;  
+			xhr.open("POST", "<?=web_url('/service/remove_soltion')?>");
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+			xhr.send(data);  
+			function display_datas() {  
+				if (xhr.readyState == 4) {  
+					if (xhr.status == 200) {  
+						// alert(xhr.responseText);   
+						var data = JSON.parse(xhr.responseText);
+						if (data.state === true) {
+							successmsg('刪除成功')
+							solution_table_refresh();
+						}else{
+							errormsg('模板標號可能錯誤');  	
+						}
+					} else {  
+						errormsg('資料傳送出現問題，等等在試一次.');  
+					}  
+				}  
+			}  
+			xhr.onreadystatechange = display_datas;
+		}; 
+			
+	}
+	
 	$('#soln_view_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 </script>
 

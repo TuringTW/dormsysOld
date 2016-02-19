@@ -491,4 +491,5 @@ class Mcontract extends CI_Model
         $this->db->update("contract", $data);
         return TRUE;
     }
+    
 }?>

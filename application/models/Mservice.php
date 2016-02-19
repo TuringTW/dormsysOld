@@ -106,13 +106,13 @@ class Mservice extends CI_Model
         return $result;	
 	}
 	function show_solution_list($fr_id){
-		$this->db->select('sr_id, fr_id, type, solution, cost, salary, date')->from('soln_record')->where('fr_id', $fr_id);
+		$this->db->select('sr_id, fr_id, type, solution, cost, salary, date')->from('soln_record')->where('fr_id', $fr_id)->where('seal', 0);
 		$query = $this->db->get();
 		$result['state'] = true;
 		$result['result'] = $query->result_array();
         return $result;	
 	}
-	function show_soltion_item($sr_id){
+	function show_solution_item($sr_id){
 		$this->db->select('sr_id, fr_id, type, solution, cost, salary, date, timestamp')->from('soln_record')->where('sr_id', $sr_id);
 		// die($fr_id);
 		$query = $this->db->get();
@@ -149,4 +149,42 @@ class Mservice extends CI_Model
 		}
 		return $result;	
 	}
+	function save_solution($type, $solution, $cost, $salary, $date, $fr_id, $sr_id){
+		$data = array(
+				'type'=>$type, 
+				'solution'=>$solution,
+				'cost'=>$cost,
+				'salary'=>$salary,
+				'date'=>$date,
+				'fr_id'=>$fr_id);
+		if ($sr_id!=0) {
+			$this->db->where('sr_id', $sr_id);
+			$this->db->update('soln_record', $data);
+		}else{
+			$this->db->insert('soln_record', $data);
+		}
+		$result['state'] = true;
+		return $result;
+		
+	}
+	function save_template($type, $solution, $cost, $salary){
+		$data = array(
+				'type_id'=>$type,
+				'level'=>1, 
+				'solution'=>$solution,
+				'cost'=>$cost,
+				'salary'=>$salary);
+		
+		$this->db->insert('soln_template', $data);
+		
+		$result['state'] = true;
+		return $result;
+	}
+	function remove_soltion($sr_id){
+        $data = array('seal'=>1);
+        $this->db->where('sr_id', $sr_id);
+		$this->db->update('soln_record', $data);
+		$result['state'] = true;
+		return $result;
+    }
 }?>

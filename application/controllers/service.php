@@ -146,7 +146,7 @@ class Service extends CI_Controller
 	}
 	public function show_soltion_item(){
 		$sr_id = $this->input->post('sr_id', TRUE);
-		$data['json_data'] = $this->Mservice->show_solution_list($sr_id);
+		$data['json_data'] = $this->Mservice->show_solution_item($sr_id);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function show_template_by_type(){
@@ -157,6 +157,34 @@ class Service extends CI_Controller
 	public function select_template(){
 		$template = $this->input->post('template', TRUE);
 		$data['json_data'] = $this->Mservice->select_solution_template($template);
+		$this->load->view('template/jsonview', $data);
+	}
+	public function save_solution(){
+		$type = $this->input->post('type', TRUE);
+		$solution = $this->input->post('solution', TRUE);
+		$cost = $this->input->post('cost', TRUE);
+		$salary = $this->input->post('salary', TRUE);
+		$date = $this->input->post('date', TRUE);
+		$fr_id = $this->input->post('fr_id', TRUE);
+		$sr_id = $this->input->post('sr_id', TRUE);
+
+		$data['json_data'] = $this->Mservice->save_solution($type, $solution, $cost, $salary, $date, $fr_id, $sr_id);
+
+		$this->load->view('template/jsonview', $data);
+	}
+	public function new_template(){
+		$type = $this->input->post('type', TRUE);
+		$solution = $this->input->post('solution', TRUE);
+		$cost = $this->input->post('cost', TRUE);
+		$salary = $this->input->post('salary', TRUE);
+
+		$data['json_data'] = $this->Mservice->save_template($type, $solution, $cost, $salary);
+
+		$this->load->view('template/jsonview', $data);
+	}
+	public function remove_soltion(){
+		$sr_id = $this->input->post('sr_id', TRUE);
+		$data['json_data'] = $this->Mservice->remove_soltion($sr_id);
 		$this->load->view('template/jsonview', $data);
 	}
 }
