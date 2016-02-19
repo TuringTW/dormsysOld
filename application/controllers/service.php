@@ -187,6 +187,11 @@ class Service extends CI_Controller
 		$data['json_data'] = $this->Mservice->remove_soltion($sr_id);
 		$this->load->view('template/jsonview', $data);
 	}
+	public function fix_finish(){
+		$fr_id = $this->input->post('fr_id', TRUE);
+		$data['json_data'] = $this->Mservice->fix_finish($fr_id);
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>
 

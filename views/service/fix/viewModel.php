@@ -14,7 +14,7 @@
 					</ul>
 
 					<div class="tab-content">
-						<div class="tab-pane " id="fix_detail">
+						<div class="tab-pane active" id="fix_detail">
 							<div class="row">
 
 								<div class="col-md-5">
@@ -83,7 +83,7 @@
 							
 	    					<input type="hidden" id="view_fr_id" value="0">
 						</div>
-						<div class="tab-pane active " id="solution">
+						<div class="tab-pane " id="solution">
 							<div class="row">
 								<div class="col-sm-7">
 									<h4>處理方式</h4>
@@ -92,7 +92,7 @@
 										<a href="#" class="btn btn-default" onclick="new_solution()">新增處理方式</a>
 									</div>
 									
-									<a href="#" class="btn btn-danger" >標示為處理完成</a>
+									<a href="#" class="btn btn-danger" onclick="finish()">標示為處理完成</a>
 									<hr>
 									<table class="table table-hover">
 										<thead>

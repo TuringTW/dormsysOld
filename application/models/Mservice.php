@@ -187,4 +187,11 @@ class Mservice extends CI_Model
 		$result['state'] = true;
 		return $result;
     }
+    function fix_finish($fr_id){
+    	 $data = array('done'=>1);
+        $this->db->where('fr_id', $fr_id);
+		$this->db->update('fix_record', $data);
+		$result['state'] = true;
+		return $result;
+    }
 }?>

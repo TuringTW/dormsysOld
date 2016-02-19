@@ -383,6 +383,37 @@
 		}; 
 			
 	}
+	function finish(){
+		var fr_id = $('#view_fr_id').val();
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "fr_id="+fr_id;  
+		xhr.open("POST", "<?=web_url('/service/fix_finish')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);   
+					var data = JSON.parse(xhr.responseText);
+					if (data.state === true) {
+						successmsg('處理完成');
+						table_refresh();
+						$('#viewModal').modal('toggle');
+					}else{
+						errormsg('模板標號可能錯誤');  	
+					}
+				} else {  
+					errormsg('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;
+	}
 	
 	$('#soln_view_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 </script>
