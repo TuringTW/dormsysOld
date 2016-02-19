@@ -3,52 +3,7 @@
 <script type="text/javascript">
 // for contractlist
 	table_refresh();
-	// 關鍵字搜尋
-	function keyword_serach(){
-		pagemove(0);
-		table_refresh();
-	}
-	// 宿舍選擇
-	function dorm_select(dorm_id, dorm_name){
-		$('#lbldorm').html(dorm_name);
-		$('#dorm_select_value').val(dorm_id);
-		pagemove(0);
-		table_refresh();
-	}
-	function type_select(cate_id, cate){
-		$('#lbltype').html(cate);
-		$('#type_select_value').val(cate_id);
-		pagemove(0);
-		table_refresh();
-	}
-	function rtype_select(rtype_id, rtype){
-		$('#lblrtype').html(rtype);
-		$('#rtype_select_value').val(rtype_id);
-		pagemove(0);
-		table_refresh();
-	}
-	// 頁碼
-	function pagemove(action){
-		var page = parseInt($('#page_value').val());
-		if (action == 0|| page < 1) {
-			$('#page_value').val(1);
-			$('#page_down').attr( "disabled", true );
 
-		}else if(action == -1){
-			if (page !== 1) {
-				$('#page_value').val(page-1);
-			}
-			if (page-1 == 1) {
-
-				$('#page_down').attr( "disabled", true );
-			};
-		}else{
-			$('#page_value').val(page+1);
-			$('#page_down').attr( "disabled", false );
-		}
-		$('#show_page').html($('#page_value').val());
-		table_refresh();
-	}
 	
 	// 更新想式的數量
 	function table_refresh(){
@@ -143,6 +98,7 @@
 						document.getElementById('view_fr_id').value = datum.fr_id;
 						//document.getElementById("room_select").innerHTML = xhr.responseText;  
 						$('#view_sms').attr('onclick', 'sendsms("'+datum.sname+'同學你好,", "'+datum.mobile+'")');
+						solution_table_refresh();
 					}else{
 						errormsg('該筆資料不存在，請稍後在試');
 					}
@@ -157,44 +113,34 @@
 	// 提示表單有變更
 	function change_alert(){
 
-
 		$('#edit_btn').attr('className', 'btn btn-warning btn-lg');
 		$('#edit_btn').html('未儲存');
 	}
 	// 修改合約資料
-	function edititem(){
+	function save_solution(){
 		var state = 1;
-		var rtype = document.getElementById('view_rtype').value
-		var item = document.getElementById('view_item').value
-		var type = document.getElementById('view_type').value
-		var note = document.getElementById('view_note').value
-		var company = document.getElementById('view_company').value
-		var money = document.getElementById('view_money').value
-		var date = document.getElementById('view_date').value
-		var dorm = document.getElementById('view_dorm').value
-		var billing = document.getElementById('view_billing').value
-		var item_id = document.getElementById('view_item_id').value
+		var fr_id = document.getElementById('view_fr_id').value
+		var type = document.getElementById('soln_view_type').value
+		var solution = document.getElementById('soln_view_solution').value
+		var cost = document.getElementById('soln_view_cost').value
+		var salary = document.getElementById('soln_view_salary').value
+		var date = document.getElementById('soln_view_date').value
+		
 		var errorstate = '';
-		if (rtype==0) {
-			errorstate+='收據類型沒填<br>';
+		if (type==null) {
+			errorstate+='分類沒填<br>';
 			state=0;
-		}else if (item==0) {
-			errorstate+='名稱沒填<br>';
+		}else if (solution=='') {
+			errorstate+='處理方式沒填<br>';
 			state=0;
-		}else if (type==0) {
-			errorstate+='類別沒填<br>';
+		}else if (cost=='') {
+			errorstate+='材料費沒填<br>';
 			state=0;
-		}else if (company==0) {
-			errorstate+='請款單位沒填<br>';
+		}else if (salary=='') {
+			errorstate+='工資單位沒填<br>';
 			state=0;
-		}else if (money==0) {
-			errorstate+='支出金額沒填<br>';
-			state=0;
-		}else if (date==0) {
-			errorstate+='請款日期沒填<br>';
-			state=0;
-		}else if (dorm==0) {
-			errorstate+='宿舍沒填<br>';
+		}else if (date=='') {
+			errorstate+='日期沒填<br>';
 			state=0;
 		}
 
@@ -205,7 +151,7 @@
 			} else if (window.ActiveXObject) { // IE 8 and older  
 				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 			}  
-			var data = 'rtype='+rtype+'&item='+item+'&type='+type+'&note='+note+'&company='+company+'&money='+money+'&date='+date+'&dorm='+dorm+'&billing='+billing+'&item_id='+item_id;
+			var data = 'type='+type+'&solution='+solution+'&cost='+cost+'&salary='+salary+'&fr_id='+fr_id;
 			xhr.open("POST", "<?=web_url('/accounting/itemedit')?>");
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
 			xhr.send(data);  
@@ -218,6 +164,7 @@
 							document.getElementById('edit_btn').innerHTML = '已儲存';
 							// 更新表格裡的資訊
 							table_refresh();
+
 							$('#viewModal').modal('toggle');
 						}
 					} else {  
@@ -233,23 +180,27 @@
 	// 詳細資料裡的日期選擇
 	$('#view_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 	
-	function new_item(){
-		document.getElementById('view_rtype').value = null;
-		document.getElementById('view_item').value = null;
-		document.getElementById('view_type').value = null;
-		document.getElementById('view_note').value = null;
-		document.getElementById('view_company').value = null;
-		document.getElementById('view_money').value = null;
-		document.getElementById('view_date').value = null;
-		document.getElementById('view_dorm').value = null;
-		document.getElementById('view_billing').value = null;
-		$("input[name='isrequest']").attr("checked",5);
+	function new_solution(){
+		//reset value
+		document.getElementById('soln_view_type').value = null;
+		document.getElementById('soln_view_solution').value = null;
+		document.getElementById('soln_view_cost').value = null;
+		document.getElementById('soln_view_salary').value = null;
+		document.getElementById('soln_view_date').value = null;
+		$('#soln_view_template').html('<option  class="form-control">請選擇...</option>');
+		$('#soln_view_template').removeAttr('disabled');
 
-		document.getElementById('view_manager').value = 0;
-		document.getElementById('view_item_id').value = 0;
-		$('#viewModal').modal('toggle');
+
+		$("#soln_view_type").focus();
+
+		//show item
+		$("#view_new_solution_lbl").css("display", "inline");
+		$("#add_to_template_btn").css("display", "none");
+
 	}
+
 	function solution_table_refresh(){
+		var fr_id = $("#view_fr_id").val();
 		// 傳送
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
@@ -257,15 +208,19 @@
 		} else if (window.ActiveXObject) { // IE 8 and older  
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 		}  
-		var data = "";  
-		xhr.open("POST", "<?=web_url('/service/show_fix_list')?>");
+		var data = "fr_id="+fr_id;  
+		xhr.open("POST", "<?=web_url('/service/show_solution_list')?>");
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
 		xhr.send(data);  
 		function display_datas() {  
 			if (xhr.readyState == 4) {  
 				if (xhr.status == 200) {  
 					// alert(xhr.responseText);   
-					solution_tableparse(xhr.responseText);
+					var data = JSON.parse(xhr.responseText);
+					if (data.state == true) {
+
+					};
+					solution_tableparse(data.result);
 				} else {  
 					alert('資料傳送出現問題，等等在試一次.');  
 				}  
@@ -273,16 +228,119 @@
 		}  
 		xhr.onreadystatechange = display_datas;  
 	}
-	function solution_tableparse(json){
-		data = JSON.parse(json);
+	function solution_tableparse(data){
+		
 		$('#solution_list').html('');
 		for (var i = 0; i < data.length; i++) {
-
-
-			$('#solution_list').append('<tr><td>'+(i+1)+'</td><td>'+data[i].dname+'</td><td>'+data[i].room+'</td><td>'+data[i].fix_item+'</td><td>'+data[i].sname+'</td><td>'+data[i].mobile+'&nbsp;&nbsp;<a id="item_click_'+data[i].fr_id+'" title="寄簡訊"><span class="glyphicon glyphicon-comment"></span></a></td><td>'+data[i].timestamp+'</td><td>'+(data[i].is_allow==0?'否':'<b>是</b>')+'</td><td><a onclick="showitem('+data[i].fr_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
-			$('#item_click_'+data[i].fr_id).attr('onclick', 'sendsms("'+data[i].sname+'同學你好,", "'+data[i].mobile+'")');
+			$('#solution_list').append('<tr style="text-align:center"><td>'+(i+1)+'</td><td>'+data[i].type+'</td><td>'+data[i].solution+'</td><td>'+data[i].cost+'</td><td>'+data[i].salary+'</td><td><a onclick="showsoltion('+data[i].sr_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td><td><a onclick="removesoltion('+data[i].sr_id+')"><span class="glyphicon glyphicon-remove"></span></a></td></tr>');				
 		};
 	}
+	function showsoltion(sr_id){
+		//turn off something
+		$("#view_new_solution_lbl").css("display", "none");
+		$("#add_to_template_btn").css("display", "inline");
+		$('#soln_view_template').html('<option  class="form-control">請選擇...</option>');
+		$('#soln_view_template').attr('disabled', 'true');
+
+						soln_view_date
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "sr_id="+sr_id;  
+		xhr.open("POST", "<?=web_url('/service/show_soltion_item')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);   
+					var data = JSON.parse(xhr.responseText);
+					if (data.state == true) {
+						var datum = data.result
+						document.getElementById('soln_view_type').value = datum[0].type;
+						document.getElementById('soln_view_solution').value = datum[0].solution;
+						document.getElementById('soln_view_cost').value = datum[0].cost;
+						document.getElementById('soln_view_salary').value = datum[0].salary;
+					};
+					
+				} else {  
+					errormsg('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;  
+	}
+	function type_select(){
+		var type = $('#soln_view_type').val();
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "type="+type;  
+		xhr.open("POST", "<?=web_url('/service/show_template_by_type')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);   
+					var data = JSON.parse(xhr.responseText);
+					if (data.state == true) {
+						$('#soln_view_template').html('<option  class="form-control">請選擇...</option>');
+						
+						for (var i = data.result.length - 1; i >= 0; i--) {
+							var datum = data.result;
+							$('#soln_view_template').append('<option value="'+datum[i].st_id+'">'+datum[i].solution+'</option>');
+						};
+					}
+				} else {  
+					errormsg('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;
+	}
+	function type_select_auto_fill_in(){
+		var template = $('#soln_view_template').val();
+		var xhr;  
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
+			xhr = new XMLHttpRequest();  
+		} else if (window.ActiveXObject) { // IE 8 and older  
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
+		}  
+		var data = "template="+template;  
+		xhr.open("POST", "<?=web_url('/service/select_template')?>");
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
+		xhr.send(data);  
+		function display_datas() {  
+			if (xhr.readyState == 4) {  
+				if (xhr.status == 200) {  
+					// alert(xhr.responseText);   
+					var data = JSON.parse(xhr.responseText);
+					if (data.state === true) {
+						datum = data.result;
+						document.getElementById('soln_view_type').value = datum.type_id;
+						document.getElementById('soln_view_solution').value = datum.solution;
+						document.getElementById('soln_view_cost').value = datum.cost;
+						document.getElementById('soln_view_salary').value = datum.salary;
+						$('#soln_view_date').focus();
+					}else{
+						errormsg('模板標號可能錯誤');  	
+					}
+				} else {  
+					errormsg('資料傳送出現問題，等等在試一次.');  
+				}  
+			}  
+		}  
+		xhr.onreadystatechange = display_datas;
+	}
+
+	$('#soln_view_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
 </script>
 
 <?php } ?>

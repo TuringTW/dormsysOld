@@ -105,4 +105,48 @@ class Mservice extends CI_Model
 		$result['result'] = $query->row(0);
         return $result;	
 	}
+	function show_solution_list($fr_id){
+		$this->db->select('sr_id, fr_id, type, solution, cost, salary, date')->from('soln_record')->where('fr_id', $fr_id);
+		$query = $this->db->get();
+		$result['state'] = true;
+		$result['result'] = $query->result_array();
+        return $result;	
+	}
+	function show_soltion_item($sr_id){
+		$this->db->select('sr_id, fr_id, type, solution, cost, salary, date, timestamp')->from('soln_record')->where('sr_id', $sr_id);
+		// die($fr_id);
+		$query = $this->db->get();
+		$result['state'] = true;
+		$result['result'] = $query->row(0);
+        return $result;	
+	}
+	function get_soln_type_list(){
+		$this->db->select('st_id, solution, level, cost, salary, note')->from('soln_template')->where('level', 0);
+		// die($fr_id);
+		$query = $this->db->get();
+		$result['state'] = true;
+		$result['result'] = $query->result_array();
+        return $result;	
+	}
+	function show_solution_template($type){
+		$this->db->select('st_id, solution, level, type_id, cost, salary, note')->from('soln_template')->where('type_id', $type)->where('level', 1);
+		$query = $this->db->get();
+		$result['state'] = true;
+		$result['result'] = $query->result_array();
+        return $result;	
+	}
+	function select_solution_template($template){
+		$this->db->select('st_id, solution, level, type_id, cost, salary, note')->from('soln_template')->where('st_id', $template)->where('level', 1);
+		$query = $this->db->get();
+		if ($query->num_rows()==1) {
+		
+			$result['state'] = true;
+			$result['result'] = $query->row(0);
+	
+		}else{
+			$result['state'] = false;
+			// $result['result'] = $query->row(0);		
+		}
+		return $result;	
+	}
 }?>

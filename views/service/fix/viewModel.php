@@ -89,7 +89,7 @@
 									<h4>處理方式</h4>
 									<hr>
 									<div class="btn-group">
-										<a href="#" class="btn btn-default">新增處理方式</a>
+										<a href="#" class="btn btn-default" onclick="new_solution()">新增處理方式</a>
 									</div>
 									
 									<a href="#" class="btn btn-danger" >標示為處理完成</a>
@@ -110,15 +110,15 @@
 									</table>
 								</div>
 								<div class="col-sm-5">
-									<h4><span id="view_new_solution_lbl">新</span>處理方式細節</h4>
+									<h4><span id="view_new_solution_lbl">新增</span>處理方式細節</h4>
 									<table class="table table-hover">
 										<tr>
 											<td style="width:25%">類別</td>
 											<td>
-												<select class="form-control" onchange="change_alert();" id="view_sales" required="required" style="width:100%" name="new[]">
+												<select class="form-control" onchange="change_alert();type_select()" id="soln_view_type" required="required" style="width:100%" name="new[]">
 			     									<option  class="form-control">請選擇...</option>
-				     								<?php foreach ($saleslist as $key => $value): ?>
-				     									<option  class="form-control" value="<?=$value['m_id']?>" ><?=$value['name']?></option>
+				     								<?php foreach ($soltypelist as $key => $value): ?>
+				     									<option  class="form-control" value="<?=$value['st_id']?>" ><?=$value['solution']?></option>
 				     								<?php endforeach ?>
 				     							</select> 
 											</td>
@@ -126,33 +126,35 @@
 										<tr>
 											<td style="width:25%">套用模板</td>
 											<td>
-												<select class="form-control" onchange="change_alert();" id="view_sales" required="required" style="width:100%" name="new[]">
-			     									<option  class="form-control">請選擇...</option>
-				     								<?php foreach ($saleslist as $key => $value): ?>
-				     									<option  class="form-control" value="<?=$value['m_id']?>" ><?=$value['name']?></option>
-				     								<?php endforeach ?>
+												<select class="form-control" onchange="change_alert();type_select_auto_fill_in();" id="soln_view_template" required="required" style="width:100%" name="new[]">
+			     									
+				     								
 				     							</select> 
 											</td>
 										</tr>
 										<tr><td>&nbsp;</td><td></td></tr>
 										
 										<tr>
-											<td style="width:25%">處理方式</td>
-											<td><input id="view_mobile" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text"></td>
+											<td style="width:25%">處理方式*</td>
+											<td><input id="soln_view_solution" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text"></td>
 										</tr>
 										<tr>
-											<td style="width:25%">材料費</td>
-											<td><input id="view_mobile" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text"></td>
+											<td style="width:25%">材料費*</td>
+											<td><input id="soln_view_cost" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text"></td>
 										</tr>
 										<tr>
-											<td style="width:25%">工資</td>
-											<td><input id="view_mobile" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text"></td>
+											<td style="width:25%">工資*</td>
+											<td><input id="soln_view_salary" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text"></td>
+										</tr>
+										<tr>
+											<td style="width:25%">日期*</td>
+											<td><input id="soln_view_date" onchange="change_alert()" class="form-control" required="required" style="width:100%" type="text"></td>
 										</tr>
 										
 									</table>
 									<hr>
-									<a href="#" class="btn btn-warning">儲存</a>
-									<a href="#" class="btn btn-default">新增為模板</a>
+									<a href="#" id="edit_btn" class="btn btn-warning" onclick="save_solution()">儲存</a>
+									<a href="#" id="add_to_template_btn"class="btn btn-default">新增為模板</a>
 								</div>
 							</div>
 						</div>

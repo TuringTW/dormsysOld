@@ -123,7 +123,7 @@ class Service extends CI_Controller
 		$this->load->view('service/sidebar', $data);
 		$data['dormlist'] = $this->Mutility->get_dorm_list();
 		$this->load->view("service/fix/search_table", $data);
-		
+		$data['soltypelist'] = $this->Mservice->get_soln_type_list()['result'];
 		$this->load->view('service/fix/viewModel',$data);
 		$this->load->view("service/fix/js_section", $data);
 
@@ -137,6 +137,26 @@ class Service extends CI_Controller
 	public function show_fix_item(){
 		$fr_id = $this->input->post('fr_id', TRUE);
 		$data['json_data'] = $this->Mservice->show_fix_item($fr_id);
+		$this->load->view('template/jsonview', $data);
+	}
+	public function show_solution_list(){
+		$fr_id = $this->input->post("fr_id", TRUE);
+		$data['json_data'] = $this->Mservice->show_solution_list($fr_id);
+		$this->load->view('template/jsonview', $data);
+	}
+	public function show_soltion_item(){
+		$sr_id = $this->input->post('sr_id', TRUE);
+		$data['json_data'] = $this->Mservice->show_solution_list($sr_id);
+		$this->load->view('template/jsonview', $data);
+	}
+	public function show_template_by_type(){
+		$type = $this->input->post('type', TRUE);
+		$data['json_data'] = $this->Mservice->show_solution_template($type);
+		$this->load->view('template/jsonview', $data);	
+	}
+	public function select_template(){
+		$template = $this->input->post('template', TRUE);
+		$data['json_data'] = $this->Mservice->select_solution_template($template);
 		$this->load->view('template/jsonview', $data);
 	}
 }
