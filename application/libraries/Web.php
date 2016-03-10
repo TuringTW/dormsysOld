@@ -15,7 +15,7 @@ class Web
     {
 
     }
-    public function send_sms($rx, $tx, $content, $note, $userdata)
+    public function send_sms($rx, $tx, $content, $note, $userdata)//smsgetpaid
     {
         if(!is_null($rx)&!is_null($content)){
             //$toURL = "127.0.0.1/dorm/test.php";
@@ -75,6 +75,7 @@ class Web
         }
         return $kevin;
     }
+
     public function cURL($url, $post, $method)
     {
         $header=NULL;

@@ -14,9 +14,9 @@ class Mservice extends CI_Model
 	parent::__construct();
 
 	}
-	function add_sms_record($content,$phone,$note,$stats,$errormsg){
+	function add_sms_record($content,$phone,$note,$stats,$msg_id){
 		$admin = $this->session->userdata('m_id');
-        $sqldata = array('content'=>$content,'phone'=>$phone,'note'=>$note,'m_id'=>$admin,'send_state'=>$stats,'api_code'=>$errormsg);
+        $sqldata = array('content'=>$content,'phone'=>$phone,'note'=>$note,'m_id'=>$admin,'send_state'=>$stats,'msg_id'=>$msg_id);
        	$this->db->insert('smsdata', $sqldata);
        	return true;
 	}

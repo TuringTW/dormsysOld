@@ -9,7 +9,7 @@ class Mutility extends CI_Model
         parent::__construct();
         $this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
         $this->load->library('session');
-        $this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mstudent'));
+        $this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mstudent', 'Mservice'));
         // check login & power, and then init the header
         $required_power = 2;
         $this->login_check->check_init($required_power);
@@ -123,7 +123,35 @@ class Mutility extends CI_Model
         $query = $this->db->get();
         return $query->result_array()[0]['value'];
     }
-   
+    function send_sms($rx, $tx, $content, $note){
+        if(!is_null($rx)&!is_null($content)){
+            $this->load->library(array('SmsGateway'));
+
+            $email = $this->getparameters(2);//email
+            $password = $this->getparameters(3);
+            $deviceID = $this->getparameters(4);
+
+            
+            $this->sms = new SmsGateway();
+            $this->sms->set_user_info($email, $password);
+
+            $options = [];
+
+            $response = $this->sms->sendMessageToNumber($rx, $content, $deviceID, $options);
+            echo "<pre>";
+            print_r($response['response']);
+            echo "</pre>";
+
+            $result = $response['response']['success'];
+            if ($result==true) {
+                $r_data = $response['response']['result']['success'][0];
+                $this->Mservice->add_sms_record($content,$rx,$note,$r_data['status'],$r_data['id']);
+            }
+        }else{
+            $result = false;
+        }
+        return $result;
+    }
     
 }
 ?>
