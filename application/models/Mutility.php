@@ -124,6 +124,7 @@ class Mutility extends CI_Model
         return $query->result_array()[0]['value'];
     }
     function send_sms($rx, $tx, $content, $note){
+        $result = false;
         if(!is_null($rx)&!is_null($content)){
             $this->load->library(array('SmsGateway'));
 
@@ -136,19 +137,17 @@ class Mutility extends CI_Model
             $this->sms->set_user_info($email, $password);
 
             $options = [];
+            $receiver = explode(",",$rx);
+            $rx = str_replace(" ", "", $rx);
+            $receiver = preg_split("/(,|\n| )/", $rx);
 
-            $response = $this->sms->sendMessageToNumber($rx, $content, $deviceID, $options);
-            echo "<pre>";
-            print_r($response['response']);
-            echo "</pre>";
+            $response = $this->sms->sendMessageToManyNumbers($receiver, $content, $deviceID, $options);
 
             $result = $response['response']['success'];
             if ($result==true) {
                 $r_data = $response['response']['result']['success'][0];
                 $this->Mservice->add_sms_record($content,$rx,$note,$r_data['status'],$r_data['id']);
             }
-        }else{
-            $result = false;
         }
         return $result;
     }

@@ -16,7 +16,7 @@
     					
     				</select>
     				<br>
-    				<h5>收件人(逗號隔開)</h5>
+    				<h5>收件人(逗號或換行隔開)</h5>
     				<textarea class="form-control" id="sms_receiver" style="resize: none;"  style="width:100%" name="new[]" rows="5"></textarea>	
      				
 				</div>

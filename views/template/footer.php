@@ -78,8 +78,7 @@
 				if (xhr.status == 200) {  
 					// alert(xhr.responseText);
 					var data = JSON.parse(xhr.responseText);
-					
-					if (data.status == 1) {
+					if (data == true) {
 						successmsg('寄送成功');
 						$('#smsModal').modal('toggle');
 					}else{

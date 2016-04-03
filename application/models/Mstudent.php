@@ -181,7 +181,8 @@ class Mstudent extends CI_Model
 	function update_from_type_form(){
 		$this->load->library(array('web'));
 		$key = $this->Mutility->getparameters(1);
-		$today = mktime(0,0,0,Date('m'), Date('d'), Date('Y'));
+		$today = mktime(0,0,0,Date('m'), Date('d')-3, Date('Y'));
+		//change to 3 day before
 		$url = "https://api.typeform.com/v0/form/tWEk2z?key=".$key."&completed=true&order_by[]=date_land,desc&since=".$today."&limit=10";
 		$curl_result = json_decode($this->web->cURL($url, array(), 'get'));
 		$success_add = 0;

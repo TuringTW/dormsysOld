@@ -69,7 +69,7 @@
 							</td>
 						</tr>
 						<tr id="rentd">
-							<td style="width:30%;font-size:12px" align="right">*每人每月租金</td>
+							<td style="width:30%;font-size:12px" align="right">*總租金</td>
 							<td>
 									<input class="form-control" id="rent" required="required" style="width:100%" type="text" value="<?=isset($sroom)?$sroom['rent']:''?>" name="rent" onchange="get_rent_cal()">
 							</td>

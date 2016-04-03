@@ -173,7 +173,7 @@
 						htmltext+=' <td id="stu_'+key+'_remove" style="width:5%"><h4><a href="#" onClick="removestuinfo('+key+')"><span class="glyphicon glyphicon-remove"></span></a></h4></td>'
 						htmltext+=' </tr></table></a></h4></div>'
 
-						htmltext+=' <div id="stu_info_detail_'+key+'" class="panel-collapse collapse in" >'
+						htmltext+=' <div id="stu_info_detail_'+key+'" class="panel-collapse collapse" >'
 						htmltext+=' <!-- 細步資料 -->'
 						htmltext+=' <div class="panel-body">'
 						htmltext+=' <div class="row" style="width:100%">'
@@ -426,13 +426,14 @@
 					original_data = JSON.parse(xhr.responseText);
 					if (original_data.state==true) {
 						var data = original_data.result;
-						var htmltext = "";
+						var htmltext = "<option class='form-control'>請選擇...</option>";
 						for (var i = data.length - 1; i >= 0; i--) {
 							htmltext += "<option class='form-control' value='"+data[i].room_id+"'>"+data[i].name+"</option>";
 						};
 
 						document.getElementById("room_select").innerHTML = htmltext; 
-						if (typeof(keeproom)!=='undefined') {
+						document.getElementById("room_select").focus();
+						if (typeof(keeproom)!=='undefined') { //for keep room
 							document.getElementById('room_select').value = keeproom;
 							room_data_suggestion();
 						}; 

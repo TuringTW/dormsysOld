@@ -42,7 +42,7 @@
 					<td rowspan="1"><?=$key+1?></td>
 					<td rowspan="1"><span style="font-size:18px"><?=($datum['sname'])?></span></td>
 					<td><?=ucwords(trim($datum['id_num']))?></td>
-					<td>民<?=(trim((new DateTime($datum['birthday']))-> modify('-1911 year') -> format('Y-m-d'),'0'))?></td>
+					<td>民<?=(date('Y', strtotime($datum['birthday']))-1911)?>-<?=date('m-d', strtotime($datum['birthday']))?></td>
 					<td><span style="font-size:18px"><?=($datum['mobile'])?></span></td>
 					<!-- <td><?=($datum['home'])?></td> -->
 					<td><?=($datum['emg_name'])?></td>
