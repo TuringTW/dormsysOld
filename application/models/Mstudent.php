@@ -19,13 +19,39 @@ class Mstudent extends CI_Model
 	{
 		// echo "<div class='list-group' style='position: relative; width: 100%; max-height: 180px; overflow: auto;'>";
 		// 今日新增
-		$sql = "select `stu_id`,`name`,`mobile` from `student` where (`name` like binary '%$keyword' or `mobile` like binary '%$keyword' or `name` like binary '%$keyword%' or `mobile` like binary '%$keyword%' or `name` like binary '$keyword%' or `mobile` like binary '$keyword%') and(Year(`ctime`)='".date('Y')."' and MONTH(`ctime`)='".date('m')."' and Day(`ctime`)='".date('j')."')";  
+		$sql = "select `stu_id`,`name`,`mobile`, `emg_name`, `emg_phone` from `student` where (
+			`name` like binary '%$keyword' or 
+			`emg_name` like binary '%$keyword' or 
+			`mobile` like binary '%$keyword' or 
+			`emg_phone` like binary '%$keyword' or 
+			`name` like binary '%$keyword%' or 
+			`emg_name` like binary '%$keyword%' or 
+			`mobile` like binary '%$keyword%' or 
+			`emg_phone` like binary '%$keyword%' or 
+			`name` like binary '$keyword%' or 
+			`emg_name` like binary '$keyword%' or 
+			`mobile` like binary '$keyword%' or
+			`emg_phone` like binary '$keyword%' 
+			) and(Year(`ctime`)='".date('Y')."' and MONTH(`ctime`)='".date('m')."' and Day(`ctime`)='".date('j')."')";  
 		$query = $this->db->query($sql);
 		$result['today'] = $query->result_array();
 		// echo "$sql";
 		
 		// 全部
-		$sql = "select `stu_id`,`name`,`mobile` from `student` where `name` like binary '%$keyword' or `mobile` like binary '%$keyword' or `name` like binary '%$keyword%' or `mobile` like binary '%$keyword%' or `name` like binary '$keyword%' or `mobile` like binary '$keyword%' LIMIT 0,20";  
+		$sql = "select `stu_id`,`name`,`mobile`, `emg_name`, `emg_phone` from `student` where 
+			`name` like binary '%$keyword' or 
+			`emg_name` like binary '%$keyword' or 
+			`mobile` like binary '%$keyword' or 
+			`emg_phone` like binary '%$keyword' or 
+			`name` like binary '%$keyword%' or 
+			`emg_name` like binary '%$keyword%' or 
+			`mobile` like binary '%$keyword%' or 
+			`emg_phone` like binary '%$keyword%' or 
+			`name` like binary '$keyword%' or 
+			`emg_name` like binary '$keyword%' or 
+			`mobile` like binary '$keyword%' or
+			`emg_phone` like binary '$keyword%' 
+			 LIMIT 0,20";  
 		$query = $this->db->query($sql);
 		$result['all'] = $query->result_array();
 		return $result;
@@ -77,7 +103,7 @@ class Mstudent extends CI_Model
         // from
         $this->db->from('student');
         // where
-        $this->db->where('( 0',null,false)->or_like('student.name',$keyword)->or_like('student.mobile',$keyword)->or_like('student.home',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword)->or_where('0 )',null,false);
+        $this->db->where('( 0',null,false)->or_like('student.name',$keyword)->or_like('student.mobile',$keyword)->or_like('student.home',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword)->or_like('student.car_id',$keyword)->or_where('0 )',null,false);
         $this->db->order_by('student.name')->limit(30,$pages);
 
         $query = $this->db->get();
@@ -114,8 +140,8 @@ class Mstudent extends CI_Model
 
 	}
 
-	function edit_stu_info($stu_id, $reg_address, $mailing_address, $name, $school, $mobile, $home, $email, $id_num, $birthday, $emg_name, $emg_phone, $note){
-		$sql = "UPDATE `dorm`.`student` SET `name` = '$name', `school` = '$school', `mobile` = '$mobile', `home` = '$home', `reg_address` = '$reg_address', `mailing_address` = '$mailing_address', `email` = '$email', `id_num` = '$id_num', `birthday` = '$birthday', `emg_name` = '$emg_name', `emg_phone` = '$emg_phone', `note` = '$note' WHERE `student`.`stu_id` = '$stu_id';";
+	function edit_stu_info($stu_id, $reg_address, $mailing_address, $name, $school, $mobile, $home, $email, $id_num, $birthday, $emg_name, $emg_phone, $note, $car_id){
+		$sql = "UPDATE `dorm`.`student` SET `name` = '$name', `school` = '$school', `mobile` = '$mobile', `home` = '$home', `reg_address` = '$reg_address', `mailing_address` = '$mailing_address', `email` = '$email', `id_num` = '$id_num', `birthday` = '$birthday', `emg_name` = '$emg_name', `emg_phone` = '$emg_phone', `car_id` = '$car_id', `note` = '$note' WHERE `student`.`stu_id` = '$stu_id';";
 		$query = $this->db->query($sql);
 		if ($this->db->affected_rows()>0) {
 			return true;
@@ -155,7 +181,7 @@ class Mstudent extends CI_Model
 	}
 	function get_stu_info_from_s_id($stu_id){
 
-		$this->db->select('contract.contract_id, contractpeo.stu_id, dorm.name as dname, room.name as rname, student.name as sname, mobile, home, email, reg_address, mailing_address, emg_name, emg_phone, school');
+		$this->db->select('contract.contract_id, contractpeo.stu_id, dorm.name as dname, room.name as rname, student.name as sname, mobile, home, email, reg_address, mailing_address, emg_name, emg_phone, school, car_id');
 		$this->db->from('contract');
 		$this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
 		$this->db->join('room','room.room_id=contract.room_id','left');
@@ -172,7 +198,7 @@ class Mstudent extends CI_Model
 		$this->db->join('student','student.stu_id=contractpeo.stu_id','left');
 		$this->db->where('seal<>', 1);
 		$this->db->where('( 0',NULL, false); //for logic 
-        $this->db->or_like('student.name',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.mobile',$keyword)->or_like('student.emg_phone',$keyword);
+        $this->db->or_like('student.name',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.mobile',$keyword)->or_like('student.emg_phone',$keyword)->or_like('student.car_id',$keyword);
         $this->db->or_where('0 )',NULL, false);
         $this->db->order_by('student.name')->order_by('in_date');
 		$query = $this->db->get();
@@ -206,6 +232,7 @@ class Mstudent extends CI_Model
 					'emg_name' => $value->answers->textfield_12545584,
 					'emg_phone' => $value->answers->textfield_12545601,
 					'note' => '',
+					'car_id' => $value->answers->textfield_24024411,
 					'n_id' => $value->token,
 					);
 				$this->db->flush_cache();

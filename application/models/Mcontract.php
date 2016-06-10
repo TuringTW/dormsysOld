@@ -23,7 +23,7 @@ class Mcontract extends CI_Model
         $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
         $this->db->join('student','student.stu_id=contractpeo.stu_id','left');
         $this->db->where('( 0',NULL, false); //for logic 
-        $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword);
+        $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword);
         $this->db->or_where('0 )',NULL, false);
         $this->db->where('( 0',NULL, false); //for logic 
             $this->db->or_where('seal', 0);
@@ -408,7 +408,7 @@ class Mcontract extends CI_Model
             $end_date = (new DateTime($str_date))-> modify('+1 day') -> format('Y-m-d');
         }
 
-        $this->db->select('dorm.name as dname, room.name as rname, room.type, if(isnull(precontract.contract_id), "",precontract.contract_id) as pre_id, if(isnull(precontract.out_date), "",precontract.out_date) as out_date, if(isnull(postcontract.contract_id), "", postcontract.contract_id)  as post_id, if(isnull(postcontract.in_date),"",postcontract.in_date) as in_date, room.rent, room.room_id, if(isnull(postcontract.postmin), 4000, postcontract.postmin) as postmin, if(isnull(precontract.premin), 4000, precontract.premin) as premin');
+        $this->db->select('dorm.name as dname, room.name as rname, room.type, if(isnull(precontract.contract_id), "",precontract.contract_id) as pre_id, if(isnull(precontract.out_date), "",precontract.out_date) as out_date, if(isnull(postcontract.contract_id), "", postcontract.contract_id)  as post_id, if(isnull(postcontract.in_date),"",postcontract.in_date) as in_date, room.rent, room.room_id, if(isnull(postcontract.postmin), 4000, postcontract.postmin) as postmin, if(isnull(precontract.premin), 4000, precontract.premin) as premin, if(isnull(postcontract.postmin), 0, postcontract.postmin)+if(isnull(precontract.premin), 4000, precontract.premin) as prepost');
         $this->db->from('room');
         // join
         $this->db->join('dorm', 'dorm.dorm_id = room.dorm', 'left');
@@ -416,9 +416,10 @@ class Mcontract extends CI_Model
 
         $this->db->join("(select temp1.* from (select contract_id, room_id, (DATEDIFF(in_date, '$end_date')) as postmin, in_date from contract where DATEDIFF(in_date, '$end_date')>0 and DATEDIFF(out_date, '$end_date')>0 and seal<>1 order by room_id, DATEDIFF(out_date, '$end_date') ) as temp1 group by room_id) as postcontract", 'postcontract.room_id = room.room_id', 'left');
         $this->db->join("(select count(contract_id) as countc, room_id from contract where (     
-                    (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$str_date')>=0 )
+                (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$str_date')>=0 )
             or    (DATEDIFF('$str_date', in_date)<=0 and DATEDIFF(out_date, '$end_date')<=0) 
-            or    (DATEDIFF('$end_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0) )and seal<>1 group by room_id) as contractcheck", 'contractcheck.room_id = room.room_id', 'left');
+            or    (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0) 
+            or    (DATEDIFF('$end_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0) )and seal<>1 and seal<>-1 group by room_id) as contractcheck", 'contractcheck.room_id = room.room_id', 'left');
         $this->db->where('isnull(`contractcheck`.`countc`)', 1);
         
         if ($type<>0) {
@@ -428,8 +429,9 @@ class Mcontract extends CI_Model
             $this->db->where('dorm.dorm_id=', $dorm_id);
         }
         $this->db->where('rent>=', $lprice)->where('rent<=', $hprice);
-        $this->db->order_by('premin');
-        $this->db->order_by('postmin');
+        // $this->db->order_by('postmin');
+        // $this->db->order_by('premin');
+        $this->db->order_by('prepost');
         
         
         $this->db->order_by('dorm.name', 'desc');

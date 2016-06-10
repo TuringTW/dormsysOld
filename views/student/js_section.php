@@ -115,6 +115,7 @@
 						document.getElementById('view_reg_address').value = datum.reg_address;
 						document.getElementById('view_mailing_address').value = datum.mailing_address;
 						document.getElementById('view_note').value = datum.note;
+						document.getElementById('view_car_id').value = datum.car_id;
 
 						$('#view_contract_list').html('');
 						if (data.countc>0) {
@@ -165,8 +166,11 @@
 		var reg_address = $('#view_reg_address').val();
 		var mailing_address = $('#view_mailing_address').val();
 		var note = $('#view_note').val();
+		var car_id = $('#view_car_id').val();
+
+		
 		var stu_id = $('#stu_id').val();
-		data = 'name=' + name + '&school=' + school + '&mobile=' + mobile +  '&home=' + home + '&email=' + email + '&id_num=' + id_num + '&birthday=' + birthday + '&emg_name=' + emg_name + '&emg_phone=' + emg_phone +'&reg_address=' +reg_address + '&mailing_address=' + mailing_address+'&note='+note+'&stu_id='+stu_id;
+		data = 'name=' + name + '&school=' + school + '&mobile=' + mobile +  '&home=' + home + '&email=' + email + '&id_num=' + id_num + '&birthday=' + birthday + '&emg_name=' + emg_name + '&emg_phone=' + emg_phone +'&reg_address=' +reg_address + '&mailing_address=' + mailing_address+'&note='+note+'&car_id='+car_id+'&stu_id='+stu_id;
 		var xhr;  
 		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
 			xhr = new XMLHttpRequest();  

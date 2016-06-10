@@ -24,13 +24,13 @@
 					if (data.today.length>0) {
 						htmltext += "<a class='list-group-item' style='background-color:lightgray'>今日新增</a>";
 						for (var i = data.today.length - 1; i >= 0; i--) {
-							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.today[i].stu_id+")'>"+data.today[i].name+'-'+data.today[i].mobile+"</a>";  
+							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.today[i].stu_id+")'>"+data.today[i].name+'-'+data.today[i].mobile+'----聯絡人:'+data.today[i].emg_name+'-'+data.today[i].emg_phone+"</a>";  
 						};
 					}
 					if (data.all.length>0) {
 						htmltext += "<a class='list-group-item' style='background-color:lightgray'>相關"+data.all.length+"筆</a>";
 						for (var i = data.all.length - 1; i >= 0; i--) {
-							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.all[i].stu_id+")'>"+data.all[i].name+'-'+data.all[i].mobile+"</a>";  
+							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.all[i].stu_id+")'>"+data.all[i].name+'-'+data.all[i].mobile+'----聯絡人:'+data.all[i].emg_name+'-'+data.all[i].emg_phone+"</a>";  
 						};
 					}
 					htmltext += '</div>';
@@ -109,7 +109,7 @@
 		document.getElementById('key').value = key;	
 		// errormsg(stu_id+' '+key);
 		if (stu_id == 0) {
-			data = JSON.parse('{"stu_id":"","name":"","sex":"","school":"","mobile":"","home":"","reg_address":"","mailing_address":"","email":"","id_num":"","birthday":"","emg_name":"","emg_phone":"","note":""}')
+			data = JSON.parse('{"stu_id":"","name":"","sex":"","school":"","mobile":"","home":"","reg_address":"","mailing_address":"","email":"","id_num":"","birthday":"","emg_name":"","emg_phone":"","note":"", "car_id":""}')
 			$('#accordion').append(stu_info_gen(data, key, stu_id));
 			$(function() {$( '#stu_'+key+'_birthday' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});})
 		}else{
@@ -235,6 +235,10 @@
 						htmltext+=' <tr>'
 						htmltext+=' <td style="width:28%" align="right">*緊急聯絡人電話</td>'
 						htmltext+=' <td><input class="form-control" required id="stu_'+key+'_emg_phone" placeholder="請輸入緊急聯絡人電話" style="" type="text"  value="'+data.emg_phone+'" onChange="bannerrefresh('+key+',6)"></td>'
+						htmltext+=' </tr>'
+						htmltext+=' <tr>'
+						htmltext+=' <td style="width:28%" align="right">車牌</td>'
+						htmltext+=' <td><input class="form-control" id="stu_'+key+'_car_id" placeholder="請輸入車牌號碼（沒有就不用）" style="" type="text"  value="'+data.car_id+'" onChange="bannerrefresh('+key+',6)"></td>'
 						htmltext+=' </tr>'
 						htmltext+=' </table>'
 						htmltext+=' </div>'

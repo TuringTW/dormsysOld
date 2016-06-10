@@ -140,6 +140,7 @@
 								+'<tr><th style="width:40%">緊急聯絡</th><td colspan="2">'+data[0].emg_name+'</td></tr>'
 								+'<tr><th style="width:40%">緊急電話</th><td colspan="2">'+data[0].emg_phone+'</td></tr>'
 								+'<tr><th style="width:40%">通訊地址</th><td colspan="2">'+data[0].mailing_address+'</td></tr>'
+								+'<tr><th style="width:40%">車牌</th><td colspan="2">'+((data[0].car_id == null)?'':data[0].car_id)+'</td></tr>'
 								+'</table>'
 								+'<h5>功能</h5><div class="row"><div class="col-sm-1"></div><div class="col-sm-10 btn-group"><a id="mail_btn" title="通知有信件或包裹到了" class="btn btn-default">信件通知&nbsp;&nbsp;<span class="glyphicon glyphicon-envelope"></span></a><a id="contract_btn" title="查看這筆聯絡資料對應的合約" class="btn btn-default">查看合約&nbsp;&nbsp;<span class="glyphicon glyphicon-file"></span></a></div></div>');
 		$('#stu_info_href').attr('href', '<?=web_url("/student/index")?>?view='+data[0].stu_id);

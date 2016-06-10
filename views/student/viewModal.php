@@ -61,6 +61,13 @@
 
 				     						</td>
 				     					</tr>
+				     					<tr>
+				     						<td style="width:25%" align="right">車牌</td>
+				     						<td>
+				     							<input class="form-control"  id="view_car_id" style="width:100%" type="text" onclick="showedit()" value="">
+
+				     						</td>
+				     					</tr>
 									</table>
 								</div>
 								<div class="col-sm-6">

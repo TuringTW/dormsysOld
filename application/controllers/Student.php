@@ -94,9 +94,10 @@ class Student extends CI_Controller
 		$birthday = $this->input->post('birthday',TRUE);
 		$emg_name = $this->input->post('emg_name',TRUE);
 		$emg_phone = $this->input->post('emg_phone',TRUE);
+		$car_id = $this->input->post('car_id',TRUE);
 		$note = $this->input->post('note',TRUE);
 
-		$data['json_data'] = $this->Mstudent->edit_stu_info($stu_id, $reg_address, $mailing_address, $name, $school, $mobile, $home, $email, $id_num, $birthday, $emg_name, $emg_phone, $note);
+		$data['json_data'] = $this->Mstudent->edit_stu_info($stu_id, $reg_address, $mailing_address, $name, $school, $mobile, $home, $email, $id_num, $birthday, $emg_name, $emg_phone, $note, $car_id);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function update_from_type_form(){
