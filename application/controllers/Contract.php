@@ -64,11 +64,13 @@ class Contract extends CI_Controller
 		$page = $this->input->post("page", TRUE);
 		$due = $this->input->post("due_value", TRUE);
 		$ofd = $this->input->post("ofd_value", TRUE);
+		$diom = $this->input->post("diom_value", TRUE);
+		$ns = $this->input->post("ns_value", TRUE);
 		$dorm = $this->input->post("dorm", TRUE);
 		$order_method = $this->input->post("order_method", TRUE);
 		$order_law = $this->input->post("order_law", TRUE);
 		
-		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $page, $order_method, $order_law);
+		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $ns, $diom, $page, $order_method, $order_law);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function due_ofd_refresh(){

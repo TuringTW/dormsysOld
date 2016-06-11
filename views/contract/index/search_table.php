@@ -4,22 +4,15 @@
 	<input type="hidden" id="view_contract_id" value="<?=$view_contract_id?>">
 	<input type="hidden" id="view_option" value="<?=$view_ofd_contract?>">
 
-	<div class="form-group">
-		<div class="col-sm-3">
+	<div class="form-group row">
+		<div class="col-sm-4">
 			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="Enter搜:宿舍、房號、姓名、手機" value="">
 		</div>
 		<div class="col-md-3">
 			<?php echo dorm_list_html($dormlist); ?>
 		</div>
-		<div class="col-sm-4">
-			<div class="btn-group">
-				<input type="hidden" id="due_value" value="0">
-				<input type="hidden" id="ofd_value" value="0">
-				<a href="#" id="btnDue" onclick="due_select()" class="btn btn-default" >本月到期&nbsp;&nbsp;<span class="badge" id="view_due">1</span></a>
-				<a href="#" id="btnOFD" onclick="ofd_select()" class="btn btn-default" >過期合約&nbsp;&nbsp;<span class="badge" id="view_ofd">1</span></a>
-			</div>
-		</div>
-
+		
+		<div class="col-sm-3"></div>
 		<div class="col-sm-2">
 			<input type="hidden" value="1" id="page_value">
 			<a href="#" class="btn btn-default " onclick="pagemove(-1);" id="page_down" disabled="true"><span class=" glyphicon glyphicon-chevron-left"></span></a>
@@ -27,10 +20,28 @@
 			<a href="#" class="btn btn-default " onclick="pagemove(1);" id="page_up"><span class=" glyphicon glyphicon-chevron-right"></span></a>
 
 		</div>
+
 	</div>	
-	<br>
-	<br>
-	<hr>
+	<input type="hidden" id="ns_value" value="0">
+	<input type="hidden" id="diom_value" value="0">
+	<input type="hidden" id="due_value" value="0">
+	<input type="hidden" id="ofd_value" value="0">
+	<div class="form-group row">
+		<div class="col-md-4"></div>
+		<div class="col-md-6">
+			<div class="btn-group">
+				<a href="#" id="btnNS" onclick="ns_select()" class="btn btn-info" title="還沒開始的合約">未開始&nbsp;&nbsp;<span class="badge" id="view_ns">1</span></a>
+				<a href="#" id="btnDIOM" onclick="diom_select()" class="btn btn-default" title="遷出日期在一個月內的合約">一個月內遷出&nbsp;&nbsp;<span class="badge" id="view_due_in_one_m">1</span></a>
+				<a href="#" id="btnDue" onclick="due_select()" class="btn btn-default" title="這個月份到期的合約(合約結束日期在這個月)">本月到期&nbsp;&nbsp;<span class="badge" id="view_due">1</span></a>
+				<a href="#" id="btnOFD" onclick="ofd_select()" class="btn btn-danger" title="已經過期的合約(超過合約結束的日期)">過期&nbsp;&nbsp;<span class="badge" id="view_ofd">1</span></a>
+				
+				
+			</div>
+		</div>	
+	</div>
+	<!-- <br> -->
+	<!-- <br> -->
+	<!-- <hr> -->
 			<!-- 搜尋結果 -->
 
 	<div class="table-responsive">

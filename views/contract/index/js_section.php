@@ -46,6 +46,46 @@
 		$('#show_page').html($('#page_value').val());
 		table_refresh();
 	}
+	function btn_value_reset(){
+		$('#ns_value').val(0);
+		$('#btnNS').removeClass('active');
+		$('#diom_value').val(0);
+		$('#btnOFD').removeClass('active');
+		$('#due_value').val(0);
+		$('#btnDIOM').removeClass('active');
+		$('#ofd_value').val(0);
+		$('#btnDue').removeClass('active');
+	}
+	// 即將到期的按鈕
+	function ns_select(){
+		var value = $('#ns_value').val();
+		if (value==1) {
+			$('#ns_value').val(0);
+			$('#btnNS').removeClass('active');
+		}else{
+			btn_value_reset();
+			// =====
+			$('#ns_value').val(1);
+			$('#btnNS').addClass('active');
+		}
+		pagemove(0);
+		table_refresh();
+	}
+	// 即將到期的按鈕
+	function diom_select(){
+		var value = $('#diom_value').val();
+		if (value==1) {
+			$('#diom_value').val(0);
+			$('#btnDIOM').removeClass('active');
+		}else{
+			btn_value_reset();
+			// =====
+			$('#diom_value').val(1);
+			$('#btnDIOM').addClass('active');
+		}
+		pagemove(0);
+		table_refresh();
+	}
 	// 即將到期的按鈕
 	function due_select(){
 		var value = $('#due_value').val();
@@ -53,11 +93,10 @@
 			$('#due_value').val(0);
 			$('#btnDue').removeClass('active');
 		}else{
+			btn_value_reset();
+			// =====
 			$('#due_value').val(1);
 			$('#btnDue').addClass('active');
-			$('#ofd_value').val(0);
-			$('#btnOFD').removeClass('active');
-
 		}
 		pagemove(0);
 		table_refresh();
@@ -69,10 +108,10 @@
 			$('#ofd_value').val(0);
 			$('#btnOFD').removeClass('active');
 		}else{
+			btn_value_reset();
+			// =====
 			$('#ofd_value').val(1);
 			$('#btnOFD').addClass('active');
-			$('#due_value').val(0);
-			$('#btnDue').removeClass('active');
 		}
 		pagemove(0);
 		table_refresh();
@@ -96,6 +135,8 @@
 					data = JSON.parse(xhr.responseText) ;
 					$('#view_ofd').html(data.countofd);
 					$('#view_due').html(data.countdue);
+					$('#view_due_in_one_m').html(data.countdue_in_1_m);
+					$('#view_ns').html(data.count_ns);
 				} else {  
 					alert('資料傳送出現問題，等等在試一次.');  
 				}  
@@ -141,6 +182,8 @@
 		var page = $('#page_value').val();
 		var due_value = $('#due_value').val();
 		var ofd_value = $('#ofd_value').val();
+		var ns_value = $('#ns_value').val();
+		var diom_value = $('#diom_value').val();
 		var dorm = $('#dorm_select_value').val();
 		var order_method = $('#order_method').val();//排序方法
 		var order_law = $('#order_law').val(); //遞增或遞減
@@ -170,7 +213,7 @@
 		} else if (window.ActiveXObject) { // IE 8 and older  
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
 		}  
-		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law;  
+		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&ns_value="+ns_value+"&diom_value="+diom_value+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law;  
 		xhr.open("POST", "<?=web_url('/contract/show')?>");
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
 		xhr.send(data);  
@@ -209,7 +252,7 @@
 						state = "<b>未</b>開始"; 	
 						classrule = "class='info'"
 					}else if(((e_date.getTime()-Date.now())/1000/86400)+1<0){
-						state = "過期"; 	
+						state = "<b>過</b>期"; 	
 						classrule = "class='danger'"
 					}else{
 						state = "有效"; 	
@@ -223,7 +266,7 @@
 
 					if (Math.floor((e_date.getTime()-Date.now())/1000/86400)+1>=0) {
 						classrule="class='success'" ;
-						state = "<b>已</b>續約";
+						state = "<b>已</b>續";
 					}else{
 						classrule="class='warning'" ;
 						state = "待結算";
