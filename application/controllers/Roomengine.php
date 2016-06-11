@@ -34,7 +34,9 @@ class Roomengine extends CI_Controller
 		$this->load->view('roomengine/index/search_table', $data);
 		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/index/viewModel',$data);
-
+		$this->load->view('contract/index/printModel');
+		$this->load->view('contract/index/break_contract_dialog');
+		$this->load->view('contract/index/checkout');
 		// footer
 		$this->load->view('roomengine/index/js_section');
 		$this->load->view('template/footer');

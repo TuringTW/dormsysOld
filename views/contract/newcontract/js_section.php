@@ -1001,6 +1001,8 @@
 		$('#tab_print').attr('onclick','');
 		$('#tab_print').trigger('click');
 		$('#printFrame').attr('src', '<?=web_url("/contract/pdf_gen")?>?contract_id='+contract_id);
+
+		$('#href_contract').attr('href', '<?=web_url('/contract/index')?>?contract_id='+contract_id)
 	}
 
 	function refresh(){

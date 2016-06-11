@@ -159,7 +159,7 @@
 				</div>
 				<div class="modal-footer">
 					<div class="row" style="width:100%">
-						<div class="col-md-3">
+						<div class="col-md-2">
 						</div>
 						<div class="col-md-3">
 							<a id="view_print_btn"  class="btn btn-default btn-lg" onclick="printmodel()">列印</a>
@@ -169,10 +169,10 @@
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
 						
-						<div class="col-md-4 pull-right">
+						<div class="col-md-5 pull-right">
 							<a id="view_keep_btn"  name="checkoutsubmit" title="續約" onclick="keep_check()"class="btn btn-success btn-lg keep">續約</a>
-							<a id="view_check_out_btn"  name="checkoutsubmit" title="移到結算列表" onclick="checkout_check()" class="btn btn-primary btn-lg checkout">結算此合約</a>
-							<a id="view_change_btn"  name="checkoutsubmit" data-cnum="0" title="違約提早結束、手滑打錯要刪除、要換房間"class="btn  btn-lg btn-danger">合約更動、取消</a>
+							<a id="view_check_out_btn"  name="checkoutsubmit" title="移到結算列表" onclick="checkout_check()" class="btn btn-primary btn-lg checkout">結算合約</a>
+							<a id="view_change_btn"  name="checkoutsubmit" data-cnum="0" title="違約提早結束、手滑打錯要刪除、要換房間"class="btn  btn-lg btn-danger">合約更動/取消</a>
 						</div> 
     					<div class="col-md-1 pull-right">
 							

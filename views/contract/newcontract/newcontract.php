@@ -317,24 +317,15 @@
 	<div class="tab-pane" id="print">
 		<div class="row">
 			<div class="col-md-4">
-				<h2>列印設定</h2>
+				<h2>列印</h2>
 				<hr>
-				<div class="row">
-					<div class="col-md-4"><label>選擇印表機</label></div>
-					<div class="col-md-8">
-						<select id="printer" class="form-control" style="width:100%">
-
-						</select>
-					</div>
-					
-				</div>
 				<br>
-				<div class="row">
-					<div class="col-md-4 pull-right">
-						<a class="btn btn-default " onclick="gcpprint()" style="width:100%"><span class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;列印</a>
-					</div>
-				</div>
+				<h2>資料查看</h2>
+				<hr>
+				<div class="btn-group">
+					<a class="btn btn-default" href="" id="href_contract">查看合約</a>
 
+				</div>
 			</div>
 			<div class="col-md-8" >
 				<div class="well" style="width:100%;">
