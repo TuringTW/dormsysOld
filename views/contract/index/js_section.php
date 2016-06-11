@@ -198,19 +198,32 @@
 			};
 			var classrule = "";
 			var state = 0;
+			var e_date = new Date(data[i].e_date);
+			var s_date = new Date(data[i].s_date);
 			switch(data[i].seal){
 				case '0': 
+					
 					//正常
 					classrule="";
-					state = "有效"; 
+					if (((s_date.getTime()-Date.now())/1000/86400)+1>0) {
+						state = "<b>未</b>開始"; 	
+						classrule = "class='info'"
+					}else if(((e_date.getTime()-Date.now())/1000/86400)+1<0){
+						state = "過期"; 	
+						classrule = "class='danger'"
+					}else{
+						state = "有效"; 	
+					}
+					
+
 					break;
 				case '2':
 					//待結算
-					var e_date = new Date(data[i].e_date);
+					
 
 					if (Math.floor((e_date.getTime()-Date.now())/1000/86400)+1>=0) {
 						classrule="class='success'" ;
-						state = "已續約";
+						state = "<b>已</b>續約";
 					}else{
 						classrule="class='warning'" ;
 						state = "待結算";
