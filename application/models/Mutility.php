@@ -14,15 +14,48 @@ class Mutility extends CI_Model
         $required_power = 2;
         $this->login_check->check_init($required_power);
      }
-     
+
     function Date_diff($s_date, $e_date){
-        $s_date = date('Y-m-d', strtotime('-1 day', strtotime($s_date)));
-        $start = date_create($s_date);
-        $end = date_create($e_date);
-        $diff=date_diff($start, $end);
-        $output['td'] = $diff->format("%r%a"); //total date
-        $output['mib'] = $diff->format("%r%m")+$diff->format("%r%y")*12; //month in betwwen
-        $output['rod'] = $diff->format("%d");
+      $str_time = strtotime('0 day', strtotime($s_date));
+      $end_time = strtotime('0 day', strtotime($e_date));
+
+
+      $start_month = date('Y', $str_time)*12 + date('m', $str_time);
+      $end_month = date('Y', $end_time)*12 + date('m', $end_time);
+
+      $td = 0;
+      $mib = 0;
+      for ($imonth=$start_month+1; $imonth < $end_month; $imonth++) {
+        $mib+=1;
+        $td+=strftime('%d', mktime(0,0,0,$imonth+1, 0, 0));
+      }
+
+      // count totalt days in first and last month
+      $f_totaldays = strftime('%d', mktime(0,0,0,date('m', $str_time)+1, 0, date('Y', $str_time)));
+      $l_totaldays = strftime('%d', mktime(0,0,0,date('m', $end_time)+1, 0, date('Y', $end_time)));
+      if ($end_month == $start_month) {
+        $days_in_f_month = date('d', $end_time) - date('d', $str_time) + 1;
+        $days_in_l_month = 0;
+      }else{
+        $days_in_f_month = $f_totaldays - date('d', $str_time)+1;
+        $days_in_l_month = date('d', $end_time);
+      }
+      // echo $days_in_f_month, $days_in_l_month;
+      $rod = $days_in_f_month + $days_in_l_month;
+      $td+=$rod;
+      if ($rod - $f_totaldays >=0) {
+        $rod -= $f_totaldays;
+        $mib += 1;
+      }
+      if ($rod - $l_totaldays >=0) {
+        $rod -= $l_totaldays;
+        $mib += 1;
+      }
+
+      $output['td'] = $td; //total date
+      $output['mib'] = $mib; //month in betwwen
+      $output['rod'] = $rod;
+
         return $output;
     }
 
@@ -62,7 +95,7 @@ class Mutility extends CI_Model
                 $this->db->insert('room', $data);
             }else{
                 $this->db->where('room_id', $room_id);
-                $this->db->update('room', $data); 
+                $this->db->update('room', $data);
             }
             $result['state'] = true;
         }else{
@@ -70,7 +103,7 @@ class Mutility extends CI_Model
             $result['dorm'] = $dorm_id;
         }
         return $result;
-    }   
+    }
     function is_in_the_dorm($dorm_id){
         if ($this->db->from('dorm')->where('dorm_id', $dorm_id)->count_all_results()==1) {
             return true;
@@ -95,9 +128,9 @@ class Mutility extends CI_Model
 
                 $m_id = $this->login_check->get_user_id();
                 $auth_num = md5(date('U').'-'.$auth_code.'-mobileapp');
-                $data = array(  'auth_code'=>$auth_code, 
-                                'auth_num'=>$auth_num, 
-                                'usage'=>$usage, 
+                $data = array(  'auth_code'=>$auth_code,
+                                'auth_num'=>$auth_num,
+                                'usage'=>$usage,
                                 'm_id'=>$m_id);
                 $this->db->insert('auth_record', $data);
                 if ($this->db->affected_rows()>0) {
@@ -110,13 +143,13 @@ class Mutility extends CI_Model
                 $result['state'] = -1;
             }
 
-                
+
         }else{
             $result['state'] = false;
-            
+
         }
         return $result;
-        
+
     }
     function getparameters($id){
         $this->db->select('value')->from('parameter')->where('id', $id);
@@ -132,7 +165,7 @@ class Mutility extends CI_Model
             $password = $this->getparameters(3);
             $deviceID = $this->getparameters(4);
 
-            
+
             $this->sms = new SmsGateway();
             $this->sms->set_user_info($email, $password);
 
@@ -151,6 +184,6 @@ class Mutility extends CI_Model
         }
         return $result;
     }
-    
+
 }
 ?>

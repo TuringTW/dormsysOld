@@ -26,7 +26,7 @@
 	<input type="hidden" id="ofd_value" value="0">
 	<div class="form-group row">
 		<div class="col-md-5">
-			<div class=" input-group">
+			<div class=" input-group" style="width:100%">
 				<input type="text" id="txtSetStartday" title="開始時間" class="form-control" style="width:40%" onchange="set_start()" placeholder="某日以後開始的合約" value="">
 				<a class="btn btn-default form-control" onclick="remove_str_date()" title="清除開始時間限制" style="width:10%"><span class="glyphicon glyphicon-remove"></span></a>
 				<input type="text" id="txtSetendday" title="結束時間" class="form-control" style="width:40%" onchange="set_end()" placeholder="某日以前結束的合約" value="">
