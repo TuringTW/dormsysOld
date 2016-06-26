@@ -1,5 +1,5 @@
 <?php
-class Contract extends CI_Controller 
+class Contract extends CI_Controller
 {
 	public function __construct(){
 		parent::__construct();
@@ -11,7 +11,7 @@ class Contract extends CI_Controller
 		$this->login_check->check_init($required_power);
 	}
 	private function view_header(){
-		$data = array(	'title' => 'Home', 
+		$data = array(	'title' => 'Home',
 						'user' => $this->session->userdata('user'),
 						'power' => $this->session->userdata('power')
 					);
@@ -20,7 +20,7 @@ class Contract extends CI_Controller
 		$this->load->view('template/message_dialog');
 		$this->load->view('template/smsModel');
 	}
-	public function index($contract_id=0){	
+	public function index($contract_id=0){
 		// get contract_id
 		$data['view_contract_id'] = $this->input->get('contract_id', TRUE);
 		if (is_null($data['view_contract_id'])) {
@@ -69,14 +69,19 @@ class Contract extends CI_Controller
 		$dorm = $this->input->post("dorm", TRUE);
 		$order_method = $this->input->post("order_method", TRUE);
 		$order_law = $this->input->post("order_law", TRUE);
-		
-		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $ns, $diom, $page, $order_method, $order_law);
+		$start_val = $this->input->post("startval", TRUE);
+		$end_val = $this->input->post("endval", TRUE);
+
+		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $ns, $diom, $page, $order_method, $order_law, 0, $start_val, $end_val);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function due_ofd_refresh(){
 		$keyword = $this->input->post("keyword", TRUE);
 		$dorm = $this->input->post("dorm", TRUE);
-		$data['json_data'] = $this->Mcontract->count_ofd_due($dorm, $keyword);
+		$start_val = $this->input->post("startval", TRUE);
+		$end_val = $this->input->post("endval", TRUE);
+
+		$data['json_data'] = $this->Mcontract->count_ofd_due($dorm, $keyword, $start_val, $end_val);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function show_contract(){
@@ -118,7 +123,7 @@ class Contract extends CI_Controller
 		$contract_id = $this->input->post('contract_id', TRUE);
 		$result = $this->Mcontract->set_check_out($contract_id);
 		$data['json_data'] = $result;
-		$this->load->view('template/jsonview', $data);	
+		$this->load->view('template/jsonview', $data);
 	}
 	public function checkout()
 	{
@@ -149,7 +154,7 @@ class Contract extends CI_Controller
 			$data['keep'] = null;
 			$data['keep_result'] = array();
 		}
-		
+
 
 		$this->load->model('Mstudent');
 		$this->view_header();
@@ -159,7 +164,7 @@ class Contract extends CI_Controller
 		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('contract/newcontract/newcontract', $data);
 		$this->load->view('contract/newcontract/overlapModal');
-		
+
 		$this->load->view('contract/index/rentdepositModal');
 
 		$this->load->view('contract/newcontract/js_section');
@@ -171,10 +176,10 @@ class Contract extends CI_Controller
 		$rpm = $this->input->post('rpm', TRUE);
 		$countpeo = $this->input->post('countpeo', TRUE);
 		$data['json_data'] = $this->Mfinance->rent_cal($rpm, $s_date, $e_date, $countpeo);
-		$this->load->view('template/jsonview', $data);	
+		$this->load->view('template/jsonview', $data);
 	}
 	public function check_not_over_lap(){
-		$s_date = $this->input->post('s_date',TRUE);		
+		$s_date = $this->input->post('s_date',TRUE);
 		$e_date = $this->input->post('e_date',TRUE);
 		$room_id = $this->input->post('room_id',TRUE);
 		if (is_numeric($room_id)&&$room_id!==0) {
@@ -183,7 +188,7 @@ class Contract extends CI_Controller
 		else{
 			$data['json_data']['state'] = -1;
 		}
-		$this->load->view('template/jsonview', $data);	
+		$this->load->view('template/jsonview', $data);
 
 	}
 	public function submitcontract(){
@@ -191,7 +196,7 @@ class Contract extends CI_Controller
 		$cdata = json_decode($json_data, TRUE);
 
 		$data['json_data'] = $this->Mcontract->add_contract($cdata);
-		$this->load->view('template/jsonview', $data);	
+		$this->load->view('template/jsonview', $data);
 
 	}
 	public function pdf_gen(){
@@ -232,7 +237,7 @@ class Contract extends CI_Controller
 		$contract_id = $this->input->post("contract_id", TRUE);
 		$result = $this->Mcontract->delete_contract($contract_id);
 		$data['json_data'] = $result;
-		$this->load->view('template/jsonview', $data);	
-	}	
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>

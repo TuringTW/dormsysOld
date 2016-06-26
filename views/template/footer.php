@@ -11,17 +11,17 @@
 	<script type="text/javascript">
 		$('.dropdown-toggle').dropdown();
 	</script>
-	
-	<script type="text/javascript"> 
+
+	<script type="text/javascript">
 		dialogbreakdone = $( "#dialog-warning" ).dialog({
 			autoOpen: false,
-			
+
 			modal: true,
 			width: "50%",
 			resizable: false,
 			dialogClass: "alert",
 			buttons: {
-	        
+
 	        '確定': function(){
 	        	$( this ).dialog( "close" );
 	        }
@@ -29,13 +29,13 @@
 	    });
 	    dialogbreakdone = $( "#dialog-success" ).dialog({
 			autoOpen: false,
-			
+
 			modal: true,
 			width: "50%",
 			resizable: false,
 			dialogClass: "alert",
 			buttons: {
-	        
+
 	        '確定': function(){
 	        	$( this ).dialog( "close" );
 	        }
@@ -57,25 +57,25 @@
 			document.getElementById('sms_content').focus();
 		}
 		function send_new_sms(){
-		
+
 		var sms_content = $('#sms_content').val();
 		var sms_receiver = $('#sms_receiver').val();
 
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "content=" +sms_content+"&rx=" + sms_receiver + "&note="; 
-		// alert(data); 
-		xhr.open("POST", "<?=web_url('/contact/send_sms')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "content=" +sms_content+"&rx=" + sms_receiver + "&note=";
+		// alert(data);
+		xhr.open("POST", "<?=web_url('/contact/send_sms')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					var data = JSON.parse(xhr.responseText);
 					if (data == true) {
@@ -85,11 +85,11 @@
 						errormsg('寄送失敗')
 					}
 
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
+				} else {
+					errormsg('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
 		}
 		function ShowTime(){
 			var NowDate=new Date();
@@ -110,31 +110,31 @@
 			setTimeout('ShowTime()',1000);
 		}
 		function get_sms_collection(){
-			var xhr;  
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-				xhr = new XMLHttpRequest();  
-			} else if (window.ActiveXObject) { // IE 8 and older  
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-			}  
-			var data = "";  
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			var data = "";
 			xhr.open("POST", "<?=web_url('/service/show_sms_collection')?>");
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-			xhr.send(data);  
-			function display_datas() {  
-				if (xhr.readyState == 4) {  
-					if (xhr.status == 200) {  
-						// alert(xhr.responseText);   
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send(data);
+			function display_datas() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						// alert(xhr.responseText);
 						$('#smscollectionselection').html('<option>請選擇...</option>');
 						var data = JSON.parse(xhr.responseText);
 
 						for (var i = data.length - 1; i >= 0; i--) {
 							$('#smscollectionselection').append('<option id="smscollectionoption'+data[i].sc_id+'" value="'+data[i].sc_id+'">'+data[i].content+'</option>');
 						};
-					} else {  
-						errormsg('資料傳送出現問題，等等在試一次.');  
-					}  
-				}  
-			}  
+					} else {
+						errormsg('資料傳送出現問題，等等在試一次.');
+					}
+				}
+			}
 			xhr.onreadystatechange = display_datas;
 		}
 		get_sms_collection();
@@ -144,7 +144,7 @@
 				$('#sms_content').val($('#sms_content').val()+$("#smscollectionoption"+sc_id).html());
 			}
 		}
-	</script> 
+	</script>
 	<!-- 讓每一頁可以寫不同script的方法 -->
 	<?php if(function_exists("js_section")){ js_section(); } ?>
 </html>

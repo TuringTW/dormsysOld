@@ -1,46 +1,46 @@
 <?php function js_section(){ ?>
 <script type="text/javascript">
 // 學生資料
-	function stu_suggestion(){  
-		var name =$('#add_stu_info_search').val(); 
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
+	function stu_suggestion(){
+		var name =$('#add_stu_info_search').val();
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
 		var data = "keyword=" + name;
 		xhr.open("POST", "<?=web_url('/student/search_name')?>", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// errormsg(xhr.responseText);        
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					// errormsg(xhr.responseText);
 					var data = JSON.parse(xhr.responseText);
 					var htmltext = '';
 					htmltext += "<div class='list-group' style='position: relative; width: 100%; max-height: 300px; overflow: auto;'>";
 					if (data.today.length>0) {
 						htmltext += "<a class='list-group-item' style='background-color:lightgray'>今日新增</a>";
 						for (var i = data.today.length - 1; i >= 0; i--) {
-							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.today[i].stu_id+")'>"+data.today[i].name+'-'+data.today[i].mobile+'----聯絡人:'+data.today[i].emg_name+'-'+data.today[i].emg_phone+"</a>";  
+							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.today[i].stu_id+")'>"+data.today[i].name+'-'+data.today[i].mobile+'----聯絡人:'+data.today[i].emg_name+'-'+data.today[i].emg_phone+"</a>";
 						};
 					}
 					if (data.all.length>0) {
 						htmltext += "<a class='list-group-item' style='background-color:lightgray'>相關"+data.all.length+"筆</a>";
 						for (var i = data.all.length - 1; i >= 0; i--) {
-							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.all[i].stu_id+")'>"+data.all[i].name+'-'+data.all[i].mobile+'----聯絡人:'+data.all[i].emg_name+'-'+data.all[i].emg_phone+"</a>";  
+							htmltext += "<a class='list-group-item' onclick='checkreselect("+data.all[i].stu_id+")'>"+data.all[i].name+'-'+data.all[i].mobile+'----聯絡人:'+data.all[i].emg_name+'-'+data.all[i].emg_phone+"</a>";
 						};
 					}
 					htmltext += '</div>';
 					$('#stu_search_result').html(htmltext);
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-	} 
+				} else {
+					errormsg('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
+	}
 	// 檢查是否已新增此人
 	function checkreselect(stu_id){
 		document.getElementById('submitbtn').disabled=true;
@@ -72,19 +72,19 @@
 			var mobile = document.getElementById('stu_'+key+'_mobile').value;
 			var idnum = document.getElementById('stu_'+key+'_idnum').value;
 			var data = 'id_num='+idnum+'&name='+name+'&mobile='+mobile;
-			var xhr;  
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-				xhr = new XMLHttpRequest();  
-			} else if (window.ActiveXObject) { // IE 8 and older  
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-			}  
-			xhr.open("POST", "<?=web_url('/student/checkdoubleadd')?>", true);   
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-			xhr.send(data);  
-			xhr.onreadystatechange = display_data;  
-			function display_data() {  
-				if (xhr.readyState == 4) {  
-					if (xhr.status == 200) {  
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xhr.open("POST", "<?=web_url('/student/checkdoubleadd')?>", true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.send(data);
+			xhr.onreadystatechange = display_data;
+			function display_data() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
 						// errormsg(xhr.responseText);
 						data = JSON.parse(xhr.responseText);
 						if (data == true) {
@@ -94,52 +94,52 @@
 							document.getElementById('stu_'+key+'_btn').disabled = false;
 
 						}
-							 
-					} else {  
-						errormsg('資料傳送出現問題，等等在試一次.');  
-					}  
-				}  
+
+					} else {
+						errormsg('資料傳送出現問題，等等在試一次.');
+					}
+				}
 			}
-		}			
+		}
 	}
 	function addstuinfo(stu_id){
 		document.getElementById('submitbtn').disabled=true;
 		var key = document.getElementById('key').value;
 		key = Number(key)+1;
-		document.getElementById('key').value = key;	
+		document.getElementById('key').value = key;
 		// errormsg(stu_id+' '+key);
 		if (stu_id == 0) {
 			data = JSON.parse('{"stu_id":"","name":"","sex":"","school":"","mobile":"","home":"","reg_address":"","mailing_address":"","email":"","id_num":"","birthday":"","emg_name":"","emg_phone":"","note":"", "car_id":""}')
 			$('#accordion').append(stu_info_gen(data, key, stu_id));
 			$(function() {$( '#stu_'+key+'_birthday' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});})
 		}else{
-			var xhr;  
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-				xhr = new XMLHttpRequest();  
-			} else if (window.ActiveXObject) { // IE 8 and older  
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-			}  
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
 			var data = "stu_id=" + stu_id;
-			xhr.open("POST", "<?=web_url('/student/add_stu_info')?>", true);   
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-			xhr.send(data);  
-			xhr.onreadystatechange = display_data;  
-			function display_data() {  
-				if (xhr.readyState == 4) {  
-					if (xhr.status == 200) {  
-						// errormsg(xhr.responseText);   
+			xhr.open("POST", "<?=web_url('/student/add_stu_info')?>", true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.send(data);
+			xhr.onreadystatechange = display_data;
+			function display_data() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						// errormsg(xhr.responseText);
 						data = JSON.parse(xhr.responseText);
 						// errormsg(document.getElementById('accordion').innerHTML);
 						$('#accordion').append(stu_info_gen(data, key, stu_id));
 						if (stu_id!==0) {
-							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+data.name+'</td><td>'+data.mobile+'</td><tr>');		
+							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+data.name+'</td><td>'+data.mobile+'</td><tr>');
 						};
 
 						$(function() {$( '#stu_'+key+'_birthday' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});})
-					} else {  
-						errormsg('資料傳送出現問題，等等在試一次.');  
-					}  
-				}  
+					} else {
+						errormsg('資料傳送出現問題，等等在試一次.');
+					}
+				}
 			}
 
 			//清除搜尋結果
@@ -151,7 +151,7 @@
 				document.getElementById('stuinfosubmit').innerHTML += "<input type='hidden' name='stu_id[]' id='stu_id_"+key+"_submit' value="+stu_id+">"
 				get_rent_cal();
 			};
-		}			
+		}
 	}
 	function stu_info_gen(data, key, stu_id){
 
@@ -267,7 +267,7 @@
 			remove_item.parentElement.removeChild(remove_item);
 
 
-		}	
+		}
 	}
 	function bannerrefresh(key,item){
 		document.getElementById('stu_'+key+'_btn').className = 'btn btn-warning';
@@ -299,8 +299,8 @@
 	}
 	function sameasreg(key){
 
-		document.getElementById('stu_'+key+'_mailing_address').value = document.getElementById('stu_'+key+'_reg_address').value;	
-	}	
+		document.getElementById('stu_'+key+'_mailing_address').value = document.getElementById('stu_'+key+'_reg_address').value;
+	}
 	// 更新學生資料
 	function submitstuinfo(key){
 		document.getElementById('submitbtn').disabled=true;
@@ -360,29 +360,29 @@
 		}
 
 		if (check) {
-			var data = 'key='+key+'&name='+name+'&school='+school+'&id_num='+idnum+'&birthday='+birthday+'&note='+note+'&mobile='+mobile+'&home='+home+'&email='+email+'&reg_address='+reg_address+'&mailing_address='+mailing_address+'&emg_name='+emg_name+'&emg_phone='+emg_phone+'&stu_id='+stu_id;  
+			var data = 'key='+key+'&name='+name+'&school='+school+'&id_num='+idnum+'&birthday='+birthday+'&note='+note+'&mobile='+mobile+'&home='+home+'&email='+email+'&reg_address='+reg_address+'&mailing_address='+mailing_address+'&emg_name='+emg_name+'&emg_phone='+emg_phone+'&stu_id='+stu_id;
 			submitinfo(data,key,stu_id);
-			
+
 		}else{
 			errormsg(checkinfo);
 		};
 	}
 	function submitinfo(data,key,stu_id){
 
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		xhr.open("POST", "<?=web_url('/student/submitstuinfo')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// errormsg(xhr.responseText);  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xhr.open("POST", "<?=web_url('/student/submitstuinfo')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					// errormsg(xhr.responseText);
 					result = JSON.parse(xhr.responseText);
 					if (result != false) {
 						document.getElementById('stu_'+key+'_btn').className = 'btn btn-primary';
@@ -390,43 +390,43 @@
 							// errormsg('key='+key);
 							document.getElementById('stu_'+key+'_stu_id').value = xhr.responseText;
 							document.getElementById('stuinfosubmit').innerHTML += "<input type='hidden' name='stu_id[]' id='stu_id_"+key+"_submit' value="+xhr.responseText+">"
-							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+$('#stu_'+key+'_name').val()+'</td><td>'+$('#stu_'+key+'_mobile').val()+'</td><tr>');		
+							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+$('#stu_'+key+'_name').val()+'</td><td>'+$('#stu_'+key+'_mobile').val()+'</td><tr>');
 
 							get_rent_cal();
 						}else{
 							var remove_item = document.getElementById('final_stu_'+key);
 							remove_item.parentElement.removeChild(remove_item);
-							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+$('#stu_'+key+'_name').val()+'</td><td>'+$('#stu_'+key+'_mobile').val()+'</td><tr>');		
+							$('#final_stu_list').append('<tr id="final_stu_'+key+'"><td>'+$('#stu_'+key+'_name').val()+'</td><td>'+$('#stu_'+key+'_mobile').val()+'</td><tr>');
 
 						}
 					}else{
 						errormsg('[儲存時發生錯誤，請再試一次]\n如果持續出現請聯絡Kevin\n');
-					}      
-						 
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
+					}
+
+				} else {
+					errormsg('資料傳送出現問題，等等在試一次.');
+				}
+			}
 		}
 	}
 // 合約資料
-	function room_suggestion(keeproom){  
-		var dorm = document.getElementById("dorm_select").value;  
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "dorm_id=" + dorm;  
-		xhr.open("POST", "<?=web_url('/utility/room_suggestion')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// errormsg(xhr.responseText);        
+	function room_suggestion(keeproom){
+		var dorm = document.getElementById("dorm_select").value;
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "dorm_id=" + dorm;
+		xhr.open("POST", "<?=web_url('/utility/room_suggestion')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					// errormsg(xhr.responseText);
 					original_data = JSON.parse(xhr.responseText);
 					if (original_data.state==true) {
 						var data = original_data.result;
@@ -435,49 +435,49 @@
 							htmltext += "<option class='form-control' value='"+data[i].room_id+"'>"+data[i].name+"</option>";
 						};
 
-						document.getElementById("room_select").innerHTML = htmltext; 
+						document.getElementById("room_select").innerHTML = htmltext;
 						document.getElementById("room_select").focus();
 						if (typeof(keeproom)!=='undefined') { //for keep room
 							document.getElementById('room_select').value = keeproom;
 							room_data_suggestion();
-						}; 
+						};
 						// room_data_suggestion();
 					}else{
 						errormsg("傳輸出現問題"+xhr.responseText);
 					}
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
+				} else {
+					errormsg('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
 	}
-	function room_data_suggestion(){  
-		var room = document.getElementById("room_select").value;  
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "room_id=" + room;  
-		xhr.open("POST", "<?=web_url('/utility/get_room_info')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// errormsg(xhr.responseText);    
-					data = JSON.parse(xhr.responseText);    
-					document.getElementById("rent").value = data.rent;  
+	function room_data_suggestion(){
+		var room = document.getElementById("room_select").value;
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "room_id=" + room;
+		xhr.open("POST", "<?=web_url('/utility/get_room_info')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					// errormsg(xhr.responseText);
+					data = JSON.parse(xhr.responseText);
+					document.getElementById("rent").value = data.rent;
 					$('#final_dorm').html(data.dname);
 					$('#final_room').html(data.rname);
 					final_rent_check();
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
+				} else {
+					errormsg('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
 	}
 
 	function sameascontract(item){
@@ -496,21 +496,21 @@
 		var countpeo = $('input[name*="stu_id[]"]').length;
 
 		if (final_rent_check()&&checkSE()) {
-			var xhr;  
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-				xhr = new XMLHttpRequest();  
-			} else if (window.ActiveXObject) { // IE 8 and older  
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-			}  
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
 			var data = 'rpm='+rpm+'&s_date='+s_date+'&e_date='+e_date+'&countpeo='+countpeo;
-			xhr.open("POST", "<?=web_url('/contract/get_rent_cal')?>", true);   
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-			xhr.send(data);  
-			xhr.onreadystatechange = display_data;  
-			function display_data() {  
-				if (xhr.readyState == 4) {  
-					if (xhr.status == 200) {  
-						// errormsg(xhr.responseText);    
+			xhr.open("POST", "<?=web_url('/contract/get_rent_cal')?>", true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.send(data);
+			xhr.onreadystatechange = display_data;
+			function display_data() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						// errormsg(xhr.responseText);
 						data = JSON.parse(xhr.responseText);
 						if (data!==false) {
 							$('#total_days').html(data.date_result.td);
@@ -521,13 +521,13 @@
 							$('#ROD_rent').html(data.rent_result.ROD_rent);
 							$('#total_rent').html(data.rent_result.total_rent);
 							$('#final_tr').html(data.rent_result.total_rent);
-						}  
-					} else {  
-						errormsg('資料傳送出現問題，等等在試一次.');  
-					}  
-				}  
-			}  
-		}		
+						}
+					} else {
+						errormsg('資料傳送出現問題，等等在試一次.');
+					}
+				}
+			}
+		}
 	}
 	function checkSE(){
 		var s_date = $('#datepickerStart').val();
@@ -542,7 +542,7 @@
 			}else{
 				$('#final_sd').html($('#datepickerStart').val());
 				$('#final_ed').html($('#datepickerEnd').val());
-				
+
 				return true;
 			}
 		}else{
@@ -558,10 +558,10 @@
 		if (s_date!==''&&e_date!=='') {
 			if (date_diff(s_date, e_date)<=0) {
 				errormsg('遷入遷出日期錯誤');
-				
+
 				return false;
 			}else{
-				
+
 				return true;
 			}
 		}else{
@@ -578,21 +578,21 @@
 		var e_date = $('#datepickerOut').val();
 		var room_id = $('#room_select').val();
 		if (checkInOut()&&room_id!==''&&room_id!==null&&room_id!==0) {
-			var xhr;  
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-				xhr = new XMLHttpRequest();  
-			} else if (window.ActiveXObject) { // IE 8 and older  
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-			}  
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
 			var data = 's_date='+s_date+'&e_date='+e_date+'&room_id='+room_id;
-			xhr.open("POST", "<?=web_url('/contract/check_not_over_lap')?>", true);   
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-			xhr.send(data);  
-			xhr.onreadystatechange = display_data;  
-			function display_data() {  
-				if (xhr.readyState == 4) {  
-					if (xhr.status == 200) {  
-						// errormsg(xhr.responseText);    
+			xhr.open("POST", "<?=web_url('/contract/check_not_over_lap')?>", true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.send(data);
+			xhr.onreadystatechange = display_data;
+			function display_data() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						// errormsg(xhr.responseText);
 						data = JSON.parse(xhr.responseText);
 						if (data.state ===true) {
 							checkOK();
@@ -610,14 +610,14 @@
 							errormsg('房間日期資料輸入不完整或格式錯誤');
 							recheck();
 						}
-					} else {  
-						errormsg('資料傳送出現問題，等等在試一次.');  
-					}  
-				}  
-			}  
+					} else {
+						errormsg('資料傳送出現問題，等等在試一次.');
+					}
+				}
+			}
 		}else{
 			errormsg('房號、遷入、遷出日期請填寫完整');
-		}	
+		}
 	}
 	function checkOK(){
 		$('#btncheck').attr('disabled', true);
@@ -656,15 +656,15 @@
 			$('#final_rent').html('租金未填');
 			$('#final_tr').html('租金未填');
 			return false;
-		}	
+		}
 	}
 	function final_check(key){
 		switch(key){
 			case 1:
-				check_stu(key,true);				
+				check_stu(key,true);
 				break;
 			case 2:
-				check_room_dorm(key,true);				
+				check_room_dorm(key,true);
 				break;
 			case 3:
 				checkfinalSE(key,true);
@@ -689,7 +689,7 @@
 			if (show) {
 				errormsg('沒有新增房客');
 			};
-			
+
 			return false;
 		}else{
 			$('#btnfinalcheck_'+key).attr('disabled', true);
@@ -705,25 +705,25 @@
 			if (show) {
 				errormsg('宿舍未選擇');
 			};
-			
+
 			return false;
 		}else if($('room_select').val()===''||$('room_select').val()<=0){
 			if (show) {
 				errormsg('房間未選擇');
 			};
-			
+
 			return false;
 		}else if (!final_rent_check()) {
 			if (show) {
 				errormsg('租金未填');
 			};
-			
+
 			return false;
 		}else if($('#checkInOutval').val()!=='1'){
 			if (show) {
 				errormsg('遷入遷出檢查未通過');
 			};
-			
+
 		}else{
 			$('#dorm_select').attr('disabled', true);
 			$('#room_select').attr('disabled', true);
@@ -748,7 +748,7 @@
 			if (show) {
 				errormsg('合約日期未填');
 			}
-			
+
 			return false;
 		}
 	}
@@ -758,13 +758,13 @@
 			if (show) {
 				errormsg('遷入遷出日期未填')
 			}
-			
+
 			return false;
 		}else if($('#checkInOutval').val()!=="1"){
 			if (show) {
 				errormsg('遷入遷出檢查未通過');
 			}
-			
+
 			return false;
 		}else{
 			$('#datepickerIn').attr('disabled', true);
@@ -772,7 +772,7 @@
 
 			$('#btnfinalcheck_'+key).attr('disabled', true);
 			$('#btnfinalcheck_'+key).html('OK');
-			$('#btnfinalcheck_'+key).attr('class','btn btn-success');	
+			$('#btnfinalcheck_'+key).attr('class','btn btn-success');
 			return true;
 		}
 	}
@@ -802,7 +802,7 @@
 			}else{
 				return false;
 			}
-		}	
+		}
 	}
 // submit
 	function submitcontract(){
@@ -827,20 +827,20 @@
 		cdata.prev_contract_id=$('#prev_contract_id').val();
 		json_data = JSON.stringify(cdata);
 		data = "json_data="+json_data;
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		xhr.open("POST", "<?=web_url('/contract/submitcontract')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// errormsg(xhr.responseText);  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xhr.open("POST", "<?=web_url('/contract/submitcontract')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					// errormsg(xhr.responseText);
 					result = JSON.parse(xhr.responseText);
 					if (result.state == 1) {
 
@@ -863,12 +863,12 @@
 						errormsg('[發生不知名錯誤]\n請聯絡KEVIN');
 						$('#submitbtn').attr('disabled','false');
 					}
-						 
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
+
+				} else {
+					errormsg('資料傳送出現問題，等等在試一次.');
 					$('#submitbtn').attr('disabled','false');
-				}  
-			}  
+				}
+			}
 		}
 	}
 	function show_rent_detail(contract_id){
@@ -876,19 +876,19 @@
 			var contract_id = $('#new_contract_id').val();
 		}
 		// 傳送
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "contract_id=" + contract_id;  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "contract_id=" + contract_id;
 		xhr.open("POST", "<?=web_url('/accounting/show_rent_detail')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					data = JSON.parse(xhr.responseText);
 					$('#rent_detail').html('');
@@ -917,16 +917,16 @@
 						  	}
 						  	$('#rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.typename+'</td><td>'+((datum.pm==1)?'<span class="glyphicon glyphicon-plus"></span>':'<span class="glyphicon glyphicon-minus"></span>')+'</td><td>'+datum.value+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
 							total_rent = total_rent + ((datum.pm=='1')?1:-1)*parseInt(datum.value);
-						};  
+						};
 						$('#rent_total').html(total_rent);
 					}
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-		xhr.onreadystatechange = display_datas;  
-	
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
+		xhr.onreadystatechange = display_datas;
+
 	}
 	function submit_new_rent(){
 		var type = $('#new_rent_type_select').val();
@@ -952,22 +952,22 @@
 			errormsg('請選擇類別');
 			state = 0;
 		};
-		
+
 // 傳送
 		if (state == 1) {
-			var xhr;  
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-				xhr = new XMLHttpRequest();  
-			} else if (window.ActiveXObject) { // IE 8 and older  
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-			}  
-			var data = "contract_id=" + contract_id+'&type='+type+'&value='+value+'&date='+date+'&description='+description;  	
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			var data = "contract_id=" + contract_id+'&type='+type+'&value='+value+'&date='+date+'&description='+description;
 			xhr.open("POST", "<?=web_url('/accounting/add_rent_record')?>");
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-			xhr.send(data);  
-			function display_datas() {  
-				if (xhr.readyState == 4) {  
-					if (xhr.status == 200) {  
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send(data);
+			function display_datas() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
 						// alert(xhr.responseText);
 						data = JSON.parse(xhr.responseText);
 
@@ -978,12 +978,12 @@
 						}else{
 							errormsg('新增失敗');
 						}
-					} else {  
-						alert('資料傳送出現問題，等等在試一次.');  
-					}  
-				}  
-			}  
-			xhr.onreadystatechange = display_datas;  
+					} else {
+						alert('資料傳送出現問題，等等在試一次.');
+					}
+				}
+			}
+			xhr.onreadystatechange = display_datas;
 		};
 	}
 
@@ -1006,22 +1006,22 @@
 	}
 
 	function refresh(){
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
 		var data = "";
 		xhr.open("POST", "<?=web_url('/student/update_from_type_form')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					data = JSON.parse(xhr.responseText);
-					
+
 					if (data.state===true) {
 						if (data.chrows==0) {
 							errormsg('不要亂按，請先確定學生有新增了<br>(只有最近的10筆會被同步)<br>如果沒有匯入成功可能是資料庫中已有此人')
@@ -1030,11 +1030,11 @@
 							stu_suggestion();
 						}
 					}
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
 		xhr.onreadystatechange = display_datas;
 	}
 
@@ -1042,12 +1042,29 @@
 	$('#keepbtn').click();
 
 
-	$( '#datepickerStart' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	$( '#datepickerEnd' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	$( '#datepickerIn' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	$( '#datepickerOut' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$( '#datepickerStart' ).datepicker({
+			dateFormat: 'yy-mm-dd',
+			changeMonth: true,
+			changeYear: true,
+			onClose: function( selectedDate ) {
+				$( "#datepickerEnd" ).datepicker( "option", "minDate", selectedDate );
+			}});
+	$( '#datepickerEnd' ).datepicker({
+			dateFormat: 'yy-mm-dd',
+			changeMonth: true,
+			changeYear: true,
+			onClose: function( selectedDate ) {
+				$( "#datepickStart" ).datepicker( "option", "maxDate", selectedDate );
+			}});
+	$( '#datepickerIn' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#datepickerOut" ).datepicker( "option", "minDate", selectedDate );
+		}});
+	$( '#datepickerOut' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#datepickerIn" ).datepicker( "option", "maxDate", selectedDate );
+		}});
 	$( '#new_rent_date' ).datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-	
+
 </script>
 <?php } ?>
-
