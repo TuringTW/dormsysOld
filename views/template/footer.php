@@ -56,40 +56,73 @@
 			$('#sms_receiver').val(phone);
 			document.getElementById('sms_content').focus();
 		}
-		function send_new_sms(){
 
-		var sms_content = $('#sms_content').val();
-		var sms_receiver = $('#sms_receiver').val();
+		function post($url, data, callback, $mode){ //0: internal
+			var sms_content = $('#sms_content').val();
+			var sms_receiver = $('#sms_receiver').val();
 
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		var data = "content=" +sms_content+"&rx=" + sms_receiver + "&note=";
-		// alert(data);
-		xhr.open("POST", "<?=web_url('/contact/send_sms')?>", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send(data);
-		xhr.onreadystatechange = display_data;
-		function display_data() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					var data = JSON.parse(xhr.responseText);
-					if (data == true) {
-						successmsg('寄送成功');
-						$('#smsModal').modal('toggle');
-					}else{
-						errormsg('寄送失敗')
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			// alert(data);
+			if ($mode==0) {
+				$req_url = "<?=web_url('')?>"+$url;
+			}
+			xhr.open("POST", $req_url, true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.send(data);
+			xhr.onreadystatechange = display_data;
+			function display_data() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						callback(xhr.responseText);
+					} else {
+						errormsg('資料傳送出現問題，等等在試一次.');
 					}
-
-				} else {
-					errormsg('資料傳送出現問題，等等在試一次.');
 				}
 			}
 		}
+
+		function send_new_sms(){
+
+			var sms_content = $('#sms_content').val();
+			var sms_receiver = $('#sms_receiver').val();
+
+
+
+
+			var xhr;
+			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+				xhr = new XMLHttpRequest();
+			} else if (window.ActiveXObject) { // IE 8 and older
+				xhr = new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			var data = "content=" +sms_content+"&rx=" + sms_receiver + "&note=";
+			// alert(data);
+			xhr.open("POST", "<?=web_url('/contact/send_sms')?>", true);
+			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+			xhr.send(data);
+			xhr.onreadystatechange = display_data;
+			function display_data() {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						// alert(xhr.responseText);
+						var data = JSON.parse(xhr.responseText);
+						if (data == true) {
+							successmsg('寄送成功');
+							$('#smsModal').modal('toggle');
+						}else{
+							errormsg('寄送失敗')
+						}
+
+					} else {
+						errormsg('資料傳送出現問題，等等在試一次.');
+					}
+				}
+			}
 		}
 		function ShowTime(){
 			var NowDate=new Date();

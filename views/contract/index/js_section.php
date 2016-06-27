@@ -979,11 +979,12 @@
 					$('#pay_rent_detail').html('');
 					if (data.state===true) {
 						for (var i = 0; i < data.data.length; i++) {
-						  	var datum = data.data[i];
+								// alert(i)
+								datum = data.data[i];
 						  	$('#pay_rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.customer+'</td><td>'+datum.value+'</td><td>'+(datum.receipt_id==0?'':datum.receipt_id)+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
-						};
+						}
 						$('#pay_rent_total').html(data.sum);
-						$('#pay_rent_total_2').html(data.sum);
+						// $('#pay_rent_total_2').html(data.sum);
 					}
 				} else {
 					alert('資料傳送出現問題，等等在試一次.');
@@ -1014,16 +1015,19 @@
 						$('#rent_total_2').html(data.sumR);
 						$('#pay_rent_total_2').html(data.sumP);
 						$('#date_avail').html(data.cal.ad);
+
 						if (data.cal.done===true) {
 
 							$('#rent_progress').html('<div class="progress-bar progress-bar-success progress-bar-striped" style="width: '+data.cal.tdp+'%" title="已住區段"></div><div class="progress-bar progress-bar-success" style="width: '+(100-data.cal.tdp)+'%" title="已繳租金">100%</div>');
 						}else{
 							var ratio = Math.round(100*data.sumP/(data.sumR+1e-10));
+							// alert(ratio);
+							// alert(data.cal.tdp)
 							if (data.cal.tdp>ratio) {
 									$('#date_avail').html("當月租金未繳");
 									$('#rent_progress').html('<div class="progress-bar progress-bar-warning" style="width: '+ratio+'%" title="已繳租金">100%</div><div class="progress-bar progress-bar-danger progress-bar-striped" style="width: '+(data.cal.tdp-ratio)+'%" title="已住區段">已住區段</div>');
 							}else{
-									$('#rent_progress').html('<div class="progress-bar progress-bar-info progress-bar-striped" style="width:'+(data.cal.tdp)+'%" title="已住區段"></div><div class="progress-bar progress-bar-warning" style="width: '+ratio-data.cal.tdp+'%" title="已繳租金">已繳'+ratio+'%</div>');
+									$('#rent_progress').html('<div class="progress-bar progress-bar-info progress-bar-striped" style="width:'+(data.cal.tdp)+'%" title="已住區段"></div><div class="progress-bar progress-bar-warning" style="width: '+(ratio-data.cal.tdp)+'%" title="已繳租金">已繳'+ratio+'%</div>');
 							}
 
 
