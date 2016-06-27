@@ -56,7 +56,7 @@ class Mutility extends CI_Model
       $output['mib'] = $mib; //month in betwwen
       $output['rod'] = $rod;
 
-        return $output;
+      return $output;
     }
 
     function get_dorm_list()

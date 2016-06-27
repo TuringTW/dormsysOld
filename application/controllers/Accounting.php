@@ -1,5 +1,5 @@
 <?php
-class Accounting extends CI_Controller 
+class Accounting extends CI_Controller
 {
 	public function __construct(){
 		parent::__construct();
@@ -11,7 +11,7 @@ class Accounting extends CI_Controller
 		$this->login_check->check_init($required_power);
 	}
 	private function view_header(){
-		$data = array(	'title' => 'Home', 
+		$data = array(	'title' => 'Home',
 						'user' => $this->session->userdata('user'),
 						'power' => $this->session->userdata('power')
 					);
@@ -21,7 +21,7 @@ class Accounting extends CI_Controller
 		$this->load->view('template/message_dialog');
 		$this->load->view('template/smsModel');
 	}
-	public function expenditure($contract_id=0){	
+	public function expenditure($contract_id=0){
 		$this->load->helper('dorm_list_helper');
 		// header
 		$this->view_header();
@@ -46,7 +46,7 @@ class Accounting extends CI_Controller
 		$type = $this->input->post("type", TRUE);
 		$rtype = $this->input->post("rtype", TRUE);
 		$dorm = $this->input->post("dorm", TRUE);
-		
+
 		$data['json_data'] = $this->Mfinance->show_expenditure_list($keyword, $page, $type, $dorm, $rtype);
 
 		$this->load->view('template/jsonview', $data);
@@ -55,7 +55,7 @@ class Accounting extends CI_Controller
 		$item_id = $this->input->post('item_id', TRUE);
 		if (!is_null($item_id)&&$item_id>0) {
 			$result = $this->Mfinance->show_item($item_id);
-			
+
 		}else{
 			$result['state'] = false;
 		}
@@ -85,7 +85,7 @@ class Accounting extends CI_Controller
 	public function show_rent_detail(){
 		$contract_id = $this->input->post('contract_id', TRUE);
 		if (!is_null($contract_id)&&$contract_id>=0) {
-			$result = $this->Mfinance->show_rent_detail($contract_id, 0);
+			$result = $this->Mfinance->show_rent_detail($contract_id);
 		}else{
 			$result['state'] = false;
 		}
@@ -112,7 +112,27 @@ class Accounting extends CI_Controller
 	public function show_pay_rent_detail(){
 		$contract_id = $this->input->post('contract_id', TRUE);
 		if (!is_null($contract_id)&&$contract_id>=0) {
-			$result = $this->Mfinance->show_rent_detail($contract_id, 1);
+			$result = $this->Mfinance->show_pay_rent_detail($contract_id);
+		}else{
+			$result['state'] = false;
+		}
+		$data['json_data'] = $result;
+		$this->load->view('template/jsonview', $data);
+	}
+	public function refresh_payment_status(){
+		$contract_id = $this->input->post('contract_id', TRUE);
+		if (!is_null($contract_id)&&$contract_id>=0) {
+			$contract_info = $this->Mcontract->get_contract_info($contract_id);
+			$resultP = $this->Mfinance->show_pay_rent_detail($contract_id);
+			$result['sumP'] = ($resultP['sum']);
+			$resultR = $this->Mfinance->show_rent_detail($contract_id);
+			$result['sumR'] = ($resultR['sum']);
+			if (count($contract_info)>0) {
+					$result['cal'] = $this->Mfinance->calculate_payment_status($resultP['sum'], $resultR['sum'], $contract_info[0]);
+					$result['state'] = true;
+			}else{
+				$result['state'] = false;
+			}
 		}else{
 			$result['state'] = false;
 		}
@@ -120,16 +140,16 @@ class Accounting extends CI_Controller
 		$this->load->view('template/jsonview', $data);
 	}
 	public function add_pay_rent_record(){
-		$source = $this->input->post('source', TRUE);
+		// $source = $this->input->post('source', TRUE);
 		$value = $this->input->post('value', TRUE);
-		$from = $this->input->post('from', TRUE);
+		$customer = $this->input->post('customer', TRUE);
 		$date = $this->input->post('date', TRUE);
 		$r_id = $this->input->post('r_id', TRUE);
 		$description = $this->input->post('description', TRUE);
 		$contract_id = $this->input->post('contract_id', TRUE);
 
 		if (!is_null($contract_id)&&$contract_id>=0) {
-			$result = $this->Mfinance->add_pay_rent_record($source, $value, $from, $date, $r_id, $description, $contract_id);
+			$result = $this->Mfinance->add_pay_rent_record($value, $customer, $date, $r_id, $description, $contract_id);
 		}else{
 			$result['state'] = false;
 		}
@@ -137,6 +157,6 @@ class Accounting extends CI_Controller
 		$this->load->view('template/jsonview', $data);
 
 	}
-	
+
 }
 ?>

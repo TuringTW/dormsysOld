@@ -33,13 +33,13 @@ class Mfinance extends CI_Model
         }else{
             return false;
         }
-    }    
+    }
     // 支出列表
     function show_expenditure_list($keyword, $page, $type, $dorm, $rtype){
         $this->db->select('item_id, receipttype, item, cate, dorm.name as dname, item.dorm_id, company, money, isrequest, billing, date')->from('item');
         $this->db->join('itemcate', 'itemcate.cate_id = item.type');
         $this->db->join('dorm','item.dorm_id=dorm.dorm_id','left');
-        $this->db->where('( 0',NULL, false); //for logic 
+        $this->db->where('( 0',NULL, false); //for logic
         $this->db->or_like('item.item',$keyword)->or_like('dorm.name',$keyword)->or_like('itemcate.cate',$keyword)->or_like('company',$keyword);
         $this->db->or_where('0 )',NULL, false);
         // 宿舍
@@ -57,7 +57,7 @@ class Mfinance extends CI_Model
             $dormrule = "`item`.`receipttype` = '$rtype'";
             $this->db->where($dormrule);
         }
-        $this->db->order_by("date", "desc"); 
+        $this->db->order_by("date", "desc");
         // 頁數
         if ($page <= 0) {
             $page = 1;
@@ -72,9 +72,9 @@ class Mfinance extends CI_Model
     }
     function show_item($item_id){
         $this->db->select('item_id, receipttype as rtype, item, type, dorm_id, company, money, isrequest, billing, date, note, m_id')->from('item');
-        $this->db->where('item_id', $item_id); //for logic 
+        $this->db->where('item_id', $item_id); //for logic
         $query = $this->db->get();
-        
+
         if ($query->num_rows()>0) {
             $result['data'] = $query->result_array();
             $result['state'] = TRUE;
@@ -84,7 +84,7 @@ class Mfinance extends CI_Model
         return $result;
     }
     function edit_item($rtype, $item, $type, $note, $company, $money, $date, $dorm, $billing, $item_id){
-        
+
         $data = array(  'receipttype'=>$rtype,
                         'item'=>$item,
                         'type'=>$type,
@@ -94,7 +94,7 @@ class Mfinance extends CI_Model
                         'date'=>$date,
                         'dorm_id'=>$dorm,
                         'billing'=>$billing,
-                        
+
                         );
         if ($item_id == 0) {
             $this->db->insert('item', $data);
@@ -110,16 +110,17 @@ class Mfinance extends CI_Model
         return $result;
     }
 
-    function show_rent_detail($contract_id, $mode){
+    function show_rent_detail($contract_id){
         $this->db->select('pm, type, description, source, from, active, value, date, receipt_id')->from('rent')->where('contract_id', $contract_id);
-        if ($mode == 0) {
-            $this->db->where('source', 0);
-        }else{
-            $this->db->where('source<>', 0);
-        }
+        $this->db->where('source', 0);
         $query = $this->db->get();
         $result['data'] = $query->result_array();
         $result['state'] = true;
+
+        $this->db->select('SUM(value*if(pm=1, 1, -1)) as value', false)->where('contract_id', $contract_id);
+        $sumresult =($this->db->get('rent')->row());
+        $result['sum'] = $sumresult->value+0;
+
         return $result;
     }
     function add_rent_record($type, $value, $date, $description, $contract_id){
@@ -140,7 +141,7 @@ class Mfinance extends CI_Model
             case 5:
                 $pm = 0;
                 break;
-            
+
             default:
                 $pm = 1;
                 break;
@@ -162,26 +163,62 @@ class Mfinance extends CI_Model
         return $result;
     }
 
-    function add_pay_rent_record($source, $value, $from, $date, $r_id, $description, $contract_id){
+    function add_pay_rent_record($value, $costomer, $date, $r_id, $description, $contract_id){
         $m_id = $this->login_check->get_user_id();
-        $pm = 1;
-        $data = array(  
-                    'source'=>$source,
+        $data = array(
                     'value'=>$value,
-                    'from'=>$from,
+                    'customer'=>$costomer,
                     'date'=>$date,
                     'receipt_id'=>$r_id,
-                    'pm'=>$pm,
                     'description'=>$description,
                     'contract_id'=>$contract_id,
                     'm_id'=>$m_id
                         );
-        $this->db->insert('rent', $data);
+        $this->db->insert('payment', $data);
         if($this->db->affected_rows()>0){
             $result['state']=TRUE;
         }else{
             $result['state']=FALSE;
         }
+        return $result;
+    }
+    function show_pay_rent_detail($contract_id){
+        $this->db->select('customer, description, value, date, receipt_id')->from('payment')->where('contract_id', $contract_id);
+        $query = $this->db->get();
+        $result['data'] = $query->result_array();
+
+        $this->db->select_sum('value')->where('contract_id', $contract_id);
+        $sumresult =($this->db->get('payment')->row());
+        $result['sum'] = $sumresult->value+0;
+
+        $result['state'] = true;
+        return $result;
+    }
+    function calculate_payment_status($sumP, $sumR, $contract_info){
+        $rent = $contract_info['rent'];
+        $s_date = $contract_info['s_date'];
+        $e_date = $contract_info['e_date'];
+
+        if ($sumP>$sumR) {
+          $result['ad'] = $contract_info['e_date'];
+          $result['done'] = TRUE;
+        }else{
+          $result['done'] = false;
+          $avail_month = 0;
+          while ($sumP>$rent) {
+            $sumP-=$rent;
+            $avail_month+=1;
+          }
+          $rod = floor($sumP*30/$rent);
+          $result['ad'] = date('Y-m-d', mktime(0,0,0,date('m', strtotime($s_date))+$avail_month, date('d', strtotime($s_date))+$rod, date('Y', strtotime($s_date))));
+
+        }
+        $today = date('Y-m-d');
+        $result['td'] = $today;
+        $result['ed'] = $e_date;
+        $result['tdp'] = round(100*($this->Mutility->Date_diff($s_date, $today)['td'])/$this->Mutility->Date_diff($s_date, $e_date)['td']);
+
+
         return $result;
     }
 }?>

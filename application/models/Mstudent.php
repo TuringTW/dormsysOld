@@ -20,42 +20,42 @@ class Mstudent extends CI_Model
 		// echo "<div class='list-group' style='position: relative; width: 100%; max-height: 180px; overflow: auto;'>";
 		// 今日新增
 		$sql = "select `stu_id`,`name`,`mobile`, `emg_name`, `emg_phone` from `student` where (
-			`name` like binary '%$keyword' or 
-			`emg_name` like binary '%$keyword' or 
-			`mobile` like binary '%$keyword' or 
-			`emg_phone` like binary '%$keyword' or 
-			`name` like binary '%$keyword%' or 
-			`emg_name` like binary '%$keyword%' or 
-			`mobile` like binary '%$keyword%' or 
-			`emg_phone` like binary '%$keyword%' or 
-			`name` like binary '$keyword%' or 
-			`emg_name` like binary '$keyword%' or 
+			`name` like binary '%$keyword' or
+			`emg_name` like binary '%$keyword' or
+			`mobile` like binary '%$keyword' or
+			`emg_phone` like binary '%$keyword' or
+			`name` like binary '%$keyword%' or
+			`emg_name` like binary '%$keyword%' or
+			`mobile` like binary '%$keyword%' or
+			`emg_phone` like binary '%$keyword%' or
+			`name` like binary '$keyword%' or
+			`emg_name` like binary '$keyword%' or
 			`mobile` like binary '$keyword%' or
-			`emg_phone` like binary '$keyword%' 
-			) and(Year(`ctime`)='".date('Y')."' and MONTH(`ctime`)='".date('m')."' and Day(`ctime`)='".date('j')."')";  
+			`emg_phone` like binary '$keyword%'
+			) and(Year(`ctime`)='".date('Y')."' and MONTH(`ctime`)='".date('m')."' and Day(`ctime`)='".date('j')."')";
 		$query = $this->db->query($sql);
 		$result['today'] = $query->result_array();
 		// echo "$sql";
-		
+
 		// 全部
-		$sql = "select `stu_id`,`name`,`mobile`, `emg_name`, `emg_phone` from `student` where 
-			`name` like binary '%$keyword' or 
-			`emg_name` like binary '%$keyword' or 
-			`mobile` like binary '%$keyword' or 
-			`emg_phone` like binary '%$keyword' or 
-			`name` like binary '%$keyword%' or 
-			`emg_name` like binary '%$keyword%' or 
-			`mobile` like binary '%$keyword%' or 
-			`emg_phone` like binary '%$keyword%' or 
-			`name` like binary '$keyword%' or 
-			`emg_name` like binary '$keyword%' or 
+		$sql = "select `stu_id`,`name`,`mobile`, `emg_name`, `emg_phone` from `student` where
+			`name` like binary '%$keyword' or
+			`emg_name` like binary '%$keyword' or
+			`mobile` like binary '%$keyword' or
+			`emg_phone` like binary '%$keyword' or
+			`name` like binary '%$keyword%' or
+			`emg_name` like binary '%$keyword%' or
+			`mobile` like binary '%$keyword%' or
+			`emg_phone` like binary '%$keyword%' or
+			`name` like binary '$keyword%' or
+			`emg_name` like binary '$keyword%' or
 			`mobile` like binary '$keyword%' or
-			`emg_phone` like binary '$keyword%' 
-			 LIMIT 0,20";  
+			`emg_phone` like binary '$keyword%'
+			 LIMIT 0,20";
 		$query = $this->db->query($sql);
 		$result['all'] = $query->result_array();
 		return $result;
-	} 
+	}
 	function add_stu_info($stu_id)
 	{
 		if (!is_null($stu_id)&&is_numeric($stu_id)) {
@@ -79,7 +79,7 @@ class Mstudent extends CI_Model
 				$query = $this->db->query($sql);
 				return $data['stu_id'];
 			}
-				
+
 		}else{
 			return FALSE;
 		}
@@ -95,7 +95,7 @@ class Mstudent extends CI_Model
 	}
 
 	function show_student_list($keyword, $page){
-        // 頁數		
+        // 頁數
 		if ($page <= 0) {
             $page = 1;
         }
@@ -115,7 +115,7 @@ class Mstudent extends CI_Model
 		$sql = "SELECT * from `student` where `stu_id` = '$stu_id'";
 		$query = $this->db->query($sql);
 
-		
+
 		if ($query->num_rows()>0) {
 			$output['stu_info'] = $query->result_array();
 
@@ -130,13 +130,13 @@ class Mstudent extends CI_Model
 			$output['cdata'] = $query->result_array();
 			$output['state'] = true;
 			return $output;
-			
+
 		}else{
 			$outpu['state'] = false;
 			return $output;
 
 		}
-		
+
 
 	}
 
@@ -160,7 +160,13 @@ class Mstudent extends CI_Model
         $this->db->where('room.dorm',$dorm_id);
         $this->db->where("((DATEDIFF(  `in_date`,'$today' ) <=0
                             AND DATEDIFF(   `out_date`,'$today' ) >=0))");
-        $this->db->where('seal=',0);
+
+				$this->db->where('( 1',NULL, false); //for logic
+						$this->db->where('seal=',0);
+						$this->db->or_where('( 1',NULL, false); //for logic
+                $this->db->where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            $this->db->or_where('0 )',NULL, false);
+				$this->db->or_where('0 )',NULL, false);
         $this->db->order_by('room.name');
         $query = $this->db->get();
         return $query->result_array();
@@ -197,7 +203,7 @@ class Mstudent extends CI_Model
 		$this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
 		$this->db->join('student','student.stu_id=contractpeo.stu_id','left');
 		$this->db->where('seal<>', 1);
-		$this->db->where('( 0',NULL, false); //for logic 
+		$this->db->where('( 0',NULL, false); //for logic
         $this->db->or_like('student.name',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.mobile',$keyword)->or_like('student.emg_phone',$keyword)->or_like('student.car_id',$keyword);
         $this->db->or_where('0 )',NULL, false);
         $this->db->order_by('student.name')->order_by('in_date');
@@ -216,7 +222,7 @@ class Mstudent extends CI_Model
 			$this->db->from('student')->where('n_id', $value->token);
 			$this->db->or_where('( 1',NULL, false)->where('name', $value->answers->textfield_12545150)->where('id_num', $value->answers->textfield_12545462)->where('1 )',NULL, false); //for logic ;
 			$count = $this->db->count_all_results();
-			
+
 			if ($count==0) {
 				$data = array(
 					'name' => $value->answers->textfield_12545150,
@@ -243,7 +249,7 @@ class Mstudent extends CI_Model
 			$this->db->flush_cache();
 		}
 
-		
+
 
 		$result['state'] = true;
 		$result['chrows'] = $success_add;

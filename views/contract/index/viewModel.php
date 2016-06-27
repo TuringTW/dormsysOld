@@ -8,7 +8,7 @@
 						<h4 class="modal-title" id="myModalLabel">合約詳細資料</h4>
 				</div>
 				<div class="modal-body">
-					
+
 						<div class="row">
 							<div class="col-sm-6">
 								<table class="table"  style="margin-bottom:0px">
@@ -30,7 +30,7 @@
 			     								<input type="hidden" id="room_id" value="0">
 			     								<div class="col-md-8"><input class="form-control" id="view_room" disabled required="required" style="width:100%" type="text" name="new[]" ></div>
 			     								<div class="col-md-4"><a href="#" id="view_room_href" class="btn btn-default" style="width:100%" title="檢視房間資訊"><span class="glyphicon glyphicon-home"></span></a></div>
-			     	
+
 			     							</div>
 			     						</td>
 			     					</tr>
@@ -54,8 +54,8 @@
 			     								<div class="col-sm-8"><input class="form-control"  onchange="check_room();change_alert();" id="view_in_date" required="required" style="width:100%" type="text" name="new[]" ></div>
 			     								<div class="col-sm-4"><span class="glyphicon glyphicon-ok" id="view_in_date_check"></span></div>
 			     							</div>
-			     							
-			     							
+
+
 			     						</td>
 			     						<td style="width:15%" align="right">遷出日期</td>
 			     						<td style="width:30%">
@@ -63,7 +63,7 @@
 			     								<div class="col-sm-8"><input class="form-control" onchange="check_room();change_alert();"  id="view_out_date" required="required" style="width:100%" type="text" name="new[]" ></div>
 			     								<div class="col-sm-4"><span class="glyphicon glyphicon-ok" id="view_out_date_check"></span></div>
 			     							</div>
-			     							
+
 			     						</td>
 			     					</tr>
 			     					<tr>
@@ -84,7 +84,7 @@
 			     								<?php foreach ($saleslist as $key => $value): ?>
 			     									<option  class="form-control" value="<?=$value['m_id']?>" ><?=$value['name']?></option>
 			     								<?php endforeach ?>
-			     							</select> 
+			     							</select>
 			     						</td>
 			     						<td style="width:15%" align="right">簽約管理員</td>
 			     						<td style="width:30%">
@@ -101,12 +101,29 @@
 							</div>
 							<div class="col-sm-6">
 								<ul class="nav nav-tabs">
-									<li class="active"><a href="#contract" data-toggle="tab">租金明細</a></li>
+									<li class="active"><a href="#status" data-toggle="tab">租賃狀態</a></li>
+									<li><a href="#contract" data-toggle="tab">租金明細</a></li>
 									<li><a href="#pay_detail" data-toggle="tab">繳費明細</a></li>
 									<li><a href="#deposit" data-toggle="tab">押金紀錄</a></li>
 								</ul>
 								<div class="tab-content"  style="overflow-y:scroll;overflow-x:hidden;height:450px">
-									<div class="tab-pane active" id="contract">
+									<div class="tab-pane active" id="status">
+										<h3>租金</h3>
+										<table class="table">
+											<tr>
+												<th>應繳&nbsp;/&nbsp;已繳租金</th>
+												<th>目前租金足夠到</th>
+											</tr>
+											<tr>
+												<td style="text-align:center;font-size:20px"><span id="rent_total_2">0</span>&nbsp;/&nbsp;<span id="pay_rent_total_2">0</span>元</td>
+												<td style="text-align:center;font-size:20px"><span id="date_avail"></span></td>
+											</tr>
+										</table>
+										<div class="progress" style="width:90%" id="rent_progress">
+										</div>
+									</div>
+									<div class="tab-pane" id="contract">
+
 										<br>
 										<div class="row">
 											<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#rentModal').modal('toggle');">新增額外費用/獎勵</a></div>
@@ -126,7 +143,7 @@
 											<tbody id="rent_detail" style="text-align:center"></tbody>
 										</table>
 									</div>
-									<div class="tab-pane" id="pay_detail" >									
+									<div class="tab-pane" id="pay_detail" >
 										<br>
 										<div class="row">
 											<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#payrentModal').modal('toggle');">新增繳費紀錄</a></div>
@@ -137,7 +154,6 @@
 										<table class="table">
 											<thead>
 												<th>#</th>
-												<th>來源</th>
 												<th>繳款人</th>
 												<th>金額</th>
 												<th>收據#</th>
@@ -147,15 +163,15 @@
 											<tbody id="pay_rent_detail" style="text-align:center"></tbody>
 										</table>
 									</div>
-									<div class="tab-pane" id="deposit">									
-									
+									<div class="tab-pane" id="deposit">
+
 									</div>
 								</div>
 							</div>
 						</div>
-						
-    					
-     				
+
+
+
 				</div>
 				<div class="modal-footer">
 					<div class="row" style="width:100%">
@@ -168,30 +184,30 @@
 						<div class="col-md-2 pull-right">
 							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 						</div>
-						
+
 						<div class="col-md-5 pull-right">
 							<a id="view_keep_btn"  name="checkoutsubmit" title="續約" onclick="keep_check()"class="btn btn-success btn-lg keep">續約</a>
 							<a id="view_check_out_btn"  name="checkoutsubmit" title="移到結算列表" onclick="checkout_check()" class="btn btn-primary btn-lg checkout">結算合約</a>
 							<a id="view_change_btn"  name="checkoutsubmit" data-cnum="0" title="違約提早結束、手滑打錯要刪除、要換房間"class="btn  btn-lg btn-danger">合約更動/取消</a>
-						</div> 
+						</div>
     					<div class="col-md-1 pull-right">
-							
-						</div>
-						
-						
-						
-						<div class="col-md-2 pull-right">
-							
-						</div>
-						
-						
 
-						
+						</div>
+
+
+
+						<div class="col-md-2 pull-right">
+
+						</div>
+
+
+
+
 					</div>
-					
+
 				</div>
 
 		</div><!-- /.modal-content -->
-		
+
 	</div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
