@@ -139,31 +139,14 @@
 	}
 	// 更新本月到期跟下月到期的數量
 	function due_ofd_refresh(keyword, dorm, start_value, end_value){
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "keyword=" + keyword+"&dorm="+dorm+"&startval="+start_value+"&endval="+end_value;
-		xhr.open("POST", "<?=web_url('/contract/due_ofd_refresh')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					data = JSON.parse(xhr.responseText) ;
-					$('#view_ofd').html(data.countofd);
-					$('#view_due').html(data.countdue);
-					$('#view_due_in_one_m').html(data.countdue_in_1_m);
-					$('#view_ns').html(data.count_ns);
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
-			}
+		post('/contract/due_ofd_refresh', data, callback, 0);
+		function callback(data) {
+			$('#view_ofd').html(data.countofd);
+			$('#view_due').html(data.countdue);
+			$('#view_due_in_one_m').html(data.countdue_in_1_m);
+			$('#view_ns').html(data.count_ns);
 		}
-		xhr.onreadystatechange = display_datas;
 	}
 	// 更新排列方式
 	function table_order(order_method){
@@ -192,10 +175,7 @@
 			$('#order_marker_'+order_method).html('-');
 			$("#order_marker_"+order_method).css("display", "inline");
 		}
-
-
 		table_refresh();
-
 	}
 	// 更新想式的數量
 	function table_refresh(){
@@ -218,11 +198,6 @@
 		}
 
 		$('#txtkeyword').focus();
-		// if(due_value*ofd_value==1){
-		// 	due_value = 0;
-		// 	ofd_value = 0;
-		// }
-
 		if (page < 0) {
 			page = 1;
 		}
@@ -230,31 +205,14 @@
 		due_ofd_refresh(keyword, dorm, start_value, end_value);
 
 		// 傳送
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&ns_value="+ns_value+"&diom_value="+diom_value+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law+"&startval="+start_value+"&endval="+end_value;
-		xhr.open("POST", "<?=web_url('/contract/show')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
 
-					tableparse(xhr.responseText);
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
-			}
+		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&ns_value="+ns_value+"&diom_value="+diom_value+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law+"&startval="+start_value+"&endval="+end_value;
+		post('/contract/show', data, callback, 0)
+		function callback(data) {
+			tableparse(data);
 		}
-		xhr.onreadystatechange = display_datas;
 	}
-	function tableparse(json){
-		data = JSON.parse(json);
+	function tableparse(data){
 		var page = $('#page_value').val();
 		$('#result_table').html('');
 		for (var i = 0; i < data.length; i++) {
@@ -309,67 +267,50 @@
 	// AJAX產生合約資料
 	function showcontract(contract_id){
 		$('#viewModal').modal('toggle');
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "contract_id=" + contract_id;
-		xhr.open("POST", "<?=web_url('/contract/show_contract')?>", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send(data);
-		xhr.onreadystatechange = display_data;
-		function display_data() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					var data = JSON.parse(xhr.responseText);
-					document.getElementById('view_stu_info').innerHTML = '';
-					for (var i = 0; i < data.length; i++) {
-						datum = data[i];
-						var stu_url = "<?=web_url('/student/index')?>";
-						document.getElementById('view_stu_info').innerHTML+='<tr>'
-		     						+'<td style="width:15%" align="right" >'+((i==0)?'立約人':'')+'</td>'
-		     						+'<td>'
-		     						+'	<div class="row">'
-		     						+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.sname+'"></div>'
-		     						+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.mobile+'"></div>'
-		     						+'		<div class="col-md-2"><a title="學生資料" href="'+stu_url+'?view='+datum.stu_id+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-user"></span></a></div>'
-		     						+'		<div class="col-md-2"><a title="寄簡訊" id="view_sms_'+i+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-comment"></span></a></div>'
-		     						+'	</div>'
-		     						+'</td>'
-		     						+'<input type="hidden" name="contract[]" value="'+datum.contract_id+'">'
-		     					+'</tr>';
-		     			$('#view_sms_'+i).attr('onclick','sendsms("'+datum.sname+'同學你好,", "'+datum.mobile+'")')
-					};
-					var datum = data[0];
-					document.getElementById('view_dorm_href').href = 'dorm.php?view='+datum.dorm_id;
-					document.getElementById('view_dorm').value = datum.dname;
-					document.getElementById('view_room').value = datum.rname;
-					document.getElementById('view_room_href').href = 'room.php?view='+datum.room_id;
-					document.getElementById('view_s_date').value = datum.s_date;
-					document.getElementById('view_e_date').value = datum.e_date;
-					document.getElementById('view_in_date').value = datum.in_date;
-					document.getElementById('view_out_date').value = datum.out_date;
-					document.getElementById('view_c_date').value = datum.c_date;
-					document.getElementById('view_rent').value = datum.rent;
-					document.getElementById('view_sales').value = datum.sales;
-					document.getElementById('view_manager').value = datum.mname;
-					document.getElementById('view_note').value = datum.note;
-					document.getElementById('room_id').value = datum.room_id;
-					document.getElementById('view_change_btn').setAttribute('data-cnum',datum.contract_id);
-					document.getElementById('contract_id').value = datum.contract_id;
-					//document.getElementById("room_select").innerHTML = xhr.responseText;
+		function callback(data) {
+			document.getElementById('view_stu_info').innerHTML = '';
+			for (var i = 0; i < data.length; i++) {
+				datum = data[i];
+				var stu_url = "<?=web_url('/student/index')?>";
+				document.getElementById('view_stu_info').innerHTML+='<tr>'
+				+'<td style="width:15%" align="right" >'+((i==0)?'立約人':'')+'</td>'
+				+'<td>'
+				+'	<div class="row">'
+				+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.sname+'"></div>'
+				+'		<div class="col-md-4"><input class="form-control"  disabled required="required" style="width:100%" type="text" name="stu[]" value="'+datum.mobile+'"></div>'
+				+'		<div class="col-md-2"><a title="學生資料" href="'+stu_url+'?view='+datum.stu_id+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-user"></span></a></div>'
+				+'		<div class="col-md-2"><a title="寄簡訊" id="view_sms_'+i+'" class="btn btn-default" style="width:100%"><span class="glyphicon glyphicon-comment"></span></a></div>'
+				+'	</div>'
+				+'</td>'
+				+'<input type="hidden" name="contract[]" value="'+datum.contract_id+'">'
+				+'</tr>';
+				$('#view_sms_'+i).attr('onclick','sendsms("'+datum.sname+'同學你好,", "'+datum.mobile+'")')
+			};
+			var datum = data[0];
+			document.getElementById('view_dorm_href').href = 'dorm.php?view='+datum.dorm_id;
+			document.getElementById('view_dorm').value = datum.dname;
+			document.getElementById('view_room').value = datum.rname;
+			document.getElementById('view_room_href').href = 'room.php?view='+datum.room_id;
+			document.getElementById('view_s_date').value = datum.s_date;
+			document.getElementById('view_e_date').value = datum.e_date;
+			document.getElementById('view_in_date').value = datum.in_date;
+			document.getElementById('view_out_date').value = datum.out_date;
+			document.getElementById('view_c_date').value = datum.c_date;
+			document.getElementById('view_rent').value = datum.rent;
+			document.getElementById('view_sales').value = datum.sales;
+			document.getElementById('view_manager').value = datum.mname;
+			document.getElementById('view_note').value = datum.note;
+			document.getElementById('room_id').value = datum.room_id;
+			document.getElementById('view_change_btn').setAttribute('data-cnum',datum.contract_id);
+			document.getElementById('contract_id').value = datum.contract_id;
+			//document.getElementById("room_select").innerHTML = xhr.responseText;
 
-					show_rent_detail(contract_id);
-					show_pay_rent_detail(contract_id);
-					refresh_payment_status(contract_id)
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
-			}
+			show_rent_detail(contract_id);
+			show_pay_rent_detail(contract_id);
+			refresh_payment_status(contract_id)
 		}
+		post('/contract/show_contract', data, callback, 0)
 	}
 	// 檢查遷入遷出日期
 	function check_room(){
@@ -381,35 +322,18 @@
 		var room_id = $('#room_id').val();
 		var contract_id = $('#contract_id').val();
 
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "room_id=" + room_id+"&in_date=" + in_date+"&out_date=" + out_date + '&contract_id='+contract_id;
-		xhr.open("POST", "<?=web_url('/contract/date_check_by_room')?>", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send(data);
-		xhr.onreadystatechange = display_data;
-		function display_data() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					var result = JSON.parse(xhr.responseText);
-					if (result == true) {
-						$('#edit_btn').attr( "disabled", false );
-						document.getElementById('view_out_date_check').className = "glyphicon glyphicon-ok";
-						document.getElementById('view_in_date_check').className = "glyphicon glyphicon-ok";
-					}else{
-						document.getElementById('view_out_date_check').className = "glyphicon glyphicon-remove";
-						document.getElementById('view_in_date_check').className = "glyphicon glyphicon-remove";
-					}
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
+		function callback(data){
+			if (data == true) {
+				$('#edit_btn').attr( "disabled", false );
+				document.getElementById('view_out_date_check').className = "glyphicon glyphicon-ok";
+				document.getElementById('view_in_date_check').className = "glyphicon glyphicon-ok";
+			}else{
+				document.getElementById('view_out_date_check').className = "glyphicon glyphicon-remove";
+				document.getElementById('view_in_date_check').className = "glyphicon glyphicon-remove";
 			}
 		}
+		post('/contract/date_check_by_room', data, callback, 0)
 	}
 	// 提示表單有變更
 	function change_alert(){
@@ -429,32 +353,16 @@
 		var out_date = $('#view_out_date').val();
 		var sales = $('#view_sales').val();
 		var note = $('#view_note').val();
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "contract_id=" + contract_id+"&in_date="+in_date+"&out_date="+out_date+"&sales="+sales+"&note="+note;
-		xhr.open("POST", "<?=web_url('/contract/edit')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					if (JSON.parse(xhr.responseText.trim())===true) {
-						document.getElementById('edit_btn').className = 'btn btn-info btn-lg';
-						document.getElementById('edit_btn').innerHTML = '已儲存';
-						// 更新表格裡的資訊
-						table_refresh();
-					}
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
+		post('/contract/edit', data, callback, 0)
+		function callback(data){
+			if (data===true) {
+				document.getElementById('edit_btn').className = 'btn btn-info btn-lg';
+				document.getElementById('edit_btn').innerHTML = '已儲存';
+				// 更新表格裡的資訊
+				table_refresh();
 			}
 		}
-		xhr.onreadystatechange = display_datas;
 	}
 	// 詳細資料裡的日期選擇
 	$('#view_in_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
@@ -521,105 +429,49 @@
     function delete_confirm(){
     	if (confirm("確定要刪除?")) {
     		var contract_id = $('#bcontract_id').val();
-    		var xhr;
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-				xhr = new XMLHttpRequest();
-			} else if (window.ActiveXObject) { // IE 8 and older
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			var data = "contract_id=" + contract_id;
-			xhr.open("POST", "<?=web_url('/contract/delete_contract')?>", true);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.send(data);
-			function display_datas() {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						// alert(xhr.responseText);
-						data = JSON.parse(xhr.responseText);
-						if (data==true) {
-							successmsg("刪除成功");
-							table_refresh();
-							dialogbreak.dialog( "close" );
-						}else{
-							errormsg("發生問題，在試一次");
-							dialogbreak.dialog( "close" );
-						}
-					} else {
-						alert('資料傳送出現問題，等等在試一次.');
+				var data = "contract_id=" + contract_id;
+				post('/contract/delete_contract', data, callback, 0)
+				function callback(data){
+					if (data==true) {
+						successmsg("刪除成功");
+						table_refresh();
+						dialogbreak.dialog( "close" );
+					}else{
+						errormsg("發生問題，在試一次");
+						dialogbreak.dialog( "close" );
 					}
 				}
-			}
-			xhr.onreadystatechange = display_datas;
     	}
 	}
-    function getbcontract(contract_id){
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
+  function getbcontract(contract_id){
 		var data = "contract_id=" + contract_id;
-		xhr.open("POST", "<?=web_url('/contract/show_contract')?>", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					data = JSON.parse(xhr.responseText);
-
-
-					document.getElementById("break_stu_info").innerHTML = '';
-					for (var i = data.length - 1; i >= 0; i--) {
-						document.getElementById("break_stu_info").innerHTML += '<tr><td>'+data[i].sname+'</td><td>'+data[i].mobile+'</td><td>'+data[i].id_num+'</td></tr>';
-					};
-					document.getElementById("break_contract_info").innerHTML = '<tr><td>'+data[0].dname+'</td><td>'+data[0].rname+'</td><td>'+data.length+'</td><td>'+data[0].s_date+'</td><td>'+data[0].e_date+'</td></tr>'+"<input type='hidden' name='bs_date' id='bs_date' value='"+data[0].s_date+"'>"+"<input type='hidden' name='be_date' id='be_date' value='"+data[0].e_date+"'>";
-
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
-			}
+		post('/contract/show_contract', data, callback, 0)
+		function callback(data){
+			document.getElementById("break_stu_info").innerHTML = '';
+			for (var i = data.length - 1; i >= 0; i--) {
+				document.getElementById("break_stu_info").innerHTML += '<tr><td>'+data[i].sname+'</td><td>'+data[i].mobile+'</td><td>'+data[i].id_num+'</td></tr>';
+			};
+			document.getElementById("break_contract_info").innerHTML = '<tr><td>'+data[0].dname+'</td><td>'+data[0].rname+'</td><td>'+data.length+'</td><td>'+data[0].s_date+'</td><td>'+data[0].e_date+'</td></tr>'+"<input type='hidden' name='bs_date' id='bs_date' value='"+data[0].s_date+"'>"+"<input type='hidden' name='be_date' id='be_date' value='"+data[0].e_date+"'>";
 		}
-		xhr.onreadystatechange = display_datas;
 	}
 	function breakcontract(contract_id,b_date,wtdo){
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "contract_id=" + contract_id+"&b_date=" + b_date;
-		xhr.open("POST", "<?=web_url('/contract/break_contract')?>", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-
-					if (JSON.parse(xhr.responseText)==true) {
-						$('#dialog-breakcontracr').dialog( "close" );
-						if (wtdo) {
-							$('#keep_bcontract_id').val(contract_id);
- 							$('#keep_b_date').val(b_date);
- 							$('#bkeepalert').html('接下來進行續約');
- 							$('#bkeepalert').css('display','inline');
-						}
-
-						$('#dialog-update-done').dialog( "open" );
-					}else{
-						$('#dialog-update-failed').dialog( "open" );
-					}
-
-
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
+		post('/contract/break_contract', data, callback, 0)
+		function callback(data){
+			if (data===true) {
+				$('#dialog-breakcontracr').dialog( "close" );
+				if (wtdo) {
+					$('#keep_bcontract_id').val(contract_id);
+						$('#keep_b_date').val(b_date);
+						$('#bkeepalert').html('接下來進行續約');
+						$('#bkeepalert').css('display','inline');
 				}
+
+				$('#dialog-update-done').dialog( "open" );
+			}else{
+				$('#dialog-update-failed').dialog( "open" );
 			}
 		}
-		xhr.onreadystatechange = display_datas;
 	}
 	function breaknkeep () {
 		var contract_id = $('#bcontract_id').val();
@@ -659,7 +511,6 @@
 		resizable: false,
 		dialogClass: "alert",
 		buttons: {
-
         '確定': function() {
           $( this ).dialog( "close" );
           location.reload();
@@ -667,13 +518,12 @@
       }
     });
     dialogbreakdone = $( "#dialog-update-done" ).dialog({
-		autoOpen: false,
-
-		modal: true,
-		width: "50%",
-		resizable: false,
-		dialogClass: "alert",
-		buttons: {
+			autoOpen: false,
+			modal: true,
+			width: "50%",
+			resizable: false,
+			dialogClass: "alert",
+			buttons: {
 
         '確定': function() {
           	$( this ).dialog( "close" );
@@ -688,9 +538,7 @@
           		var tomorrow = new Date(Date.parse(b_date));
 				tomorrow.setDate(tomorrow.getDate()+1);
           		window.location.assign('<?=web_url("/contract/newcontract")?>?keep='+contract_id);
-
           	}
-
         }
       }
     });
@@ -713,12 +561,10 @@
 				$('.modal-backdrop').remove();
 		    });
 		}
-
 	}
 	// 確認結算
 	dialogbreakdone = $( "#dialog-check-out-comfirm" ).dialog({
 		autoOpen: false,
-
 		modal: true,
 		width: "50%",
 		resizable: false,
@@ -737,14 +583,12 @@
       }
     });
     dialogbreakdone = $( "#dialog-universal-alert" ).dialog({
-		autoOpen: false,
-
-		modal: true,
-		width: "30%",
-		resizable: false,
-		dialogClass: "alert",
-		buttons: {
-
+			autoOpen: false,
+			modal: true,
+			width: "30%",
+			resizable: false,
+			dialogClass: "alert",
+			buttons: {
         '確定': function() {
           	$( this ).dialog( "close" );
         }
@@ -752,31 +596,16 @@
     });
     // 結算
     function checkout_contract(contract_id){
-    	var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		var data = "contract_id=" + contract_id;
-		xhr.open("POST", "<?=web_url('/contract/checkout_contract')?>", true);
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					table_refresh();
-					if (JSON.parse(xhr.responseText) == true ) {
-						$('#dialog-universal-alert').html('<div class="alert alert-success"><h2><span class="glyphicon glyphicon-ok"></span>成功!!!</h2></div>')
-						$('#dialog-universal-alert').dialog( "open" );
-					}
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
+			var data = "contract_id=" + contract_id;
+			post('/contract/checkout_contract', data, callback, 0)
+			function callback(data){
+				// alert(xhr.responseText);
+				table_refresh();
+				if (data === true ) {
+					$('#dialog-universal-alert').html('<div class="alert alert-success"><h2><span class="glyphicon glyphicon-ok"></span>成功!!!</h2></div>')
+					$('#dialog-universal-alert').dialog( "open" );
 				}
 			}
-		}
-		xhr.onreadystatechange = display_datas;
     }
 // 續約
 	// 檢查可否續約
@@ -811,92 +640,53 @@
     });
     function keep_contract(contract_id){
     	// 傳送
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-		var data = "contract_id=" + contract_id;
-		xhr.open("POST", "<?=web_url('/contract/keep_contract_check')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					data = JSON.parse(xhr.responseText);
-					if (data==true) {
-						window.location = "<?=web_url('/contract/newcontract')?>?keep="+contract_id;
-					}else{
-						errormsg('續約時發生錯誤，可能是租金尚未結清。');
-					}
-				} else {
-					errormsg('資料傳送出現問題，等等在試一次.');
+			var data = "contract_id=" + contract_id;
+			post('/contract/keep_contract_check', data, callback, 0)
+			function callback(data){
+				// alert(xhr.responseText);
+				data = JSON.parse(xhr.responseText);
+				if (data==true) {
+					window.location = "<?=web_url('/contract/newcontract')?>?keep="+contract_id;
+				}else{
+					errormsg('續約時發生錯誤，可能是租金尚未結清。');
 				}
 			}
-		}
-		xhr.onreadystatechange = display_datas;
-
-
-
     }
-
-
 // 租金
 	function show_rent_detail(contract_id){
-
 		// 傳送
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "contract_id=" + contract_id;
-		xhr.open("POST", "<?=web_url('/accounting/show_rent_detail')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					data = JSON.parse(xhr.responseText);
-					$('#rent_detail').html('');
-					if (data.state===true) {
-						for (var i = 0; i < data.data.length; i++) {
-						  	var datum = data.data[i];
-						  	switch(datum.type){
-						  		case '1':
-						  			datum.typename = '租金';
-						  			break;
-						  		case '2':
-						  			datum.typename = '額外';
-						  			break;
-						  		case '3':
-						  			datum.typename = '獎學金';
-						  			break;
-						  		case '4':
-						  			datum.typename = '其他+';
-						  			break;
-						  		case '5':
-						  			datum.typename = '其他-';
-						  			break;
-						  		default:
-						  			datum.typename = '';
-						  	}
-						  	$('#rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.typename+'</td><td>'+((datum.pm==1)?'<span class="glyphicon glyphicon-plus"></span>':'<span class="glyphicon glyphicon-minus"></span>')+'</td><td>'+datum.value+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
-						};
-						$('#rent_total').html(data.sum);
-						$('#rent_total_2').html(data.sum);
-					}
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
+		post('/accounting/show_rent_detail', data, callback, 0)
+		function callback(data){
+			$('#rent_detail').html('');
+			if (data.state===true) {
+				for (var i = 0; i < data.data.length; i++) {
+				  	var datum = data.data[i];
+				  	switch(datum.type){
+				  		case '1':
+				  			datum.typename = '租金';
+				  			break;
+				  		case '2':
+				  			datum.typename = '額外';
+				  			break;
+				  		case '3':
+				  			datum.typename = '獎學金';
+				  			break;
+				  		case '4':
+				  			datum.typename = '其他+';
+				  			break;
+				  		case '5':
+				  			datum.typename = '其他-';
+				  			break;
+				  		default:
+				  			datum.typename = '';
+				  	}
+				  	$('#rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.typename+'</td><td>'+((datum.pm==1)?'<span class="glyphicon glyphicon-plus"></span>':'<span class="glyphicon glyphicon-minus"></span>')+'</td><td>'+datum.value+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
+				};
+				$('#rent_total').html(data.sum);
+				$('#rent_total_2').html(data.sum);
 			}
 		}
-		xhr.onreadystatechange = display_datas;
-
 	}
 	function submit_new_rent(){
 		var type = $('#new_rent_type_select').val();
@@ -925,121 +715,58 @@
 
 // 傳送
 		if (state == 1) {
-			var xhr;
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-				xhr = new XMLHttpRequest();
-			} else if (window.ActiveXObject) { // IE 8 and older
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
 			var data = "contract_id=" + contract_id+'&type='+type+'&value='+value+'&date='+date+'&description='+description;
-			xhr.open("POST", "<?=web_url('/accounting/add_rent_record')?>");
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.send(data);
-			function display_datas() {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						// alert(xhr.responseText);
-						data = JSON.parse(xhr.responseText);
-
-						if (data.state===true) {
-							successmsg('新增成功');
-							show_rent_detail(contract_id);
-							refresh_payment_status(contract_id)
-							$('#rentModal').modal('toggle');
-						}else{
-							errormsg('新增失敗');
-						}
-					} else {
-						alert('資料傳送出現問題，等等在試一次.');
-					}
+			post('/accounting/add_rent_record', data, callback, 0)
+			function callback(data){
+				if (data.state===true) {
+					successmsg('新增成功');
+					show_rent_detail(contract_id);
+					refresh_payment_status(contract_id)
+					$('#rentModal').modal('toggle');
+				}else{
+					errormsg('新增失敗');
 				}
 			}
-			xhr.onreadystatechange = display_datas;
 		};
 	}
 
 	function show_pay_rent_detail(contract_id){
-
-		// 傳送
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "contract_id=" + contract_id;
-		xhr.open("POST", "<?=web_url('/accounting/show_pay_rent_detail')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					data = JSON.parse(xhr.responseText);
-					$('#pay_rent_detail').html('');
-					if (data.state===true) {
-						for (var i = 0; i < data.data.length; i++) {
-								// alert(i)
-								datum = data.data[i];
-						  	$('#pay_rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.customer+'</td><td>'+datum.value+'</td><td>'+(datum.receipt_id==0?'':datum.receipt_id)+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
-						}
-						$('#pay_rent_total').html(data.sum);
-						// $('#pay_rent_total_2').html(data.sum);
-					}
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
-				}
+		post('/accounting/show_pay_rent_detail', data, callback, 0)
+		function callback(data){
+			$('#pay_rent_detail').html('');
+			if (data.state===true) {
+				for (var i = 0; i < data.data.length; i++) {
+						datum = data.data[i];
+				  	$('#pay_rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.customer+'</td><td>'+datum.value+'</td><td>'+(datum.receipt_id==0?'':datum.receipt_id)+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
+				};
+				$('#pay_rent_total').html(data.sum);
 			}
 		}
-		xhr.onreadystatechange = display_datas;
 	}
 	function refresh_payment_status(contract_id){
-		// 傳送
-		var xhr;
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-			xhr = new XMLHttpRequest();
-		} else if (window.ActiveXObject) { // IE 8 and older
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");
-		}
 		var data = "contract_id=" + contract_id;
-		xhr.open("POST", "<?=web_url('/accounting/refresh_payment_status')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		xhr.send(data);
-		function display_datas() {
-			if (xhr.readyState == 4) {
-				if (xhr.status == 200) {
-					// alert(xhr.responseText);
-					data = JSON.parse(xhr.responseText);
-					$('#pay_rent_detail').html('');
-					if (data.state===true) {
-						$('#rent_total_2').html(data.sumR);
-						$('#pay_rent_total_2').html(data.sumP);
-						$('#date_avail').html(data.cal.ad);
-
-						if (data.cal.done===true) {
-
-							$('#rent_progress').html('<div class="progress-bar progress-bar-success progress-bar-striped" style="width: '+data.cal.tdp+'%" title="已住區段"></div><div class="progress-bar progress-bar-success" style="width: '+(100-data.cal.tdp)+'%" title="已繳租金">100%</div>');
-						}else{
-							var ratio = Math.round(100*data.sumP/(data.sumR+1e-10));
-							// alert(ratio);
-							// alert(data.cal.tdp)
-							if (data.cal.tdp>ratio) {
-									$('#date_avail').html("當月租金未繳");
-									$('#rent_progress').html('<div class="progress-bar progress-bar-warning" style="width: '+ratio+'%" title="已繳租金">100%</div><div class="progress-bar progress-bar-danger progress-bar-striped" style="width: '+(data.cal.tdp-ratio)+'%" title="已住區段">已住區段</div>');
-							}else{
-									$('#rent_progress').html('<div class="progress-bar progress-bar-info progress-bar-striped" style="width:'+(data.cal.tdp)+'%" title="已住區段"></div><div class="progress-bar progress-bar-warning" style="width: '+(ratio-data.cal.tdp)+'%" title="已繳租金">已繳'+ratio+'%</div>');
-							}
-
-
-						}
-
+		post('/accounting/refresh_payment_status', data, callback, 0)
+		function callback(data){
+			if (data.state===true) {
+				$('#rent_total_2').html(data.sumR);
+				$('#pay_rent_total_2').html(data.sumP);
+				$('#date_avail').html(data.cal.ad);
+				if (data.cal.done===true) {
+					$('#rent_progress').html('<div class="progress-bar progress-bar-success progress-bar-striped" style="width: '+data.cal.tdp+'%" title="已住區段"></div><div class="progress-bar progress-bar-success" style="width: '+(100-data.cal.tdp)+'%" title="已繳租金">100%</div>');
+				}else{
+					var ratio = Math.round(100*data.sumP/(data.sumR+1e-10));
+					// alert(ratio);
+					// alert(data.cal.tdp)
+					if (data.cal.tdp>ratio) {
+							$('#date_avail').html("當月租金未繳");
+							$('#rent_progress').html('<div class="progress-bar progress-bar-warning" style="width: '+ratio+'%" title="已繳租金">100%</div><div class="progress-bar progress-bar-danger progress-bar-striped" style="width: '+(data.cal.tdp-ratio)+'%" title="已住區段">已住區段</div>');
+					}else{
+							$('#rent_progress').html('<div class="progress-bar progress-bar-info progress-bar-striped" style="width:'+(data.cal.tdp)+'%" title="已住區段"></div><div class="progress-bar progress-bar-warning" style="width: '+(ratio-data.cal.tdp)+'%" title="已繳租金">已繳'+ratio+'%</div>');
 					}
-				} else {
-					alert('資料傳送出現問題，等等在試一次.');
 				}
 			}
 		}
-		xhr.onreadystatechange = display_datas;
 	}
 	function submit_new_pay_rent(){
 		// var source = $('#new_pay_rent_source').val();
@@ -1073,42 +800,20 @@
 
 // 傳送
 		if (state == 1) {
-			var xhr;
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-				xhr = new XMLHttpRequest();
-			} else if (window.ActiveXObject) { // IE 8 and older
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
 			var data = "contract_id=" + contract_id+ '&value='+value+'&customer='+customer+'&date='+date+'&r_id='+r_id+'&description='+description;
-			xhr.open("POST", "<?=web_url('/accounting/add_pay_rent_record')?>");
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.send(data);
-			function display_datas() {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						// alert(xhr.responseText);
-						data = JSON.parse(xhr.responseText);
-
-						if (data.state===true) {
-							successmsg('新增成功');
-							show_pay_rent_detail(contract_id);
-							refresh_payment_status(contract_id)
-							$('#payrentModal').modal('toggle');
-						}else{
-							errormsg('新增失敗');
-						}
-					} else {
-						alert('資料傳送出現問題，等等在試一次.');
-					}
+			post('/accounting/add_pay_rent_record', data, callback, 0)
+			function callback(data){
+				if (data.state===true) {
+					successmsg('新增成功');
+					show_pay_rent_detail(contract_id);
+					refresh_payment_status(contract_id)
+					$('#payrentModal').modal('toggle');
+				}else{
+					errormsg('新增失敗');
 				}
 			}
-			xhr.onreadystatechange = display_datas;
 		};
 	}
-
-
-
-
 
 	if ($("#view_contract_id").val()==-1) {
 		errormsg("查看合約代碼錯誤，請紀錄步驟，通知Kevin");

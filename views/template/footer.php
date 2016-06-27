@@ -78,7 +78,8 @@
 			function display_data() {
 				if (xhr.readyState == 4) {
 					if (xhr.status == 200) {
-						callback(xhr.responseText);
+						var return_data = JSON.parse(xhr.responseText);
+						callback(return_data);
 					} else {
 						errormsg('資料傳送出現問題，等等在試一次.');
 					}
@@ -87,42 +88,18 @@
 		}
 
 		function send_new_sms(){
-
-			var sms_content = $('#sms_content').val();
-			var sms_receiver = $('#sms_receiver').val();
-
-
-
-
-			var xhr;
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-				xhr = new XMLHttpRequest();
-			} else if (window.ActiveXObject) { // IE 8 and older
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			var data = "content=" +sms_content+"&rx=" + sms_receiver + "&note=";
-			// alert(data);
-			xhr.open("POST", "<?=web_url('/contact/send_sms')?>", true);
-			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-			xhr.send(data);
-			xhr.onreadystatechange = display_data;
-			function display_data() {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						// alert(xhr.responseText);
-						var data = JSON.parse(xhr.responseText);
+				var sms_content = $('#sms_content').val();
+				var sms_receiver = $('#sms_receiver').val();
+				var req_data = "content=" +sms_content+"&rx=" + sms_receiver + "&note=";
+				function callback(data){
 						if (data == true) {
-							successmsg('寄送成功');
-							$('#smsModal').modal('toggle');
+								successmsg('寄送成功');
+								$('#smsModal').modal('toggle');
 						}else{
-							errormsg('寄送失敗')
+								errormsg('寄送失敗')
 						}
-
-					} else {
-						errormsg('資料傳送出現問題，等等在試一次.');
-					}
 				}
-			}
+				post('/contact/send_sms', req_data, callback, 0);
 		}
 		function ShowTime(){
 			var NowDate=new Date();
@@ -143,32 +120,14 @@
 			setTimeout('ShowTime()',1000);
 		}
 		function get_sms_collection(){
-			var xhr;
-			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-				xhr = new XMLHttpRequest();
-			} else if (window.ActiveXObject) { // IE 8 and older
-				xhr = new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			var data = "";
-			xhr.open("POST", "<?=web_url('/service/show_sms_collection')?>");
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.send(data);
-			function display_datas() {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						// alert(xhr.responseText);
-						$('#smscollectionselection').html('<option>請選擇...</option>');
-						var data = JSON.parse(xhr.responseText);
-
-						for (var i = data.length - 1; i >= 0; i--) {
-							$('#smscollectionselection').append('<option id="smscollectionoption'+data[i].sc_id+'" value="'+data[i].sc_id+'">'+data[i].content+'</option>');
-						};
-					} else {
-						errormsg('資料傳送出現問題，等等在試一次.');
-					}
+			function callback(data){
+				// alert(xhr.responseText);
+				$('#smscollectionselection').html('<option>請選擇...</option>');
+				for (var i = data.length - 1; i >= 0; i--) {
+					$('#smscollectionselection').append('<option id="smscollectionoption'+data[i].sc_id+'" value="'+data[i].sc_id+'">'+data[i].content+'</option>');
 				}
 			}
-			xhr.onreadystatechange = display_datas;
+			post('/service/show_sms_collection', "", callback, 0);
 		}
 		get_sms_collection();
 		function fill_in_sms(){
