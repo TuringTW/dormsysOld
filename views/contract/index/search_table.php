@@ -24,6 +24,7 @@
 	<input type="hidden" id="diom_value" value="0">
 	<input type="hidden" id="due_value" value="0">
 	<input type="hidden" id="ofd_value" value="0">
+	<input type="hidden" id="pne_value" value="0">
 	<div class="form-group row">
 		<div class="col-md-5">
 			<div class=" input-group" style="width:100%">
@@ -35,12 +36,13 @@
 
 		</div>
 
-		<div class="col-md-6">
+		<div class="col-md-7">
 			<div class="btn-group">
 				<a href="#" id="btnNS" onclick="ns_select()" class="btn btn-info" title="還沒開始的合約">未開始&nbsp;&nbsp;<span class="badge" id="view_ns">1</span></a>
 				<a href="#" id="btnDIOM" onclick="diom_select()" class="btn btn-default" title="遷出日期在一個月內的合約">一個月內遷出&nbsp;&nbsp;<span class="badge" id="view_due_in_one_m">1</span></a>
 				<a href="#" id="btnDue" onclick="due_select()" class="btn btn-default" title="這個月份到期的合約(合約結束日期在這個月)">本月到期&nbsp;&nbsp;<span class="badge" id="view_due">1</span></a>
 				<a href="#" id="btnOFD" onclick="ofd_select()" class="btn btn-danger" title="已經過期的合約(超過合約結束的日期)">過期&nbsp;&nbsp;<span class="badge" id="view_ofd">1</span></a>
+			<a href="#" id="btnPNE" onclick="pne_select()" class="btn btn-warning" title="房租即將(30天內)/已經不足的合約">租金不足&nbsp;&nbsp;<span class="badge" id="view_pne">1</span></a>
 			</div>
 		</div>
 	</div>
@@ -66,7 +68,10 @@
 						<th><a href="#" title="依照遷入日期遞增/遞減排列" onclick="table_order(6)">遷入日期<span class="order_marker" id="order_marker_6" style="display:none;"></span></a></th>
 						<th><a href="#" title="依照遷出日期遞增/遞減排列" onclick="table_order(7)">遷出日期<span class="order_marker" id="order_marker_7" style="display:none;"></span></a></th>
 						<th><a href="#" title="依照新增日期遞增/遞減排列" onclick="table_order(8)">新增日期<span class="order_marker" id="order_marker_8" style="display:none;"></span></a></th>
+						<th>租金總額</th>
+						<th>已繳租金</th>
 						<th style="width:5%">詳細</th>
+
 					</tr>
 				</thead>
 				<tbody id="result_table">

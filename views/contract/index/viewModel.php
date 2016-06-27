@@ -146,7 +146,7 @@
 									<div class="tab-pane" id="pay_detail" >
 										<br>
 										<div class="row">
-											<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#payrentModal').modal('toggle');">新增繳費紀錄</a></div>
+											<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="resetpaymodal();$('#payrentModal').modal('toggle');">新增繳費紀錄</a></div>
 											<div class="col-sm-3"><h4>已繳租金總額:</h4></div>
 											<div class="col-sm-4"><h4><span id="pay_rent_total">0</span>元</h4></div>
 										</div>
@@ -156,7 +156,7 @@
 												<th>#</th>
 												<th>繳款人</th>
 												<th>金額</th>
-												<th>收據#</th>
+												<!-- <th>收據#</th> -->
 												<th>描述</th>
 												<th>入帳日期</th>
 											</thead>

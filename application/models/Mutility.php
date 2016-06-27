@@ -61,7 +61,7 @@ class Mutility extends CI_Model
 
     function get_dorm_list()
     {
-    	$sql = "SELECT `name`,`dorm_id`,`location`,`note` FROM `dorm`  WHERE 1";
+    	$sql = "SELECT `name`,`dorm_id`,`location`,`note` FROM `dorm`  WHERE `active` = 1";
     	$query = $this->db->query($sql);
     	return $query->result_array();
     }

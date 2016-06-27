@@ -221,4 +221,39 @@ class Mfinance extends CI_Model
 
         return $result;
     }
+    function show_pay_rent_list($keyword='', $page){
+        $this->db->select('id, payment.contract_id, dorm.name as dname, room.name as rname, customer, value, date, m_id, description, receipt_id as rid')->from('payment');
+        $this->db->join('contract', 'contract.contract_id = payment.contract_id', 'left');
+        $this->db->join('room', 'contract.room_id = room.room_id', 'left');
+        $this->db->join('dorm', 'room.dorm = dorm.dorm_id', 'left');
+        // $this->db->where('( 0',NULL, false); //for logic
+        // $this->db->or_like('item.item',$keyword)->or_like('dorm.name',$keyword)->or_like('itemcate.cate',$keyword)->or_like('company',$keyword);
+        // $this->db->or_where('0 )',NULL, false);
+        // 宿舍
+        // if ($dorm != 0&&!is_null($dorm)) {
+            // $dormrule = "`dorm`.`dorm_id` = '$dorm'";
+            // $this->db->where($dormrule);
+        // }
+        // 類別
+        // if ($type != 0&&!is_null($type)) {
+        //     $dormrule = "`item`.`type` = '$type'";
+        //     $this->db->where($dormrule);
+        // }
+        // 類別
+        // if ($rtype != 0&&!is_null($rtype)) {
+        //     $dormrule = "`item`.`receipttype` = '$rtype'";
+        //     $this->db->where($dormrule);
+        // }
+        $this->db->order_by("date", "desc")->order_by("payment.timestamp", "desc");
+        // 頁數
+        if ($page <= 0) {
+            $page = 1;
+        }
+        $pages = 30*$page-30;
+        $this->db->limit(30,$pages);
+
+        $query = $this->db->get();
+        return $query->result_array();
+
+    }
 }?>

@@ -157,6 +157,32 @@ class Accounting extends CI_Controller
 		$this->load->view('template/jsonview', $data);
 
 	}
+	public function payment(){
+		$this->load->helper('dorm_list_helper');
+		// header
+		$this->view_header();
+		// sidebar
+		$data['active'] = 1;
+		$this->load->view('accounting/sidebar', $data);
+		// body table
+		$data['dormlist'] = $this->Mutility->get_dorm_list();
+		$this->load->view('accounting/payment/search_table', $data);
+		$data['manager'] = $this->Mutility->get_user_list();
+		$this->load->view('accounting/payment/viewModel',$data);
+		// footer
+		$this->load->view('accounting/payment/js_section');
+		$this->load->view('template/footer');
+	}
+	public function show_pay_rent_list(){
+		// $keyword = $this->input->post("keyword", TRUE);
+		$page = $this->input->post("page", TRUE);
+		// $type = $this->input->post("type", TRUE);
+		// $rtype = $this->input->post("rtype", TRUE);
+		// $dorm = $this->input->post("dorm", TRUE);
 
+		$data['json_data'] = $this->Mfinance->show_pay_rent_list('', $page);
+
+		$this->load->view('template/jsonview', $data);
+	}
 }
 ?>

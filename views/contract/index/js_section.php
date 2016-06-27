@@ -76,6 +76,8 @@
 		$('#btnDIOM').removeClass('active');
 		$('#ofd_value').val(0);
 		$('#btnDue').removeClass('active');
+		$('#pne_value').val(0);
+		$('#btnPNE').removeClass('active');
 	}
 	// 即將到期的按鈕
 	function ns_select(){
@@ -103,6 +105,21 @@
 			// =====
 			$('#diom_value').val(1);
 			$('#btnDIOM').addClass('active');
+		}
+		pagemove(0);
+		table_refresh();
+	}
+	// 房租不足的按鈕
+	function pne_select(){
+		var value = $('#pne_value').val();
+		if (value==1) {
+			$('#pne_value').val(0);
+			$('#btnPNE').removeClass('active');
+		}else{
+			btn_value_reset();
+			// =====
+			$('#pne_value').val(1);
+			$('#btnPNE').addClass('active');
 		}
 		pagemove(0);
 		table_refresh();
@@ -146,6 +163,7 @@
 			$('#view_due').html(data.countdue);
 			$('#view_due_in_one_m').html(data.countdue_in_1_m);
 			$('#view_ns').html(data.count_ns);
+			$('#view_pne').html(data.count_pne);
 		}
 	}
 	// 更新排列方式
@@ -185,6 +203,7 @@
 		var ofd_value = $('#ofd_value').val();
 		var ns_value = $('#ns_value').val();
 		var diom_value = $('#diom_value').val();
+		var pne_value = $('#pne_value').val();
 		var dorm = $('#dorm_select_value').val();
 		var order_method = $('#order_method').val();//排序方法
 		var order_law = $('#order_law').val(); //遞增或遞減
@@ -206,7 +225,7 @@
 
 		// 傳送
 
-		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&ns_value="+ns_value+"&diom_value="+diom_value+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law+"&startval="+start_value+"&endval="+end_value;
+		var data = "keyword=" + keyword+"&page="+page+"&due_value="+due_value+"&ofd_value="+ofd_value+"&ns_value="+ns_value+"&diom_value="+diom_value+"&pne_value="+pne_value+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law+"&startval="+start_value+"&endval="+end_value;
 		post('/contract/show', data, callback, 0)
 		function callback(data) {
 			tableparse(data);
@@ -255,7 +274,7 @@
 
 					break;
 			}
-			$('#result_table').append('<tr '+classrule+'><td>'+(page*30+i-29)+'</td><td>'+state+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td>'+data[i].c_date+'</td><td><a onclick="showcontract('+data[i].contract_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');
+			$('#result_table').append('<tr '+classrule+'><td>'+(page*30+i-29)+'</td><td>'+state+'</td><td>'+data[i].sname+text+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].s_date+'</td><td>'+data[i].e_date+'</td><td>'+data[i].in_date+'</td><td>'+data[i].out_date+'</td><td>'+data[i].c_date+'</td><td>'+data[i].renttotal+'</td><td>'+data[i].paymenttotal+'</td><td><a onclick="showcontract('+data[i].contract_id+')"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');
 		};
 		if (data.length<30) {
 			$('#page_up').attr( "disabled", true );
@@ -410,13 +429,11 @@
     });
     //
     $( "#view_change_btn" ).on( "click", function() {
-
       	$(document).ready(function() {
 	        $('#viewModal').modal('toggle');
-			$('body').removeClass('modal-open');
+					$('body').removeClass('modal-open');
 			$('.modal-backdrop').remove();
 	    });
-
 
 	    var element = $( this );
 	    if ( element.is( "[data-cnum]" ) ) {
@@ -531,12 +548,12 @@
           	if (contract_id=='0') {
           		var contract_id = $('#bcontract_id').val();
           		table_refresh();
-        		showcontract(contract_id);
+        			showcontract(contract_id);
 
           	}else{
           		var b_date = $('#keep_b_date').val();
           		var tomorrow = new Date(Date.parse(b_date));
-				tomorrow.setDate(tomorrow.getDate()+1);
+							tomorrow.setDate(tomorrow.getDate()+1);
           		window.location.assign('<?=web_url("/contract/newcontract")?>?keep='+contract_id);
           	}
         }
@@ -544,7 +561,13 @@
     });
 	// 合約終止 日期選擇
 	$('#bdate').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
-
+	function resetpaymodal(){
+		$('#new_pay_rent_value').val('');
+		$('#new_pay_rent_from').val('');
+		$('#new_pay_rent_date').val('');
+		// $('#new_pay_rent_r_id').val('');
+		$('#new_pay_rent_description').val('');
+	}
 // 結算
 	// 檢查可否結算
 	function checkout_check(){
@@ -643,12 +666,10 @@
 			var data = "contract_id=" + contract_id;
 			post('/contract/keep_contract_check', data, callback, 0)
 			function callback(data){
-				// alert(xhr.responseText);
-				data = JSON.parse(xhr.responseText);
-				if (data==true) {
+				if (data===true) {
 					window.location = "<?=web_url('/contract/newcontract')?>?keep="+contract_id;
 				}else{
-					errormsg('續約時發生錯誤，可能是租金尚未結清。');
+					errormsg('續約時發生錯誤，可能是尚未在合約結束前三個月。');
 				}
 			}
     }
@@ -738,7 +759,7 @@
 			if (data.state===true) {
 				for (var i = 0; i < data.data.length; i++) {
 						datum = data.data[i];
-				  	$('#pay_rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.customer+'</td><td>'+datum.value+'</td><td>'+(datum.receipt_id==0?'':datum.receipt_id)+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
+				  	$('#pay_rent_detail').append('<tr><td>'+(i+1)+'</td><td>'+datum.customer+'</td><td>'+datum.value+'</td><td>'+datum.description+'</td><td>'+datum.date+'</td></tr>');
 				};
 				$('#pay_rent_total').html(data.sum);
 			}
@@ -762,7 +783,7 @@
 							$('#date_avail').html("當月租金未繳");
 							$('#rent_progress').html('<div class="progress-bar progress-bar-warning" style="width: '+ratio+'%" title="已繳租金">100%</div><div class="progress-bar progress-bar-danger progress-bar-striped" style="width: '+(data.cal.tdp-ratio)+'%" title="已住區段">已住區段</div>');
 					}else{
-							$('#rent_progress').html('<div class="progress-bar progress-bar-info progress-bar-striped" style="width:'+(data.cal.tdp)+'%" title="已住區段"></div><div class="progress-bar progress-bar-warning" style="width: '+(ratio-data.cal.tdp)+'%" title="已繳租金">已繳'+ratio+'%</div>');
+							$('#rent_progress').html('<div class="progress-bar progress-bar-info progress-bar-striped" style="width:'+(data.cal.tdp)+'%" title="已住區段">已住區段</div><div class="progress-bar progress-bar-warning" style="width: '+(ratio-data.cal.tdp)+'%" title="已繳租金">已繳'+ratio+'%</div>');
 					}
 				}
 			}
@@ -773,7 +794,7 @@
 		var value = parseInt($('#new_pay_rent_value').val());
 		var customer = $('#new_pay_rent_from').val();
 		var date = $('#new_pay_rent_date').val();
-		var r_id = $('#new_pay_rent_r_id').val();
+		// var r_id = $('#new_pay_rent_r_id').val();
 		var description = $('#new_pay_rent_description').val();
 		var contract_id = $('#contract_id').val();
 		var state = 1;
@@ -800,7 +821,7 @@
 
 // 傳送
 		if (state == 1) {
-			var data = "contract_id=" + contract_id+ '&value='+value+'&customer='+customer+'&date='+date+'&r_id='+r_id+'&description='+description;
+			var data = "contract_id=" + contract_id+ '&value='+value+'&customer='+customer+'&date='+date+'&description='+description;
 			post('/accounting/add_pay_rent_record', data, callback, 0)
 			function callback(data){
 				if (data.state===true) {
@@ -826,6 +847,9 @@
 	}
 	if ($("#view_option").val()==2) {
 		due_select();
+	}
+	if ($("#view_option").val()==3) {
+		pne_select();
 	}
 
 

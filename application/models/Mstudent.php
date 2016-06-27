@@ -163,9 +163,9 @@ class Mstudent extends CI_Model
 
 				$this->db->where('( 1',NULL, false); //for logic
 						$this->db->where('seal=',0);
-						$this->db->or_where('( 1',NULL, false); //for logic
-                $this->db->where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
-            $this->db->or_where('0 )',NULL, false);
+						// $this->db->or_where('( 1',NULL, false); //for logic
+            //     $this->db->where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            // $this->db->or_where('0 )',NULL, false);
 				$this->db->or_where('0 )',NULL, false);
         $this->db->order_by('room.name');
         $query = $this->db->get();

@@ -66,13 +66,14 @@ class Contract extends CI_Controller
 		$ofd = $this->input->post("ofd_value", TRUE);
 		$diom = $this->input->post("diom_value", TRUE);
 		$ns = $this->input->post("ns_value", TRUE);
+		$pne = $this->input->post("pne_value", TRUE);
 		$dorm = $this->input->post("dorm", TRUE);
 		$order_method = $this->input->post("order_method", TRUE);
 		$order_law = $this->input->post("order_law", TRUE);
 		$start_val = $this->input->post("startval", TRUE);
 		$end_val = $this->input->post("endval", TRUE);
 
-		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $ns, $diom, $page, $order_method, $order_law, 0, $start_val, $end_val);
+		$data['json_data'] = $this->Mcontract->show_contract_list($keyword, $dorm, 0, $due, $ofd, $ns, $diom, $page, $order_method, $order_law, 0, $start_val, $end_val, $pne);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function due_ofd_refresh(){
@@ -218,16 +219,17 @@ class Contract extends CI_Controller
 		$this->load->view('template/jsonview', $data);
 	}
 	public function keep_contract_check(){
+		$result = false;
 		$contract_id = $this->input->post('contract_id', TRUE);
-		// 檢查有可不可以續約
-		if (true) {
-			// 可以續約 先把原合約結算
-			$result = $this->Mcontract->set_check_out($contract_id);
+		$contract_info = $this->Mcontract->get_contract_info($contract_id)[0];
 
-
-		}else{
-			// 不可續約
-			$result = false;
+		if ($contract_info) {
+			$dted = $this->Mutility->date_diff(date('Y-m-d'),$contract_info['e_date']);
+			// 檢查有可不可以續約
+			if ($dted['td']<=90) {
+				// 可以續約 先把原合約結算
+				$result = $this->Mcontract->set_keep($contract_id);
+			}
 		}
 
 		$data['json_data'] = $result;

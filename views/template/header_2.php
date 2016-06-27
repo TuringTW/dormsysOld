@@ -1,24 +1,25 @@
-<?php $version="7.1.0" 
+<?php $version="7.1.0"
 // 	6.1 	新增本月退租檢視功能
 // 			seal 代號 0正常  -1退宿 1刪除 2待結算 3封存
+				// keep 0 無 keep 1
 // 	6.21	測試結算功能
-//	6.22	結算功能完成 新增快速簡訊 新增封存 
+//	6.22	結算功能完成 新增快速簡訊 新增封存
 // 	6.23 	更新房間宿舍電錶管理 可直接查看合約與房間清單
 //			電費統計更新
 //	6.24	電費分析系統 更新
-// 6.25		簡訊系統更新 
+// 6.25		簡訊系統更新
 //			新增gantti在timeline
-//			開放修改退租日期 
-//			修正退租bug 
+//			開放修改退租日期
+//			修正退租bug
 //	6.26	從新設計電費分析 把紛表跟宿舍整合再一起
 //			修改時間軸變得比較美觀好用
 //	6.27	從新設計輸入合約表格newContract.php
 //			關閉修改退租日期 改新增快速續約 避免重租問題
 // 	6.28	修正新版新增合約的檢查機制
 //	6.29	新增timeline.php的縮放功能 popover顯示合約
-			// 修改首頁的狀態顯示，改成barge的樣式，並且不顯示超過三天未處理，而是用顏色表示 
+			// 修改首頁的狀態顯示，改成barge的樣式，並且不顯示超過三天未處理，而是用顏色表示
 			// 首頁本月退租只顯示5個
-// 	6.30	更新維修功能 
+// 	6.30	更新維修功能
 			// 可以記錄維修的材料薪資
 			// 並且可以匯出
 			// 新增index搜尋功能
@@ -47,7 +48,7 @@
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="<?=web_url('/index/index')?>" title="首頁、控制面板">蔡阿姨管理系統beta<?=" ".$version." "?></a>
-			</div>			
+			</div>
 			<div class = "collapse navbar-collapse navHeadercollapse">
 				<ul class = "nav navbar-nav navbar-left" id="nav">
 					<!-- <li><a href = "<?=web_url('/index/index')?>">Home</a></li> -->
@@ -66,7 +67,7 @@
 					</li>
 					<!-- <li><a href = "#">租屋狀態</a></li> -->
 					<li><a href = "<?=web_url('/roomengine/index')?>">房間搜尋</a></li>
-					
+
 
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">聯絡通訊</a>
@@ -92,14 +93,14 @@
 							<!-- <li><a href = "">水電費押金</a></li> -->
 						</ul>
 					</li>
-					
+
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">會計</a>
 						<ul class="dropdown-menu">
 							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
 							<li><a href = "<?=web_url('/accounting/expenditure')?>">支出管理</a></li>
 							<hr>
-							<li><a href = "<?=web_url('/accounting/expenditure')?>">房租繳費</a></li>
+							<li><a href = "<?=web_url('/accounting/payment')?>">租金收款紀錄</a></li>
 						</ul>
 					</li>
 					<li class="dropdown">
@@ -125,7 +126,7 @@
 							<li><a href = "<?=web_url('/system/qna')?>">Q&A</a></li>
 						</ul>
 					</li>
-					
+
 
 					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">管理</a>
@@ -133,28 +134,28 @@
 							<li><a href = "room.php">房間管理</a></li>
 							<li><a href = "dorm.php">宿舍管理</a></li>
 							<hr>
-							
+
 							<!-- <li><a href = "reward.php">帶看獎金</a></li>
 						<!-- </ul>
 					</li> -->
 <!-- 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">分析</a>
 						<ul class="dropdown-menu">
-							
+
 							<li><a href = "electro.php">電費總攬</a></li>
 							<li><a href = "electroAnalDorm.php">宿舍電費分析</a></li>
 							<li><a href = "electroNum.php">電錶管理</a></li>
 
 							<hr>
 							<li><a href = "contractAnal.php">出租率分析</a></li>
-							
+
 						</ul>
 					</li> -->
-					
-					
-					
-					
-					
+
+
+
+
+
 					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">系統</a>
 						<ul class="dropdown-menu"> -->
@@ -166,10 +167,10 @@
 								<li><a href="addManager.php">新增使用者</a></li>
 							<?php endif ?>
 							<?php if ($power==0): ?>
-								<li><a href="#" onclick="window.open('//127.0.0.1/phpmyadmin/');">PHPMYADMIN</a></li>								
+								<li><a href="#" onclick="window.open('//127.0.0.1/phpmyadmin/');">PHPMYADMIN</a></li>
 							<?php endif ?>
-							
-							
+
+
 					<!-- 	</ul>
 					</li> -->
 				</ul>
@@ -183,7 +184,7 @@
 							<li><a href = "<?=web_url('#')?>">修改密碼</a></li>
 						</ul>
 					</li>
-					<li><a  href="<?=web_url('/index/logout')?>">登出</a></li>				
+					<li><a  href="<?=web_url('/index/logout')?>">登出</a></li>
 				</ul>
 			</div>
 		</div>

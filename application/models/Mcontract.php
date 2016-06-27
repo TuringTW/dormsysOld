@@ -15,22 +15,33 @@ class Mcontract extends CI_Model
 
     }
     // 取得合約列表
-    function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $ns, $diom, $page, $order_method=0, $order_law=0, $page_rule=0, $start_val='', $end_val='')
+    function show_contract_list($keyword, $dorm, $seal, $due, $outofdate, $ns, $diom, $page, $order_method=0, $order_law=0, $page_rule=0, $start_val='', $end_val='', $pne=0)
     {
-        $this->db->select('contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal, student.name as sname, mobile, p_c_id')->from('contract');
+
+        $this->db->select("contract.contract_id,contract.rent,contract.sales,student.name as sname,dorm.name as dname,room.name as rname,  contract.s_date,contract.in_date,contract.out_date ,  contract.e_date, contract.c_date, COUNT(contract.contract_id) as countp, seal, student.name as sname, mobile, p_c_id, keep, if(isnull(rentsum.totalvalue), 0, rentsum.totalvalue) as renttotal, if(isnull(paymentsum.totalvalue), 0, paymentsum.totalvalue) as paymenttotal")->from('contract');
         $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
         $this->db->join('room','room.room_id=contract.room_id','left');
         $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
         $this->db->join('student','student.stu_id=contractpeo.stu_id','left');
+        $this->db->join('(SELECT sum(value) AS totalvalue, contract_id
+                          FROM  `payment`
+                          WHERE 1
+                          GROUP BY  `contract_id`
+                          ) AS paymentsum','paymentsum.contract_id=contract.contract_id','left');
+        $this->db->join('(SELECT if(isnull(SUM( value*if(pm=1, 1, -1) )), 0, SUM( value*if(pm=1, 1, -1) )) AS totalvalue, contract_id
+                          FROM  `rent`
+                          WHERE 1
+                          GROUP BY  `contract_id`
+                          ) AS rentsum','rentsum.contract_id=contract.contract_id','left');
+
         $this->db->where('( 0',NULL, false); //for logic
         $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword);
         $this->db->or_where('0 )',NULL, false);
         $this->db->where('( 0',NULL, false); //for logic
             $this->db->or_where('seal', 0);
-            $this->db->or_where('( 0',NULL, false); //for logic
-                $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
-
-            $this->db->or_where('0 )',NULL, false);
+            // $this->db->or_where('( 0',NULL, false); //for logic
+            //     $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            // $this->db->or_where('0 )',NULL, false);
         $this->db->or_where('0 )',NULL, false);
 
         // 逾期
@@ -54,6 +65,13 @@ class Mcontract extends CI_Model
             $diomrule = "(DATEDIFF(`out_date`, '".date("Y-m-d")."')<30 and DATEDIFF(`out_date`, '".date("Y-m-d")."')>=0)";
             $this->db->where($diomrule);
         }
+        // 顯示租金不足合約
+        if ($pne==1) {
+          $today = date('Y-m-d');
+          $pnerule = "(DATEDIFF(DATE_ADD(DATE_ADD(`s_date`, INTERVAL ((if(isnull(`paymentsum`.`totalvalue`), 0, `paymentsum`.`totalvalue`) MOD (`contract`.`rent`+1E-10)) DIV (`contract`.`rent` DIV 30)) DAY), INTERVAL (if(isnull(`paymentsum`.`totalvalue`), 0, `paymentsum`.`totalvalue`) DIV (`contract`.`rent`+1E-10)) MONTH), '$today')<=30)";
+          $this->db->where($pnerule);
+        }
+
         //開始結束日期限制
         if ($start_val) {
           //
@@ -205,8 +223,6 @@ class Mcontract extends CI_Model
     }
     function count_ofd_due($dorm, $keyword, $start_val='', $end_val=''){
         $duerule = "(Month(`e_date`)=".date('m')." and Year(`e_date`)=".date('Y').")";
-
-
         $this->db->distinct()->select(' contract.contract_id')->from('contract');
         // join
         $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
@@ -219,10 +235,9 @@ class Mcontract extends CI_Model
         $this->db->or_where('0 )',NULL, false);
         $this->db->where('( 0',NULL, false); //for logic
             $this->db->or_where('seal', 0);
-            $this->db->or_where('( 0',NULL, false); //for logic
-                $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
-
-            $this->db->or_where('0 )',NULL, false);
+            // $this->db->or_where('( 0',NULL, false); //for logic
+            //     $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            // $this->db->or_where('0 )',NULL, false);
         $this->db->or_where('0 )',NULL, false);
         // 逾期
         $ofdrule = "DATEDIFF(`e_date`,'".date('Y-m-d')."')<=0";
@@ -263,10 +278,9 @@ class Mcontract extends CI_Model
         $this->db->or_where('0 )',NULL, false);
         $this->db->where('( 0',NULL, false); //for logic
             $this->db->or_where('seal', 0);
-            $this->db->or_where('( 0',NULL, false); //for logic
-                $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
-
-            $this->db->or_where('0 )',NULL, false);
+            // $this->db->or_where('( 0',NULL, false); //for logic
+            //     $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            // $this->db->or_where('0 )',NULL, false);
         $this->db->or_where('0 )',NULL, false);
         // 本月到期
         $duerule = "(Month(`e_date`)=".date('m')." and Year(`e_date`)=".date('Y').")";
@@ -306,10 +320,9 @@ class Mcontract extends CI_Model
 
         $this->db->where('( 0',NULL, false); //for logic
             $this->db->or_where('seal', 0);
-            $this->db->or_where('( 0',NULL, false); //for logic
-                $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
-
-            $this->db->or_where('0 )',NULL, false);
+            // $this->db->or_where('( 0',NULL, false); //for logic
+            //     $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            // $this->db->or_where('0 )',NULL, false);
         $this->db->or_where('0 )',NULL, false);
 
         // 本月到期
@@ -350,13 +363,11 @@ class Mcontract extends CI_Model
 
         $this->db->where('( 0',NULL, false); //for logic
             $this->db->or_where('seal', 0);
-            $this->db->or_where('( 0',NULL, false); //for logic
-                $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
-
-            $this->db->or_where('0 )',NULL, false);
+            // $this->db->or_where('( 0',NULL, false); //for logic
+            //     $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            // $this->db->or_where('0 )',NULL, false);
         $this->db->or_where('0 )',NULL, false);
 
-        // 本月到期
         $duerule = "(DATEDIFF(`s_date`, '".date("Y-m-d")."')>0)";
         $this->db->where($duerule);
 
@@ -380,6 +391,65 @@ class Mcontract extends CI_Model
 
         }
         $result['count_ns'] = $this->db->count_all_results();
+
+    //count payment not enough
+        $this->db->flush_cache();
+        $this->db->distinct()->select('contract.contract_id')->from('contract');
+        // join
+        $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
+        $this->db->join('room','room.room_id = contract.room_id','left');
+        $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
+        $this->db->join('student','student.stu_id=contractpeo.stu_id','left');
+        $this->db->join('(SELECT sum(value) AS totalvalue, contract_id
+                          FROM  `payment`
+                          WHERE 1
+                          GROUP BY  `contract_id`
+                          ) AS paymentsum','paymentsum.contract_id=contract.contract_id','left');
+        $this->db->join('(SELECT if(isnull(SUM( value*if(pm=1, 1, -1) )), 0, SUM( value*if(pm=1, 1, -1) )) AS totalvalue, contract_id
+                          FROM  `rent`
+                          WHERE 1
+                          GROUP BY  `contract_id`
+                          ) AS rentsum','rentsum.contract_id=contract.contract_id','left');
+
+        //where
+        $this->db->where('( 0',NULL, false); //for logic
+        $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword);
+        $this->db->or_where('0 )',NULL, false);
+
+        $this->db->where('( 0',NULL, false); //for logic
+            $this->db->or_where('seal', 0);
+            // $this->db->or_where('( 0',NULL, false); //for logic
+            //     $this->db->or_where('seal', 2)->where("DATEDIFF(`e_date`, '".date("Y-m-d")."')>0");
+            // $this->db->or_where('0 )',NULL, false);
+        $this->db->or_where('0 )',NULL, false);
+
+        $today = date('Y-m-d');
+        $pnerule = "(DATEDIFF(DATE_ADD(DATE_ADD(`s_date`, INTERVAL ((if(isnull(`paymentsum`.`totalvalue`), 0, `paymentsum`.`totalvalue`) MOD (`contract`.`rent`+1E-10)) DIV (`contract`.`rent` DIV 30)) DAY), INTERVAL (if(isnull(`paymentsum`.`totalvalue`), 0, `paymentsum`.`totalvalue`) DIV (`contract`.`rent`+1E-10)) MONTH), '$today')<=30)";
+        $this->db->where($pnerule);
+
+
+        // 宿舍
+        if ($dorm != 0&&!is_null($dorm)) {
+            $dormrule = "`dorm`.`dorm_id` = '$dorm'";
+            $this->db->where($dormrule);
+        }
+        //開始結束日期限制
+        if ($start_val) {
+          //
+          // 沒有作日期檢查！！！
+          //
+          $strrule = "(DATEDIFF(`s_date`, '".$start_val."')>=0)"; //前剪後
+          $this->db->where($strrule);
+
+        }
+        if ($end_val) {
+          $endrule = "(DATEDIFF(`e_date`, '".$end_val."')<=0)"; //前剪後
+          $this->db->where($endrule);
+
+        }
+        $result['count_pne'] = $this->db->count_all_results();
+
+
         return $result;
     }
 // 這個不太好
@@ -413,7 +483,17 @@ class Mcontract extends CI_Model
             return false;
         }
     }
-
+    function set_keep($contract_id){
+        if (!is_null($contract_id)&&is_numeric($contract_id)) {
+            $m_id = $this->session->userdata('m_id');
+            $time = date('Y-m-d h:i:s');
+            $sql = "UPDATE `contract` set `keep` = 2, note = CONCAT(`note`, 'keep at $time by $m_id,') where `contract_id` = '$contract_id'";
+            $query = $this->db->query($sql);
+            return true;
+        }else{
+            return false;
+        }
+    }
     function checknotoverlap($room_id, $start, $end){
          $sql = "SELECT  `dorm`.`name` as `dname`, `room`.`name` as `rname`, `student`.`name` as `sname`, `student`.`mobile`,  `contract`.`s_date`,`contract`.`in_date`,`contract`.`out_date` ,  `contract`.`e_date`, COUNT(`contractpeo`.`stu_id`) as `countp`
                     from `contract`
@@ -551,6 +631,7 @@ class Mcontract extends CI_Model
             $this->db->where('dorm.dorm_id=', $dorm_id);
         }
         $this->db->where('rent>=', $lprice)->where('rent<=', $hprice);
+        $this->db->where('active=', 1);
         // $this->db->order_by('postmin');
         // $this->db->order_by('premin');
         $this->db->order_by('prepost');

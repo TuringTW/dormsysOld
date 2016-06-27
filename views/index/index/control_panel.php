@@ -18,7 +18,7 @@
 				        	合約狀態
 				      	</h4>
 			    	</div>
-			    	
+
 			  	</div>
 			  	<div class="panel panel-warning">
 			    	<div class="panel-heading">
@@ -26,8 +26,15 @@
 				        	過期合約&nbsp;&nbsp;<span class="badge" style="float:none" id="badge_not_check_out"><?=$count_ofd_due['countofd']?></span><a href="<?=web_url('/contract/index')?>?option=1" title="在合約列表裡查看" class="pull-right"><span class="glyphicon glyphicon-search"></span></a>
 				      	</h4>
 			    	</div>
-			    	
 			  	</div>
+					<div class="panel panel-danger">
+			    	<div class="panel-heading">
+				      	<h4 class="panel-title">
+				        	租金不足合約&nbsp;&nbsp;<span class="badge" style="float:none" id="badge_not_check_out"><?=$count_ofd_due['count_pne']?></span><a href="<?=web_url('/contract/index')?>?option=3" title="在合約列表裡查看" class="pull-right"><span class="glyphicon glyphicon-search"></span></a>
+				      	</h4>
+			    	</div>
+			  	</div>
+
 			  	<div class="panel panel-default">
 			    	<div class="panel-heading" role="tab" id="headingOne">
 				      	<h4 class="panel-title">
@@ -94,5 +101,3 @@
 		</div>
 	</div>
 </div>
-
-			
