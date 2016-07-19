@@ -1,9 +1,13 @@
 <h1 class="page-header">房租繳納紀錄表</h1>
 <!-- 搜尋列 次導覽列 -->
 	<div class="form-group">
-		<!-- <div class="col-sm-3"> -->
-			<!-- <input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="名稱、宿舍、請款單位" value=""> -->
-		<!-- </div> -->
+		<div class="col-sm-3">
+			<div class="input-group" style="width:100%">
+					<input type="text" style="width:85%" id="txtdate"class="form-control" onchange="date_serach()" placeholder="請款日期" value="">
+					<a href="#" style="width:15%" class="form-control btn btn-default" onclick="resetdate()"><span class="glyphicon glyphicon-remove"></span></a>
+			</div>
+
+		</div>
 		<!-- <div class="col-md-3"> -->
 			<!-- <?php echo dorm_list_html($dormlist); ?> -->
 		<!-- </div> -->
@@ -13,6 +17,7 @@
 			<a href="#" class="btn btn-default " onclick="pagemove(0);" id="show_page">1</a>
 			<a href="#" class="btn btn-default " onclick="pagemove(1);" id="page_up"><span class=" glyphicon glyphicon-chevron-right"></span></a>
 		</div>
+
 	</div>
 	<br>
 	<br>

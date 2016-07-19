@@ -1,4 +1,4 @@
-<?php $version="7.1.0"
+<?php $version="7.1.1"
 // 	6.1 	新增本月退租檢視功能
 // 			seal 代號 0正常  -1退宿 1刪除 2待結算 3封存
 				// keep 0 無 keep 1
@@ -33,7 +33,8 @@
 			// 支出管理
 			// receipttype 1發票 2費用 3估價單
 			// 開啟會計支出功能 沒有做require & 刪除 & 新增分類 之後補做
-
+// 7.1.1
+			// 	新增交接表、
 
 
 ?>
@@ -60,14 +61,26 @@
 							<!-- <li><a href = "#">待結算合約</a></li> -->
 							<!-- <li><a href = "#">封存合約</a></li> -->
 							<li><a href = "<?=web_url('/contract/newcontract')?>">新增合約</a></li>
-
 							<hr>
 							<li><a href = "<?=web_url('/student/index')?>">學生資料</a></li>
 						</ul>
 					</li>
+					<li class="dropdown">
+						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">預定</a>
+						<ul class="dropdown-menu">
+							<?php $CI =& get_instance(); ?>
+							<li><a href = "<?=web_url('/reservation/index')?>">預定房間<b>列表</b></a></li>
+							<li><a href = "<?=web_url('/reservation/newres')?>"><b>新增</b>預定</a></li>
+						</ul>
+					</li>
 					<!-- <li><a href = "#">租屋狀態</a></li> -->
-					<li><a href = "<?=web_url('/roomengine/index')?>">房間搜尋</a></li>
-
+					<li class="dropdown">
+						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">房間搜尋</a>
+						<ul class="dropdown-menu">
+							<li><a href = "<?=web_url('/roomengine/index')?>">空房間搜尋</a></li>
+							<li><a href = "<?=web_url('/roomengine/handover')?>">交接表</a></li>
+						</ul>
+					</li>
 
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">聯絡通訊</a>
@@ -83,7 +96,6 @@
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">服務</a>
 						<ul class="dropdown-menu">
 							<li><a href = "<?=web_url('/service/mail')?>">信件通知</a></li>
-
 							<hr>
 							<li><a href = "<?=web_url('/service/sms')?>">簡訊紀錄</a></li>
 							<li><a href = "<?=web_url('/service/smscollection')?>">罐頭簡訊</a></li>

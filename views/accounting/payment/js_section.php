@@ -15,6 +15,16 @@
 		pagemove(0);
 		table_refresh();
 	}
+	// 時間查詢
+	function date_serach(){
+		pagemove(0);
+		table_refresh();
+	}
+	function resetdate(){
+		$('#txtdate').val('');
+		$('#txtdate').focus();
+		table_refresh();
+	}
 	// 頁碼
 	function pagemove(action){
 		var page = parseInt($('#page_value').val());
@@ -40,7 +50,8 @@
 
 	// 更新想式的數量
 	function table_refresh(){
-		var keyword = $('#txtkeyword').val();
+		// var keyword = $('#txtkeyword').val();
+		var date = $('#txtdate').val();
 		var page = $('#page_value').val();
 		var dorm = $('#dorm_select_value').val();
 		var type = $('#type_select_value').val();
@@ -49,7 +60,7 @@
 		if (page < 0) {
 			page = 1;
 		}
-		var data = "keyword=" + keyword+"&page="+page+"&type="+type+"&dorm="+dorm+"&rtype="+rtype;
+		var data = "date=" + date+"&page="+page;
 		post('/accounting/show_pay_rent_list', data, callback, 0);
 		function callback(data){
 			tableparse(data);
@@ -173,6 +184,7 @@
 	}
 	// 詳細資料裡的日期選擇
 	$('#view_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
+	$('#txtdate').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true, numberOfMonths: 3});
 
 	function new_item(){
 		document.getElementById('view_rtype').value = null;

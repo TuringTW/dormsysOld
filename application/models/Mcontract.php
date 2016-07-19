@@ -453,20 +453,26 @@ class Mcontract extends CI_Model
         return $result;
     }
 // 這個不太好
-    function date_check_by_room($room_id, $in_date, $out_date, $contract_id){
-        $this->db->select('contract_id, room_id');
-        $this->db->from('contract');
-        // join
+    function date_check_by_room($room_id, $in_date, $out_date, $contract_id, $r_id){
+        $sql = "Select contract_id, room_id, 'con' as `tag` from contract
+                where ((DATEDIFF('$in_date', in_date)>=0 and DATEDIFF(out_date, '$in_date')>=0 )
+                    or    (DATEDIFF('$in_date', in_date)<=0 and DATEDIFF(out_date, '$out_date')<=0)
+                    or    (DATEDIFF('$out_date', in_date)>=0 and DATEDIFF(out_date, '$out_date')>=0) )
+                    and seal<>1
+                    and contract.room_id = '$room_id'
 
-        $this->db->where("((DATEDIFF('$in_date', in_date)>=0 and DATEDIFF(out_date, '$in_date')>=0 )
-            or    (DATEDIFF('$in_date', in_date)<=0 and DATEDIFF(out_date, '$out_date')<=0)
-            or    (DATEDIFF('$out_date', in_date)>=0 and DATEDIFF(out_date, '$out_date')>=0) )and seal<>1");
-        $this->db->where('contract.room_id', $room_id);
-
-        $query = $this->db->get();
+                UNION
+                Select id, room_id, 'res' as `tag` from reservation
+                        where ((DATEDIFF('$in_date', s_date)>=0 and DATEDIFF(e_date, '$in_date')>=0 )
+                            or    (DATEDIFF('$in_date', s_date)<=0 and DATEDIFF(e_date, '$out_date')<=0)
+                            or    (DATEDIFF('$out_date', s_date)>=0 and DATEDIFF(e_date, '$out_date')>=0) )
+                            and seal=0
+                            and (DATEDIFF(`d_date`, '".(date('Y-m-d'))."')>=-5 or is_deposit=1)
+                            and reservation.room_id = '$room_id'";
+        $query = $this->db->query($sql);
         $result = $query->result_array();
 
-        if (($query->num_rows() == 0||($query->num_rows()==1&&$result[0]['contract_id']==$contract_id))&&(strtotime($out_date)-strtotime($in_date)>0)) {
+        if (($query->num_rows() == 0||($contract_id&&$query->num_rows()==1&&$result[0]['contract_id']==$contract_id)||($r_id&&$query->num_rows()==1&&$result[0]['contract_id']==$r_id))&&(strtotime($out_date)-strtotime($in_date)>0)) {
             return true;
         }else{
             return false;
@@ -495,7 +501,7 @@ class Mcontract extends CI_Model
         }
     }
     function checknotoverlap($room_id, $start, $end){
-         $sql = "SELECT  `dorm`.`name` as `dname`, `room`.`name` as `rname`, `student`.`name` as `sname`, `student`.`mobile`,  `contract`.`s_date`,`contract`.`in_date`,`contract`.`out_date` ,  `contract`.`e_date`, COUNT(`contractpeo`.`stu_id`) as `countp`
+         $sql = "SELECT  `dorm`.`name` as `dname`, `room`.`name` as `rname`, `student`.`name` as `sname`, `student`.`mobile`,  `contract`.`s_date`,`contract`.`in_date`,`contract`.`out_date` ,  `contract`.`e_date`, COUNT(`contractpeo`.`stu_id`) as `countp`, 'con' as `source`
                     from `contract`
                     LEFT JOIN `contractpeo` on `contract`.`contract_id` = `contractpeo`.`contract_id`
                     LEFT join `room` on `room`.`room_id`=`contract`.`room_id`
@@ -510,7 +516,23 @@ class Mcontract extends CI_Model
                             AND DATEDIFF(   `contract`.`in_date`,'$start' ) <=0) or
                             (DATEDIFF(  `contract`.`out_date`,'$end' ) >=0
                             AND DATEDIFF(   `contract`.`in_date`,'$end' ) <=0))
-                    GROUP BY `contractpeo`.`stu_id`" ;
+                    GROUP BY `contractpeo`.`stu_id`
+                    UNION
+                    SELECT `dorm`.`name` as `dname`, `room`.`name` as `rname`, `sname`, `mobile`,  `s_date`, `e_date`,`s_date` as `in_date`, `e_date` as `out_date`, \"1\" as `countp`, 'res' as `source`
+                    from `reservation`
+                    LEFT join `room` on `room`.`room_id`=`reservation`.`room_id`
+                    LEFT JOIN `dorm` on `dorm`.`dorm_id`=`room`.`dorm`
+                              where `reservation`.`seal`=0 and `room`.`room_id`= '$room_id' and
+                             ((DATEDIFF(  `reservation`.`s_date`,'$start' ) >=0
+                             AND DATEDIFF(   `reservation`.`e_date`,'$end' ) <=0) or
+                             (DATEDIFF(  `reservation`.`e_date`,'$start' ) >=0
+                             AND DATEDIFF(   `reservation`.`e_date`,'$end' ) <=0) or
+                             (DATEDIFF(  `reservation`.`e_date`,'$start' ) >=0
+                             AND DATEDIFF(   `reservation`.`s_date`,'$start' ) <=0) or
+                             (DATEDIFF(  `reservation`.`e_date`,'$end' ) >=0
+                             AND DATEDIFF(   `reservation`.`s_date`,'$end' ) <=0))
+                    GROUP BY d_date";
+
         $query = $this->db->query($sql);
         $output = array();
         if ($query->num_rows()>0) {
@@ -609,20 +631,58 @@ class Mcontract extends CI_Model
         if (is_null($end_date)||empty($end_date)) {
             $end_date = (new DateTime($str_date))-> modify('+1 day') -> format('Y-m-d');
         }
+        $this->db->select("contract_id, room_id, (DATEDIFF('$str_date',out_date )) as premin, out_date, 'con' as ctype");
+        $this->db->from('contract');
+        $this->db->where("DATEDIFF('$str_date',in_date )>",'0')->where("DATEDIFF('$str_date',out_date )>", '0')->where('seal<>', '1');
 
-        $this->db->select('dorm.name as dname, room.name as rname, room.type, if(isnull(precontract.contract_id), "",precontract.contract_id) as pre_id, if(isnull(precontract.out_date), "",precontract.out_date) as out_date, if(isnull(postcontract.contract_id), "", postcontract.contract_id)  as post_id, if(isnull(postcontract.in_date),"",postcontract.in_date) as in_date, room.rent, room.room_id, if(isnull(postcontract.postmin), 4000, postcontract.postmin) as postmin, if(isnull(precontract.premin), 4000, precontract.premin) as premin, if(isnull(postcontract.postmin), 0, postcontract.postmin)+if(isnull(precontract.premin), 4000, precontract.premin) as prepost');
+        $sql_con = $this->db->get_compiled_select();
+
+        $this->db->select("id, room_id, (DATEDIFF('$str_date',e_date )) as premin, e_date, 'res' as ctype");
+        $this->db->from('reservation');
+        $this->db->where("DATEDIFF('$str_date',s_date )>",'0')->where("DATEDIFF('$str_date',e_date )>", '0')->where('seal<>', '1');
+        $this->db->order_by('premin');
+        $sql_res = $this->db->get_compiled_select();
+
+        $sql_precon = "(select temp.* from (".$sql_con." UNION ".$sql_res.") as temp group by `room_id`) as precontract";
+// ========================
+
+
+        $this->db->select("contract_id, room_id, (DATEDIFF(in_date, '$end_date')) as postmin, in_date, 'con' as ctype");
+        $this->db->from('contract');
+        $this->db->where("datediff(in_date, '$end_date')>",'0')->where("datediff(out_date, '$end_date')>", '0')->where('seal<>', '1');
+
+        $sql_con = $this->db->get_compiled_select();
+
+        $this->db->select("id, room_id, (DATEDIFF(s_date, '$end_date')) as postmin, s_date, 'res' as ctype");
+        $this->db->from('reservation');
+        $this->db->where("datediff(s_date, '$end_date')>",'0')->where("datediff(e_date, '$end_date')>", '0')->where('seal<>', '1');
+        $this->db->order_by('postmin');
+        $sql_res = $this->db->get_compiled_select();
+        $sql_postcon = "(select temp1.* from (".$sql_con." UNION ".$sql_res.") as temp1 group by `room_id`) as postcontract";
+// ===================
+        $this->db->select('count(contract_id) as countc, room_id')->from('contract');
+        $this->db->where("((DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$str_date')>=0 )
+                    or    (DATEDIFF('$str_date', in_date)<=0 and DATEDIFF(out_date, '$end_date')<=0)
+                    or    (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0)
+                    or    (DATEDIFF('$end_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0)) ");
+        $this->db->where('seal<>',0)->where('seal<>', -1);
+        $this->db->group_by('room_id');
+
+        $sql_conch = "(".$this->db->get_compiled_select().") as contractcheck";
+
+        $this->db->select('dorm.name as dname, room.name as rname, room.type, if(isnull(precontract.contract_id), "",precontract.contract_id) as pre_id, if(isnull(precontract.out_date), "",precontract.out_date) as out_date, if(isnull(postcontract.ctype), "", postcontract.ctype) as post_ctype, if(isnull(precontract.ctype), "", precontract.ctype) as pre_ctype, if(isnull(postcontract.contract_id), "", postcontract.contract_id)  as post_id, if(isnull(postcontract.in_date),"",postcontract.in_date) as in_date, room.rent, room.room_id, if(isnull(postcontract.postmin), 4000, postcontract.postmin) as postmin, if(isnull(precontract.premin), 4000, precontract.premin) as premin, if(isnull(postcontract.postmin), 0, postcontract.postmin)+if(isnull(precontract.premin), 4000, precontract.premin) as prepost');
         $this->db->from('room');
         // join
         $this->db->join('dorm', 'dorm.dorm_id = room.dorm', 'left');
-        $this->db->join("(select temp.* from (select contract_id, room_id, (DATEDIFF('$str_date',out_date )) as premin, out_date from contract where DATEDIFF('$str_date',in_date )>0 and DATEDIFF('$str_date',out_date )>0 and seal<>1 order by room_id, DATEDIFF('$str_date',out_date ) ) as temp group by `room_id`) as precontract ", 'precontract.room_id = room.room_id', 'left');
+        $this->db->join("$sql_precon", 'precontract.room_id = room.room_id', 'left');
 
-        $this->db->join("(select temp1.* from (select contract_id, room_id, (DATEDIFF(in_date, '$end_date')) as postmin, in_date from contract where DATEDIFF(in_date, '$end_date')>0 and DATEDIFF(out_date, '$end_date')>0 and seal<>1 order by room_id, DATEDIFF(out_date, '$end_date') ) as temp1 group by room_id) as postcontract", 'postcontract.room_id = room.room_id', 'left');
-        $this->db->join("(select count(contract_id) as countc, room_id from contract where (
-                (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$str_date')>=0 )
-            or    (DATEDIFF('$str_date', in_date)<=0 and DATEDIFF(out_date, '$end_date')<=0)
-            or    (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0)
-            or    (DATEDIFF('$end_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0) )and seal<>1 and seal<>-1 group by room_id) as contractcheck", 'contractcheck.room_id = room.room_id', 'left');
+        $this->db->join("$sql_postcon", 'postcontract.room_id = room.room_id', 'left');
+        $this->db->join("$sql_conch", 'contractcheck.room_id = room.room_id', 'left');
         $this->db->where('isnull(`contractcheck`.`countc`)', 1);
+
+
+
+
 
         if ($type<>0) {
             $this->db->where('room.type', $type);
@@ -669,8 +729,14 @@ class Mcontract extends CI_Model
             // add a page
 
             $this->pdf->AddPage();
-            // $this->pdf->SetFont('msungstdlight', '', 12);
+            $this->pdf->SetFont('msungstdlight', '', 20);
+            $this->pdf->Cell(190, 16,'蔡阿姨宿舍租賃合約', 0, false,0 , 0, '', 0, false, 'J', 'B');
+            $this->pdf->SetFont('msungstdlight', '', 12);
             $this->pdf->load_view('contract/pdf/index', $data);
+            $this->pdf->SetY(-15);
+
+  	        $this->pdf->SetFont('msungstdlight', '', 12);
+  	        $this->pdf->Cell(0, 10, '甲方：                                                                             乙方：', 0, false, 'x-align', 0, 0, 0, false, 'J', 'M');
             ob_end_clean();
             if ($method == 0) {
                 //client side
@@ -696,5 +762,41 @@ class Mcontract extends CI_Model
         $this->db->update("contract", $data);
         return TRUE;
     }
+    function show_handover_list($keyword, $dorm = 0, $start_val, $end_val){
+      $result = array();
+      $result['status'] = False;
+      if (empty($start_val) ||empty( $end_val) ) {
+        $result['status'] = False;
+      }else{
+          // $query = $this->db->query("SELECT `contract`.`contract_id`, count(`contract`.`contract_id`) as `count`, student.name as sname, `in_date`, `out_date`, `room_id`, if(`out_date`=\"2016-06-30\", \"out\", \"in\") as `inout`, `clean`, `out_text` from `contract` left join `contractpeo` on `contractpeo`.`contract_id` = `contract`.`contract_id` left join `student` on `contractpeo`.`stu_id` = `student`.`stu_id` where `seal`=0 and `out_date`=\"2016-06-30\" or `in_date`=\"2016-06-30\" group by `contract`.`contract_id`");
+          // $query = $this->db->query("select dorm.name as dname, room.name as rname, Jun302016o.contract_id, Jun302016o.sname, Jun302016o.count, Jun302016o.inout, Jun302016o.clean, Jun302016o.out_text,Jul012016i.contract_id, Jul012016i.sname, Jul012016i.count, Jul012016i.inout, Jul012016i.clean, Jul012016i.out_text,Jun282016i.contract_id, Jun282016i.sname, Jun282016i.count, Jun282016i.inout, Jun282016i.clean, Jun282016i.out_text from room LEFT JOIN dorm on dorm.dorm_id = room.dorm LEFT JOIN ( SELECT `contract`.`contract_id`, count(`contract`.`contract_id`) as `count`, student.name as sname, `in_date`, `out_date`, `room_id`, if(`out_date`=\"2016-06-30\", \"out\", \"in\") as `inout`, `clean`, `out_text` from `contract` left join `contractpeo` on `contractpeo`.`contract_id` = `contract`.`contract_id` left join `student` on `contractpeo`.`stu_id` = `student`.`stu_id` where `seal`=0 and `out_date`=\"2016-06-30\" or `in_date`=\"2016-06-30\" group by `contract`.`contract_id` ) as `Jun302016o` on `Jun302016o`.`room_id` = `room`.`room_id` LEFT JOIN ( SELECT `contract`.`contract_id`, count(`contract`.`contract_id`) as `count`, student.name as sname, `in_date`, `out_date`, `room_id`, if(`out_date`=\"2016-07-01\", \"out\", \"in\") as `inout`, `clean`, `out_text` from `contract` left join `contractpeo` on `contractpeo`.`contract_id` = `contract`.`contract_id` left join `student` on `contractpeo`.`stu_id` = `student`.`stu_id` where `seal`=0 and `out_date`=\"2016-07-01\" or `in_date`=\"2016-07-01\" group by `contract`.`contract_id` ) as `Jul012016i` on `Jul012016i`.`room_id` = `room`.`room_id` LEFT JOIN ( SELECT `contract`.`contract_id`, count(`contract`.`contract_id`) as `count`, student.name as sname, `in_date`, `out_date`, `room_id`, if(`out_date`=\"2016-06-28\", \"out\", \"in\") as `inout`, `clean`, `out_text` from `contract` left join `contractpeo` on `contractpeo`.`contract_id` = `contract`.`contract_id` left join `student` on `contractpeo`.`stu_id` = `student`.`stu_id` where `seal`=0 and `out_date`=\"2016-06-28\" or `in_date`=\"2016-06-28\" group by `contract`.`contract_id` ) as `Jun282016i` on `Jun282016i`.`room_id` = `room`.`room_id` where dorm.active = 1 and isnull(Jun302016o.contract_id)+isnull(Jul012016i.contract_id)+isnull(Jun282016i.contract_id)<3 order by `dorm`.`name`, `room`.`name` limit 0, 30");
+          // ");
+          $link = $this->Mutility->connectDB();
+          $query = mysqli_query($link,"call `handover`('$start_val', '$end_val', '$dorm')");
 
+          $viewresult = array();
+          if ($query) {
+              while ($row = mysqli_fetch_array($query,MYSQLI_NUM)) {
+                  array_push($viewresult, $row);
+              }
+              $result['status'] = True;
+          }
+          $result['data'] = $viewresult;
+
+          $link = $this->Mutility->connectDB();
+          $query1 = mysqli_query($link,"call `getdate`('$start_val', '$end_val', '$dorm')");
+
+          $asdresult = array();
+          if ($query1) {
+              while ($row = mysqli_fetch_assoc($query1)) {
+                  array_push($asdresult, $row['odate']);
+              }
+              $result['index'] = $asdresult;
+              $result['status'] = True*$result['status'];
+          }else{
+              $result['status'] = False*$result['status'];
+          }
+        }
+        return $result;
+    }
 }?>

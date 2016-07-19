@@ -176,11 +176,11 @@ class Accounting extends CI_Controller
 	public function show_pay_rent_list(){
 		// $keyword = $this->input->post("keyword", TRUE);
 		$page = $this->input->post("page", TRUE);
-		// $type = $this->input->post("type", TRUE);
+		$date = $this->input->post("date", TRUE);
 		// $rtype = $this->input->post("rtype", TRUE);
 		// $dorm = $this->input->post("dorm", TRUE);
 
-		$data['json_data'] = $this->Mfinance->show_pay_rent_list('', $page);
+		$data['json_data'] = $this->Mfinance->show_pay_rent_list('', $page, $date);
 
 		$this->load->view('template/jsonview', $data);
 	}

@@ -221,7 +221,7 @@ class Mfinance extends CI_Model
 
         return $result;
     }
-    function show_pay_rent_list($keyword='', $page){
+    function show_pay_rent_list($keyword='', $page, $date=''){
         $this->db->select('id, payment.contract_id, dorm.name as dname, room.name as rname, customer, value, date, m_id, description, receipt_id as rid')->from('payment');
         $this->db->join('contract', 'contract.contract_id = payment.contract_id', 'left');
         $this->db->join('room', 'contract.room_id = room.room_id', 'left');
@@ -244,6 +244,10 @@ class Mfinance extends CI_Model
         //     $dormrule = "`item`.`receipttype` = '$rtype'";
         //     $this->db->where($dormrule);
         // }
+        if ($date!='') {
+          $daterule = "`date`='$date'";
+          $this->db->where($daterule);
+        }
         $this->db->order_by("date", "desc")->order_by("payment.timestamp", "desc");
         // 頁數
         if ($page <= 0) {

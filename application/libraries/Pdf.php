@@ -54,24 +54,21 @@ class Pdf extends TCPDF
 	        // Set font
 	        $this->SetFont('msungstdlight', 'B', 20);
 	        // Title
-	        // $this->Cell(x, y, ' text', 0, false,'x-align' , 0, '', 0, false, 'J', 'B');	        
-	        $this->Cell(76, 16, ' 蔡阿姨宿舍租賃合約', 0, false,0 , 0, '', 0, false, 'J', 'B');
-	        
+	        // $this->Cell(x, y, ' text', 0, false,'x-align' , 0, '', 0, false, 'J', 'B');
+	        $this->Cell(76, 16,'', 0, false,0 , 0, '', 0, false, 'J', 'B');
+
 	    }
 	    public function Footer()
 	    {
-	        
-	        $this->SetY(-15);
 
-	        $this->SetFont('msungstdlight', '', 12);
-	        $this->Cell(0, 10, '甲方：                                                                             乙方：', 0, false, 'x-align', 0, 0, 0, false, 'J', 'M');
+
 	        // Set font
 	        $this->SetFont('msungstdlight', 'I', 8);
 	        // Page number
 
-		
+
 	    }
-	
+
 }
 
 /* End of file Pdf.php */

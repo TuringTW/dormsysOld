@@ -2,8 +2,8 @@
 	<button  class="btn btn-default" data-toggle="modal" data-target="#viewModal" style="display: none;">
 	  新增房客
 	</button>
-	
-</div>	
+
+</div>
 	<div class="modal fade " id="viewModal" tabindex="-1" role="dialog" data-show="1" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -15,10 +15,10 @@
 					<ul class="nav nav-tabs">
 						<li class="active"><a href="#profile" data-toggle="tab">學生資料</a></li>
 						<li><a href="#contract" data-toggle="tab">合約記錄</a></li>
-						
+
 					</ul>
 					<div class="tab-content">
-						
+
 						<div class="tab-pane active" id="profile">
 							<div class="row">
 								<div class="col-sm-6">
@@ -85,8 +85,8 @@
 				     									</a>
 				     								</div>
 				     							</div>
-				     							
-				     							
+
+
 				     						</td>
 				     					</tr>
 				     					<tr>
@@ -127,7 +127,7 @@
 							</div>
 						</div>
 
-						<div class="tab-pane" id="contract">	
+						<div class="tab-pane" id="contract">
 							<table class="table table-hover">
 								<thead>
 									<th>#</th>
@@ -149,9 +149,9 @@
 					<input type="hidden" id="stu_id" onclick="showedit()" value="0">
 					<button type="submit" name="editstuinfosubmit" id="btnSubmit" onclick="editstuinfo()" class="btn btn-info">已儲存</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				
+
 				</div>
 			</div><!-- /.modal-content -->
-			
+
 		</div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->

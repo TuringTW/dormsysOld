@@ -1,6 +1,6 @@
 
 <div class="modal fade " id="overlapModal" tabindex="-1" role="dialog" data-show="1" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width:60%">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" id="closebtn" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -11,6 +11,7 @@
 				<table class="table table-hover">
 					<thead>
 						<th>#</th>
+						<th>類型</th>
 						<th>姓名</th>
 						<th>手機</th>
 						<th>合約開始</th>
@@ -21,7 +22,7 @@
 					<tbody id="over_lap_list">
 					</tbody>
 				</table>
- 				
+
 			</div>
 			<div class="modal-footer">
 				<div class="row" style="width:100%">

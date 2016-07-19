@@ -184,6 +184,11 @@ class Mutility extends CI_Model
         }
         return $result;
     }
+    function connectDB(){
+    		$link = mysqli_connect('localhost','client','1qaz2wsx','dorm');
+    		mysqli_query($link,"SET NAMES 'UTF8'");
+    		return($link);
+  	}
 
 }
 ?>

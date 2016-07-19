@@ -116,7 +116,8 @@ class Contract extends CI_Controller
 		$out_date = $this->input->post('out_date', TRUE);
 		$room_id = $this->input->post('room_id', TRUE);
 		$contract_id = $this->input->post('contract_id', TRUE);
-		$result = $this->Mcontract->date_check_by_room($room_id, $in_date, $out_date, $contract_id);
+		$r_id = $this->input->post('r_id', TRUE);
+		$result = $this->Mcontract->date_check_by_room($room_id, $in_date, $out_date, $contract_id, $r_id);
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
@@ -183,7 +184,7 @@ class Contract extends CI_Controller
 		$s_date = $this->input->post('s_date',TRUE);
 		$e_date = $this->input->post('e_date',TRUE);
 		$room_id = $this->input->post('room_id',TRUE);
-		if (is_numeric($room_id)&&$room_id!==0) {
+		if (is_numeric($room_id)&&$room_id!==0&&$s_date&&$e_date) {
 			$data['json_data'] = $this->Mcontract->checknotoverlap($room_id, $s_date, $e_date);
 		}
 		else{

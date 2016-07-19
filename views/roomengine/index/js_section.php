@@ -24,14 +24,14 @@
 		var dat = new Date(str_date);
 		if (method==0) {
 			if ($('#end_date').val()=='') {
-				
+
 				dat = dat.addDays(1);
 				var end_date = dat.getFullYear()+'-'+(dat.getMonth()+1)+'-'+dat.getDate();
 				$('#end_date').val(end_date);
 			}
-				
+
 		}else if ($('#str_date').val()=='') {
-			
+
 			edat = edat.addDays(-1);
 			var str_date = edat.getFullYear()+'-'+(edat.getMonth()+1)+'-'+edat.getDate();
 			$('#str_date').val(str_date);
@@ -42,10 +42,10 @@
 			var end_date = dat.getFullYear()+'-'+(dat.getMonth()+1)+'-'+dat.getDate();
 			$('#end_date').val(end_date);
 		}
-			
+
 	}
 
-	
+
 
 	// 更新想式的數量
 	function table_refresh(){
@@ -63,55 +63,90 @@
 
 
 		// 傳送
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
 		var data = "str_date="+str_date+"&end_date="+end_date+"&lprice="+lprice+"&hprice="+hprice+"&type="+type+"&dorm="+dorm;
 		xhr.open("POST", "<?=web_url('/roomengine/show_avail_room')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// alert(xhr.responseText);   
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					// alert(xhr.responseText);
 					tableparse(xhr.responseText);
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-		xhr.onreadystatechange = display_datas;  
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
+		xhr.onreadystatechange = display_datas;
 	}
 	function tableparse(json){
 		data = JSON.parse(json);
 		$('#result_table').html('');
 		for (var i = 0; i < data.length; i++) {
-			
-			$('#result_table').append('<tr><td>'+(i+1)+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].type+'</td><td>'+data[i].out_date+'</td><td>'+(data[i].premin>=4000?'':data[i].premin)+'</td><td><a style="'+((data[i].pre_id==''||data[i].pre_id==undefined)?'display:none':'')+'" href="#" onclick="showcontract('+data[i].pre_id+')" title="前合約資料"><span class="glyphicon glyphicon-file"></span></a></td><td>'+data[i].in_date+'</td><td>'+(data[i].postmin>=4000?'':data[i].postmin)+'</td><td><a href="#" style="'+((data[i].post_id==''||data[i].post_id==undefined)?'display:none':'')+'" title="後合約資料" onclick="showcontract('+data[i].post_id+')"><span class="glyphicon glyphicon-file"></span></a></td><td>'+data[i].rent+'</td><td><a href="#" title="房間詳細資料"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');				
+
+			$('#result_table').append('<tr><td>'+(i+1)+'</td><td>'+data[i].dname+'</td><td>'+data[i].rname+'</td><td>'+data[i].type+'</td><td>'+data[i].out_date+'</td><td>'+(data[i].premin>=4000?'':data[i].premin)+'</td><td><a style="'+((data[i].pre_id==''||data[i].pre_id==undefined)?'display:none':'')+'" href="#" onclick="showthing('+data[i].pre_id+','+(data[i].pre_ctype=='con'?1:(data[i].pre_ctype=='res'?2:''))+')" title="前'+(data[i].pre_ctype=='con'?'合約':(data[i].pre_ctype=='res'?'訂單':''))+'資料"><span class="'+(data[i].pre_ctype=='con'?'glyphicon glyphicon-file':(data[i].pre_ctype=='res'?'glyphicon glyphicon-bookmark':''))+'"></span></a></td><td>'+data[i].in_date+'</td><td>'+(data[i].postmin>=4000?'':data[i].postmin)+'</td><td><a href="#" style="'+((data[i].post_id==''||data[i].post_id==undefined)?'display:none':'')+'" title="後'+(data[i].post_ctype=='con'?'合約':(data[i].post_ctype=='res'?'訂單':''))+'資料" onclick="showthing('+data[i].post_id+','+(data[i].post_ctype=='con'?1:(data[i].post_ctype=='res'?2:''))+')"><span class="'+(data[i].post_ctype=='con'?'glyphicon glyphicon-file':(data[i].post_ctype=='res'?'glyphicon glyphicon-bookmark':''))+'"></span></a></td><td>'+data[i].rent+'</td><td><a href="#" title="房間詳細資料"><span class="glyphicon glyphicon-pencil"></span></a></td></tr>');
 		};
-	
+
 	}
 // for 詳細合約資料
 	// AJAX產生合約資料
+	function showthing(id, type){
+		if (type==1) {
+			showcontract(id);
+		}else{
+			showreservation(id);
+		}
+	}
+	function showreservation(r_id){
+		$('#viewModalforRes').modal('toggle');
+		var data = "r_id=" + r_id;
+		function callback(data) {
+			var datum = data[0];
+			$('#view_smsforRes').attr('onclick','sendsms("'+datum.sname+'同學你好,", "'+datum.mobile+'")')
+			$('#view_snameforRes').val(datum.sname);
+			$('#view_mobileforRes').val(datum.mobile);
+			$('#view_dorm_hrefforRes').attr('href','dorm.php?view='+datum.dorm_id);
+			$('#view_dormforRes').val(datum.dname);
+			$('#view_roomforRes').val(datum.rname);
+			$('#view_room_hrefforRes').attr('href','room.php?view='+datum.room_id);
+			$('#view_s_dateforRes').val(datum.s_date);
+			$('#view_e_dateforRes').val(datum.e_date);
+			$('#view_d_dateforRes').val(datum.d_date);
+			$('#view_timestampforRes').val(datum.timestamp);
+			$('#view_salesforRes').val(datum.sales);
+			$('#view_managerforRes').val(datum.mname);
+			$('#view_noteforRes').val(datum.note);
+			$('#room_idforRes').val(datum.room_id);
+			$('#view_change_btnforRes').attr('data-cnum',datum.contract_id);
+			$('#r_idforRes').val(datum.id);
+			//document.getElementById("room_select").innerHTML = xhr.responseText;
+
+			// show_deposit_detail(contract_id);
+		}
+		post('/reservation/show_reservation', data, callback, 0)
+	}
 	function showcontract(contract_id){
 		$('#viewModal').modal('toggle');
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "contract_id=" + contract_id;  
-		xhr.open("POST", "<?=web_url('/contract/show_contract')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "contract_id=" + contract_id;
+		xhr.open("POST", "<?=web_url('/contract/show_contract')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					var data = JSON.parse(xhr.responseText);
 					document.getElementById('view_stu_info').innerHTML = '';
@@ -148,14 +183,14 @@
 					document.getElementById('view_manager').value = datum.mname;
 					document.getElementById('view_note').value = datum.note;
 					document.getElementById('room_id').value = datum.room_id;
-					document.getElementById('view_change_btn').setAttribute('data-cnum',datum.contract_id);   
-					document.getElementById('contract_id').value = datum.contract_id;    
-					//document.getElementById("room_select").innerHTML = xhr.responseText;  
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
+					document.getElementById('view_change_btn').setAttribute('data-cnum',datum.contract_id);
+					document.getElementById('contract_id').value = datum.contract_id;
+					//document.getElementById("room_select").innerHTML = xhr.responseText;
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
 	}
 	// 檢查遷入遷出日期
 	function check_room(){
@@ -167,20 +202,20 @@
 		var room_id = $('#room_id').val();
 		var contract_id = $('#contract_id').val();
 
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "room_id=" + room_id+"&in_date=" + in_date+"&out_date=" + out_date+"&contract_id=" + contract_id;  
-		xhr.open("POST", "<?=web_url('/contract/date_check_by_room')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		xhr.onreadystatechange = display_data;  
-		function display_data() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "room_id=" + room_id+"&in_date=" + in_date+"&out_date=" + out_date+"&contract_id=" + contract_id;
+		xhr.open("POST", "<?=web_url('/contract/date_check_by_room')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		xhr.onreadystatechange = display_data;
+		function display_data() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					var result = JSON.parse(xhr.responseText);
 					if (result == true) {
@@ -191,11 +226,11 @@
 						document.getElementById('view_out_date_check').className = "glyphicon glyphicon-remove";
 						document.getElementById('view_in_date_check').className = "glyphicon glyphicon-remove";
 					}
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
 	}
 	// 提示表單有變更
 	function change_alert(){
@@ -209,19 +244,19 @@
 		var out_date = $('#view_out_date').val();
 		var sales = $('#view_sales').val();
 		var note = $('#view_note').val();
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "contract_id=" + contract_id+"&in_date="+in_date+"&out_date="+out_date+"&sales="+sales+"&note="+note;  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "contract_id=" + contract_id+"&in_date="+in_date+"&out_date="+out_date+"&sales="+sales+"&note="+note;
 		xhr.open("POST", "<?=web_url('/contract/edit')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					if (JSON.parse(xhr.responseText.trim())===true) {
 						document.getElementById('edit_btn').className = 'btn btn-info btn-lg';
@@ -229,12 +264,12 @@
 						// 更新表格裡的資訊
 						table_refresh();
 					}
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-		xhr.onreadystatechange = display_datas;  
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
+		xhr.onreadystatechange = display_datas;
 	}
 	// 詳細資料裡的日期選擇
 	$('#str_date').datepicker({ dateFormat: 'yy-mm-dd', changeMonth: true,changeYear: true});
@@ -257,7 +292,7 @@
 
 		}
     });
-    // 
+    //
     $( "#view_change_btn" ).on( "click", function() {
 
       	$(document).ready(function() {
@@ -265,7 +300,7 @@
 			$('body').removeClass('modal-open');
 			$('.modal-backdrop').remove();
 	    });
-      	
+
 
 	    var element = $( this );
 	    if ( element.is( "[data-cnum]" ) ) {
@@ -273,53 +308,53 @@
 			getbcontract(contract_id);
 			$('#bcontract_id').val(contract_id);
 	    }
-	    dialogbreak.dialog( "open" );   	
+	    dialogbreak.dialog( "open" );
     });
     function getbcontract(contract_id){
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "contract_id=" + contract_id;  
-		xhr.open("POST", "<?=web_url('/contract/show_contract')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
-					// alert(xhr.responseText);        
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "contract_id=" + contract_id;
+		xhr.open("POST", "<?=web_url('/contract/show_contract')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					// alert(xhr.responseText);
 					data = JSON.parse(xhr.responseText);
-					
-					  
-					document.getElementById("break_stu_info").innerHTML = '';  
+
+
+					document.getElementById("break_stu_info").innerHTML = '';
 					for (var i = data.length - 1; i >= 0; i--) {
 						document.getElementById("break_stu_info").innerHTML += '<tr><td>'+data[i].sname+'</td><td>'+data[i].mobile+'</td><td>'+data[i].id_num+'</td></tr>';
 					};
 					document.getElementById("break_contract_info").innerHTML = '<tr><td>'+data[0].dname+'</td><td>'+data[0].rname+'</td><td>'+data.length+'</td><td>'+data[0].s_date+'</td><td>'+data[0].e_date+'</td></tr>'+"<input type='hidden' name='bs_date' id='bs_date' value='"+data[0].s_date+"'>"+"<input type='hidden' name='be_date' id='be_date' value='"+data[0].e_date+"'>";
-					
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-		xhr.onreadystatechange = display_datas;  
+
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
+		xhr.onreadystatechange = display_datas;
 	}
 	function breakcontract(contract_id,b_date,wtdo){
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "contract_id=" + contract_id+"&b_date=" + b_date; 
-		xhr.open("POST", "<?=web_url('/contract/break_contract')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "contract_id=" + contract_id+"&b_date=" + b_date;
+		xhr.open("POST", "<?=web_url('/contract/break_contract')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 
 					if (JSON.parse(xhr.responseText)==true) {
@@ -335,14 +370,14 @@
 					}else{
 						$('#dialog-update-failed').dialog( "open" );
 					}
-					
-					
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-		xhr.onreadystatechange = display_datas;  		
+
+
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
+		xhr.onreadystatechange = display_datas;
 	}
 	function breaknkeep () {
 		var contract_id = $('#bcontract_id').val();
@@ -377,12 +412,12 @@
 
 	dialogbreakfailed = $( "#dialog-update-failed" ).dialog({
 		autoOpen: false,
-		
+
 		modal: true,
 		resizable: false,
 		dialogClass: "alert",
 		buttons: {
-        
+
         '確定': function() {
           $( this ).dialog( "close" );
           location.reload();
@@ -391,13 +426,13 @@
     });
     dialogbreakdone = $( "#dialog-update-done" ).dialog({
 		autoOpen: false,
-		
+
 		modal: true,
 		width: "50%",
 		resizable: false,
 		dialogClass: "alert",
 		buttons: {
-        
+
         '確定': function() {
           	$( this ).dialog( "close" );
           	var contract_id = $('#keep_bcontract_id').val();
@@ -413,7 +448,7 @@
           		window.location.assign('newContract.php?keep='+contract_id+'&sdate='+(tomorrow.getFullYear())+'-'+(tomorrow.getMonth()+1)+'-'+(tomorrow.getDate())+'&searchsubmit=')
 
           	}
-          
+
         }
       }
     });
@@ -434,18 +469,18 @@
 	// 確認結算
 	dialogbreakdone = $( "#dialog-check-out-comfirm" ).dialog({
 		autoOpen: false,
-		
+
 		modal: true,
 		width: "50%",
 		resizable: false,
 		dialogClass: "alert",
 		buttons: {
-        
+
         '確定結算': function() {
           	$( this ).dialog( "close" );
           	var contract_id = $('#ccontract_id').val();
           	checkout_contract(contract_id);
-          
+
         },
         '取消': function(){
         	$( this ).dialog( "close" );
@@ -454,13 +489,13 @@
     });
     dialogbreakdone = $( "#dialog-universal-alert" ).dialog({
 		autoOpen: false,
-		
+
 		modal: true,
 		width: "30%",
 		resizable: false,
 		dialogClass: "alert",
 		buttons: {
-        
+
         '確定': function() {
           	$( this ).dialog( "close" );
         }
@@ -468,31 +503,31 @@
     });
     // 結算
     function checkout_contract(contract_id){
-    	var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "contract_id=" + contract_id; 
-		xhr.open("POST", "<?=web_url('/contract/checkout_contract')?>", true);   
-		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+    	var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "contract_id=" + contract_id;
+		xhr.open("POST", "<?=web_url('/contract/checkout_contract')?>", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					table_refresh();
 					if (JSON.parse(xhr.responseText) == true ) {
 						$('#dialog-universal-alert').html('<div class="alert alert-success"><h2><span class="glyphicon glyphicon-ok"></span>成功!!!</h2></div>')
 						$('#dialog-universal-alert').dialog( "open" );
 					}
-				} else {  
-					alert('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
-		xhr.onreadystatechange = display_datas;  			
+				} else {
+					alert('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
+		xhr.onreadystatechange = display_datas;
     }
 // 續約
 	// 檢查可否續約
@@ -507,18 +542,18 @@
 	}
 	dialogbreakdone = $( "#dialog-keep-comfirm" ).dialog({
 		autoOpen: false,
-		
+
 		modal: true,
 		width: "50%",
 		resizable: false,
 		dialogClass: "alert",
 		buttons: {
-        
+
         '確定續約': function() {
           	$( this ).dialog( "close" );
           	var contract_id = $('#kcontract_id').val();
           	keep_contract(contract_id);
-          
+
         },
         '取消': function(){
         	$( this ).dialog( "close" );
@@ -527,19 +562,19 @@
     });
     function keep_contract(contract_id){
     	// 傳送
-		var xhr;  
-		if (window.XMLHttpRequest) { // Mozilla, Safari, ...  
-			xhr = new XMLHttpRequest();  
-		} else if (window.ActiveXObject) { // IE 8 and older  
-			xhr = new ActiveXObject("Microsoft.XMLHTTP");  
-		}  
-		var data = "contract_id=" + contract_id;  
+		var xhr;
+		if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+			xhr = new XMLHttpRequest();
+		} else if (window.ActiveXObject) { // IE 8 and older
+			xhr = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		var data = "contract_id=" + contract_id;
 		xhr.open("POST", "<?=web_url('/contract/keep_contract_check')?>");
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');                    
-		xhr.send(data);  
-		function display_datas() {  
-			if (xhr.readyState == 4) {  
-				if (xhr.status == 200) {  
+		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+		xhr.send(data);
+		function display_datas() {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
 					// alert(xhr.responseText);
 					data = JSON.parse(xhr.responseText);
 					if (data==true) {
@@ -547,11 +582,11 @@
 					}else{
 						errormsg('續約時發生錯誤，可能是租金尚未結清。');
 					}
-				} else {  
-					errormsg('資料傳送出現問題，等等在試一次.');  
-				}  
-			}  
-		}  
+				} else {
+					errormsg('資料傳送出現問題，等等在試一次.');
+				}
+			}
+		}
 		xhr.onreadystatechange = display_datas;
     }
 	function printmodel(){
@@ -564,4 +599,3 @@
 </script>
 
 <?php } ?>
-

@@ -38,7 +38,7 @@
 	<div class="tab-pane" id="contract">
 		<form method="POST" action="_add_contract.php" >
 			<div id="stuinfosubmit">
-				
+
 			</div>
 			<div class="row">
 				<div class="col-md-4">
@@ -54,8 +54,8 @@
      										<option class="form-control" <?=(isset($sroom)&&$dorm['dorm_id']==$sroom['dorm'])?'selected':''?> value="<?=$dorm['dorm_id']?>"><?=$dorm['name']?></option>
      									<?php endif ?>
      								<?php } ?>
-     									
-     							</select>   
+
+     							</select>
 							</td>
 						</tr>
 						<tr  id="roomtd">
@@ -65,7 +65,7 @@
 										<?php if (isset($sroom)): ?>
 											<option value="<?=$sroom['room_id']?>" selected><?=$sroom['rname']?></option>
 										<?php endif ?>
-									</select>     	
+									</select>
 							</td>
 						</tr>
 						<tr id="rentd">
@@ -79,17 +79,17 @@
 							<td>
 								<select class="form-control" id="sales" required="required" style="width:100%" name="manager">
  									<option  class="form-control">請選擇...</option>
-     								
+
      								<?php foreach ($saleslist as $key => $value): ?>
      									<option  class="form-control" value="<?=$value['m_id']?>" ><?=$value['name']?></option>
      								<?php endforeach ?>
-     							</select> 	
+     							</select>
 							</td>
 						</tr>
 					</table>
 					<h4>備註</h4>
 					<table class="table" style="width:100%">
-						
+
 						<tr>
 							<td style="width:100%" >
 									<textarea  id="note" class="form-control" style="resize: none;"  style="width:100%" name="note" row="3"></textarea>
@@ -112,7 +112,7 @@
 								<input class="form-control"  id="datepickerEnd" required="required" style="width:100%" type="text" name="edate"  onChange="document.getElementById('edatetd').className='';get_rent_cal();">
 							</td>
 						</tr>
-						
+
 					</table>
 					<h4>遷入遷出 <span class="" id="InOutcheck"></span></h4>
 					<input type="hidden" id="checkInOutval" value="0">
@@ -131,10 +131,10 @@
 							</td>
 							<td style="width:20%"><a class="btn btn-default" onclick="sameascontract(1)">同合約</a></td>
 						</tr>
-						
+
 					</table>
 					<div class="row">
-						
+
 						<div class="col-md-5 pull-right">
 							<a class="btn btn-warning btn-lg" title="檢查遷入遷出日期是否重疊" style="width:100%" id="btncheck" onClick="checknotoverlap();">CHECK</a>
 						</div>
@@ -172,7 +172,7 @@
 
 				</div>
 			</div>
-			
+
 		</form>
 	</div>
 
@@ -190,9 +190,9 @@
 						<th>姓名</th><th>手機</th>
 					</thead>
 					<tbody id="final_stu_list">
-						
+
 					</tbody>
-					
+
 				</table>
 			</div>
 			<div class="col-sm-3">
@@ -202,7 +202,7 @@
 						<td class=" pull-right"><a title="確認合約資料無誤" class="btn btn-warning" onclick="final_check(2)" id="btnfinalcheck_2">CHECK</a></td>
 					</tr>
 				</table>
-				
+
 				<table class="table table-hover">
 					<tr><th style="width:30">宿舍</th><td id="final_dorm">宿舍未填</td></tr>
 					<tr><th style="width:30">房號</th><td id="final_room">房號未填</td></tr>
@@ -240,7 +240,7 @@
 				</table>
 				<table class="table table-hover">
 					<tr>
-						<th>房間每人每月租金</th>
+						<th>租金總額</th>
 						<td id="final_tr">合約日期未填</td>
 					</tr>
 				</table>
@@ -248,14 +248,14 @@
 		</div>
 		<div class="row" style="width:100%">
 			<div class="col-md-5">
-				
+
 			</div>
 			<div class="col-md-2 pull-right">
 				<input type="hidden" id="prev_contract_id" value="0">
 				<a id="submitbtn" name="newcontractsubmit"  class="btn btn-primary btn-lg" disabled onclick="submitcontract()">送出</a>
 			</div>
 		</div>
-		
+
 
 	</div>
 	<!-- <div class="tab-pane" id="thingsplan"> -->
@@ -263,12 +263,12 @@
 			<!-- <div class="col-sm-6"> -->
 				<!-- <div class="row"> -->
 					<!-- <div class="col-sm-7"><h3>房間物品列表</h3></div> -->
-					
+
 					<!-- <div class="col-sm-1"><a href="#" class="btn btn-info" title="重新整理房間物品列表" onclick=""><span class="glyphicon glyphicon-refresh"></span></a></div> -->
 					<!-- <div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#rentModal').modal('toggle')">新增額外費用/獎勵</a></div> -->
 				<!-- </div> -->
-				
-				<!-- 
+
+				<!--
 				<table class='table table-hover' style="text-align:center">
 					<thead>
 						<th>#</th>
@@ -293,8 +293,8 @@
 					<div class="col-sm-1"><a href="#" class="btn btn-info" title="重新整理租金項目列表" onclick="show_rent_detail()"><span class="glyphicon glyphicon-refresh"></span></a></div>
 					<div class="col-sm-4"><a href="#" class="btn btn-default" onclick="$('#rentModal').modal('toggle')">新增額外費用/獎勵</a></div>
 				</div>
-				
-				
+
+
 				<table class='table table-hover' style="text-align:center">
 					<thead>
 						<th>#</th>
@@ -337,7 +337,7 @@
 		</div>
 	</div>
 </div>
-<?php 
+<?php
 	if (!is_null($keep)) {
 		$keep_result[0][0] = (new DateTime($keep_result[0]['e_date']))-> modify('+1 day') -> format('Y-m-d');
 		$keep_result[0][1] =(new DateTime($keep_result[0]['out_date']))-> modify('+1 day') -> format('Y-m-d');
@@ -353,5 +353,3 @@ room_suggestion(<?=$keep_result[0]['room_id']?>);
 $('#datepickerStart').val('<?=$keep_result[0][0]?>');
 $('#datepickerIn').val('<?=$keep_result[0][1]?>');
 $('#prev_contract_id').val(<?=$keep_result[0]['contract_id']?>) <?php } ?>"></a></button>
-
-
