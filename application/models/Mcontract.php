@@ -1,5 +1,3 @@
-
-
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Mcontract extends CI_Model
@@ -8,9 +6,11 @@ class Mcontract extends CI_Model
      {
           // Call the Model constructor
         $this->load->library('session');
+
         $this->load->model(array('login_check', 'Mutility'));
         $required_power = 2;
         $this->login_check->check_init($required_power);
+
         parent::__construct();
 
     }
@@ -35,7 +35,7 @@ class Mcontract extends CI_Model
                           ) AS rentsum','rentsum.contract_id=contract.contract_id','left');
 
         $this->db->where('( 0',NULL, false); //for logic
-        $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword);
+        $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('student.name',$keyword)->or_like('mobile',$keyword)->or_like('student.emg_name',$keyword)->or_like('student.emg_phone',$keyword)->or_like('student.car_id',$keyword);
         $this->db->or_where('0 )',NULL, false);
         $this->db->where('( 0',NULL, false); //for logic
             $this->db->or_where('seal', 0);
@@ -631,6 +631,9 @@ class Mcontract extends CI_Model
         if (is_null($end_date)||empty($end_date)) {
             $end_date = (new DateTime($str_date))-> modify('+1 day') -> format('Y-m-d');
         }
+
+
+        // =============in_date=======out_date=========str_date
         $this->db->select("contract_id, room_id, (DATEDIFF('$str_date',out_date )) as premin, out_date, 'con' as ctype");
         $this->db->from('contract');
         $this->db->where("DATEDIFF('$str_date',in_date )>",'0')->where("DATEDIFF('$str_date',out_date )>", '0')->where('seal<>', '1');
@@ -646,7 +649,7 @@ class Mcontract extends CI_Model
         $sql_precon = "(select temp.* from (".$sql_con." UNION ".$sql_res.") as temp group by `room_id`) as precontract";
 // ========================
 
-
+      // ===========end_Date=======in_date=======out_date=========
         $this->db->select("contract_id, room_id, (DATEDIFF(in_date, '$end_date')) as postmin, in_date, 'con' as ctype");
         $this->db->from('contract');
         $this->db->where("datediff(in_date, '$end_date')>",'0')->where("datediff(out_date, '$end_date')>", '0')->where('seal<>', '1');
@@ -661,11 +664,12 @@ class Mcontract extends CI_Model
         $sql_postcon = "(select temp1.* from (".$sql_con." UNION ".$sql_res.") as temp1 group by `room_id`) as postcontract";
 // ===================
         $this->db->select('count(contract_id) as countc, room_id')->from('contract');
-        $this->db->where("((DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$str_date')>=0 )
-                    or    (DATEDIFF('$str_date', in_date)<=0 and DATEDIFF(out_date, '$end_date')<=0)
-                    or    (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0)
-                    or    (DATEDIFF('$end_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0)) ");
-        $this->db->where('seal<>',0)->where('seal<>', -1);
+
+        $this->db->where("( (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$str_date')>=0)
+                        or  (DATEDIFF('$end_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0)
+                        or  (DATEDIFF('$str_date', in_date)>=0 and DATEDIFF(out_date, '$end_date')>=0))");
+
+        $this->db->where('seal',0);
         $this->db->group_by('room_id');
 
         $sql_conch = "(".$this->db->get_compiled_select().") as contractcheck";
@@ -799,4 +803,5 @@ class Mcontract extends CI_Model
         }
         return $result;
     }
+
 }?>

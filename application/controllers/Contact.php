@@ -1,17 +1,20 @@
 <?php
-class Contact extends CI_Controller 
+class Contact extends CI_Controller
 {
 	public function __construct(){
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
 		$this->load->library(array('session'));
+
 		$this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mstudent'));
+
 		// check login & power, and then init the header
 		$required_power = 2;
 		$this->login_check->check_init($required_power);
+		
 	}
 	private function view_header(){
-		$data = array(	'title' => 'Home', 
+		$data = array(	'title' => 'Home',
 						'user' => $this->session->userdata('user'),
 						'power' => $this->session->userdata('power')
 					);
@@ -32,7 +35,7 @@ class Contact extends CI_Controller
 
 		$this->load->view('contact/stulist/viewModel', $data);
 		$this->load->view('service/mail/mail_modal', $data);
-		
+
 		// footer
 		$this->load->view('contact/stulist/js_section', $data);
 		$this->load->view('template/footer');
@@ -48,7 +51,7 @@ class Contact extends CI_Controller
 		}else{
 			$result['state'] = false;
 		}
-		
+
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 	}
@@ -75,7 +78,7 @@ class Contact extends CI_Controller
 	}
 	public function send_sms(){
 		$this->load->model('Mservice');
-		
+
 		$rx = $this->input->post('rx', TRUE);
 		$content = $this->input->post('content', TRUE);
 		$note = $this->input->post('note', TRUE);
@@ -92,7 +95,7 @@ class Contact extends CI_Controller
 		$this->load->view('contact/sidebar', $data);
 
 		$this->load->view('contact/contactbookmobile/search_table');
-		
+
 		// footer
 		$this->load->view('contact/contactbookmobile/js_section', $data);
 		$this->load->view('template/footer');

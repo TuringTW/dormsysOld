@@ -6,7 +6,7 @@
 
 	<div class="form-group row">
 		<div class="col-sm-5">
-			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="Enter搜:宿舍、房號、姓名、手機" value="">
+			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="Enter搜:宿舍、房號、姓名、手機、聯絡人、車牌" value="">
 		</div>
 		<div class="col-md-3">
 			<?php echo dorm_list_html($dormlist); ?>

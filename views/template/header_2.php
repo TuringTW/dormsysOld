@@ -1,4 +1,4 @@
-<?php $version="7.1.1"
+<?php $version="7.1.2"
 // 	6.1 	新增本月退租檢視功能
 // 			seal 代號 0正常  -1退宿 1刪除 2待結算 3封存
 				// keep 0 無 keep 1
@@ -35,8 +35,10 @@
 			// 開啟會計支出功能 沒有做require & 刪除 & 新增分類 之後補做
 // 7.1.1
 			// 	新增交接表、
-
-
+// 7.1.2
+// 			新增訂單
+// 			room新增seal
+// 			修改room engine 錯誤 union 後要order by datediff 讓最靠近的合約被顯示
 ?>
 
 <body onload="ShowTime();" style="overflow-x:hidden;overflow-y:scroll;">
@@ -99,8 +101,8 @@
 							<hr>
 							<li><a href = "<?=web_url('/service/sms')?>">簡訊紀錄</a></li>
 							<li><a href = "<?=web_url('/service/smscollection')?>">罐頭簡訊</a></li>
-							<hr>
-							<li><a href = "<?=web_url('/service/fix_record')?>">維修紀錄</a></li>
+							<!-- <hr> -->
+							<!-- <li><a href = "<?=web_url('/service/fix_record')?>">維修紀錄</a></li> -->
 							<!-- <li><a href = "">維修</a></li> -->
 							<!-- <li><a href = "">水電費押金</a></li> -->
 						</ul>
@@ -115,13 +117,13 @@
 							<li><a href = "<?=web_url('/accounting/payment')?>">租金收款紀錄</a></li>
 						</ul>
 					</li>
-					<li class="dropdown">
-						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">水電費/押金</a>
-						<ul class="dropdown-menu">
+					<!-- <li class="dropdown"> -->
+						<!-- <a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">水電費/押金</a> -->
+						<!-- <ul class="dropdown-menu"> -->
 							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
-							<li><a href = "<?=web_url('/accounting/expenditure')?>">紀錄表</a></li>
-						</ul>
-					</li>
+							<!-- <li><a href = "<?=web_url('/accounting/expenditure')?>">紀錄表</a></li> -->
+						<!-- </ul> -->
+					<!-- </li> -->
 					<li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">管理</a>
 						<ul class="dropdown-menu">
@@ -130,14 +132,14 @@
 							<li><a href = "<?=web_url('/database/room')?>">房間管理</a></li>
 						</ul>
 					</li>
-					<li class="dropdown">
+					<!-- <li class="dropdown">
 						<a herf="#" class="dropdown-toggle" data-toggle="dropdown" data-target="dropdown">系統問題</a>
 						<ul class="dropdown-menu">
-							<!-- <li><a href = "receipt.php">收據管理</a></li> -->
+							 <li><a href = "receipt.php">收據管理</a></li>
 							<li><a onclick="window.open('https://docs.google.com/forms/d/1lIxLxN-y9bh3Z2-9wVjaVbhozisY3BHMfYONhreRZTk/viewform')">問題回報</a></li>
 							<li><a href = "<?=web_url('/system/qna')?>">Q&A</a></li>
 						</ul>
-					</li>
+					</li> -->
 
 
 					<!-- <li class="dropdown">
@@ -183,7 +185,7 @@
 							<?php endif ?>
 
 
-					<!-- 	</ul>
+					 	</ul>
 					</li> -->
 				</ul>
 

@@ -118,7 +118,7 @@ class Mutility extends CI_Model
         return $query->result_array();
     }
     function request_auth_num($auth_code, $usage){
-        if (floor(log10($auth_code))==3) {
+        if (floor(log10($auth_code))==7) {
             $this->db->select('auth_id')->from('auth_record');
             $this->db->where('TIMESTAMPDIFF(MINUTE,`timestamp`,CURRENT_TIMESTAMP())<', 5)->where('auth_code', $auth_code);
             $query = $this->db->get();

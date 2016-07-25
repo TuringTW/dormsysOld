@@ -4,7 +4,7 @@
 		<div class="col-sm-3">
 			<input type="text" id="txtkeyword"class="form-control" onchange="keyword_serach()" placeholder="Enter搜:宿舍、房號、姓名、手機" value="">
 		</div>
-	</div>	
+	</div>
 	<br>
 	<br>
 	<hr> -->
@@ -34,7 +34,7 @@
 		</div>
 
 		<div class="col-md-3" style="height:100%;">
-			<input type="text" placeholder="學生&nbsp;&nbsp;[遷入日期]&nbsp;&nbsp;Enter搜:手機,姓名" id="keyowrd_input"onchange="searchstu()" class="form-control" style="width:100%">
+			<input type="text" placeholder="學生&nbsp;[遷入]&nbsp;搜:手機,姓名,車牌等" id="keyowrd_input"onchange="searchstu()" class="form-control" style="width:100%">
 			<hr>
 			<div class="btn-group-vertical well" style="height:100%;width:100%;overflow-y:scroll;overflow-x:hidden" role="group" aria-label="..." id="stu_select">
 
@@ -47,11 +47,10 @@
 			<hr>
 			<div class=" well" style="height:100%;width:100%" role="group" aria-label="...">
 				<div class="btn-group-vertical" style=";width:100%"id="stu_info"></div>
-				
+
 			</div>
 		</div>
 	</div>
-	
-</div>
-</div>
 
+</div>
+</div>

@@ -1,5 +1,5 @@
 <?php
-class Utility extends CI_Controller 
+class Utility extends CI_Controller
 {
 	public function __construct()
 	{
@@ -23,7 +23,7 @@ class Utility extends CI_Controller
 		$room_id = $this->input->post('room_id', TRUE);
 		$result = $this->Mutility->get_room_info($room_id);
 		$data['json_data'] = $result;
-		$this->load->view('template/jsonview', $data);		
+		$this->load->view('template/jsonview', $data);
 	}
 }
 ?>

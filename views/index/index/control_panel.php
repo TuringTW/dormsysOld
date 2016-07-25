@@ -37,7 +37,7 @@
 											<td><?=$key+1?></td>
 											<td><?=$value['sname']?>&nbsp;<a onclick="sendsms('<?=$name?>同學你好,', '<?=$mobile?>')" title="寄簡訊"><span class="glyphicon glyphicon-comment"></span></a></td>
 											<td><?=$value['e_date']?></td>
-											<td><a href="<?=web_url('/contract/index')?>?contract_id=<?=$value['contract_id']?>" title="查看"><span class="glyphicon glyphicon-pencil"></span></a></td>
+											<td><a href="<?=web_url('/reservation/index')?>?id=<?=$value['id']?>" title="查看"><span class="glyphicon glyphicon-pencil"></span></a></td>
 										</tr>
 									<?php endforeach ?>
 								</tbody>

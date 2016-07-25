@@ -1,16 +1,11 @@
-
-
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-
 class login_check extends CI_Model
 {
      function __construct()
      {
-          // Call the Model constructor
-     	$this->load->database();
-          parent::__construct();
+        parent::__construct();
+          $this->load->database();
      }
-
      //get the username & password from tbl_usrs
      function get_user($usr, $pwd)
      {
@@ -20,10 +15,10 @@ class login_check extends CI_Model
      }
 
      function check_init($required_power){
+       
      	$this->load->helper('My_url_helper');
 		$this->load->helper('url');
 		$this->load->library('session');
-
 		// login check
 		if ($this->session->userdata('user')===false) {
 			redirect('/login');
@@ -36,7 +31,7 @@ class login_check extends CI_Model
 				redirect('/index');
 			}
 		}
-		
+
     }
     function get_user_id(){
     	return $this->session->userdata('m_id');
@@ -47,7 +42,5 @@ class login_check extends CI_Model
   		if ($method==0) {
         redirect('/login');
       }
-		
-		
     }
 }?>

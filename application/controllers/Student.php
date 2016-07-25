@@ -1,6 +1,6 @@
 <?php
 // 進行學生資料有關的操作
-class Student extends CI_Controller 
+class Student extends CI_Controller
 {
 	public function __construct()
 	{
@@ -14,7 +14,7 @@ class Student extends CI_Controller
 
 	}
 	private function view_header(){
-		$data = array(	'title' => 'Home', 
+		$data = array(	'title' => 'Home',
 						'user' => $this->session->userdata('user'),
 						'power' => $this->session->userdata('power')
 					);
@@ -71,13 +71,13 @@ class Student extends CI_Controller
 	public function show(){
 		$keyword = $this->input->post("keyword", TRUE);
 		$page = $this->input->post("page", TRUE);
-		
+
 		$data['json_data'] = $this->Mstudent->show_student_list($keyword, $page);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function show_stu_info(){
 		$stu_id = $this->input->post("stu_id", TRUE);
-		
+
 		$data['json_data'] = $this->Mstudent->get_stu_info($stu_id);
 		$this->load->view('template/jsonview', $data);
 	}
@@ -103,7 +103,7 @@ class Student extends CI_Controller
 	public function update_from_type_form(){
 
 		$result = $this->Mstudent->update_from_type_form();
-		
+
 		$data['json_data'] = $result;
 		$this->load->view('template/jsonview', $data);
 

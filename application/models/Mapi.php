@@ -1,5 +1,3 @@
-
-
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Mapi extends CI_Model
@@ -12,7 +10,6 @@ class Mapi extends CI_Model
 	// $required_power = 2;
 	// $this->login_check->check_init($required_power);
 	parent::__construct();
-
 
 	}
 
@@ -72,6 +69,40 @@ class Mapi extends CI_Model
         }else{
             return false;
         }
+    }
+		function search_by_phone($phone){
+        $phone = str_replace("+886", "0", $phone);
+				if (is_null($phone)) {
+
+				}else if($phone==""){
+
+				}else{
+
+		        $this->db->select('student.name as sname, dorm.name as dname, room.name as rname,
+		                          if(mobile=\''.$phone.'\', 1, 0) as is_mobile, mobile,
+		                          if(home=\''.$phone.'\', 1, 0) as is_home, home,
+		                          if(emg_phone=\''.$phone.'\', 1, 0) as is_emg_phone, emg_phone, ');
+		        $this->db->from('contract');
+		        $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
+		        $this->db->join('room','room.room_id = contract.room_id','left');
+		        $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
+		        $this->db->join('student','student.stu_id=contractpeo.stu_id','left');
+		        $this->db->where('mobile', $phone);
+		        $this->db->or_where('home', $phone);
+		        $this->db->or_where('emg_phone', $phone);
+
+		        $query = $this->db->get();
+		        $row = $query->row_array();
+				}
+
+        $result = array();
+        if (isset($row)) {
+            $result['status'] = True;
+            $result['data'] = $row;
+        }else{
+            $result['status'] = False;
+        }
+        return $result;
     }
 
 }?>
