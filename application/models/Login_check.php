@@ -4,7 +4,8 @@ class login_check extends CI_Model
      function __construct()
      {
         parent::__construct();
-          $this->load->database();
+        $this->load->database();
+        $this->load->model(array('Mtools'));
      }
      //get the username & password from tbl_usrs
      function get_user($usr, $pwd)
@@ -36,9 +37,13 @@ class login_check extends CI_Model
     function get_user_id(){
     	return $this->session->userdata('m_id');
     }
+    function get_user_name(){
+      return $this->session->userdata('user');
+    }
     function log_out($method=0){
-  		$this->load->library('session');
-  		$this->session->sess_destroy();
+      $this->Mtools->addlog(0, 'Logout', $this->get_user_name()." logout successfully!");
+      $this->load->library('session');
+      $this->session->sess_destroy();
   		if ($method==0) {
         redirect('/login');
       }

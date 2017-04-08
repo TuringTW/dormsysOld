@@ -27,10 +27,10 @@ class Mstudent extends CI_Model
 			`mobile` like binary '%$keyword%' or
 			`emg_phone` like binary '%$keyword%' or
 			`name` like binary '$keyword%' or
-			`emg_name` like binary '$keyword%' or
 			`mobile` like binary '$keyword%' or
 			`emg_phone` like binary '$keyword%'
 			) and(Year(`ctime`)='".date('Y')."' and MONTH(`ctime`)='".date('m')."' and Day(`ctime`)='".date('j')."')";
+			// `emg_name` like binary '$keyword%' or
 		$query = $this->db->query($sql);
 		$result['today'] = $query->result_array();
 		// echo "$sql";
@@ -46,10 +46,11 @@ class Mstudent extends CI_Model
 			`mobile` like binary '%$keyword%' or
 			`emg_phone` like binary '%$keyword%' or
 			`name` like binary '$keyword%' or
-			`emg_name` like binary '$keyword%' or
+			
 			`mobile` like binary '$keyword%' or
 			`emg_phone` like binary '$keyword%'
 			 LIMIT 0,20";
+			 // `emg_name` like binary '$keyword%' or
 		$query = $this->db->query($sql);
 		$result['all'] = $query->result_array();
 		return $result;

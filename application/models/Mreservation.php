@@ -12,15 +12,26 @@ class Mreservation extends CI_Model
         parent::__construct();
 
     }
+
+    function get_keep_info($r_id){
+
+        $this->db->select('reservation.id, dorm, reservation.room_id, s_date, e_date')->from('reservation');
+        $this->db->join('room','room.room_id = reservation.room_id','left');
+        $this->db->where('reservation.id=', $r_id);
+        $query = $this->db->get();
+        return $query->result_array();
+    }
+
+
     // 取得合約列表
     function show_reservation_list($keyword, $dorm, $ofd, $wait, $page, $order_method=0, $order_law=0, $page_rule, $start_val='', $end_val='')
     {
 
-        $this->db->select("reservation.id,dorm.name as dname, room.name as rname, sname, mobile, is_res_deposit, is_deposit, d_date, e_date, s_date");
+        $this->db->select("reservation.id,dorm.name as dname, room.name as rname, sname, mobile, is_res_deposit, is_deposit, d_date, e_date, s_date, payment.value as deposit");
         $this->db->from('reservation');
         $this->db->join('room','room.room_id=reservation.room_id','left');
         $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
-
+        $this->db->join('payment','payment.r_id=reservation.id','left');
         $this->db->where('( 0',NULL, false); //for logic
         $this->db->or_like('dorm.name',$keyword)->or_like('room.name',$keyword)->or_like('sname',$keyword)->or_like('mobile',$keyword);
         $this->db->or_where('0 )',NULL, false);
@@ -80,23 +91,23 @@ class Mreservation extends CI_Model
                 $this->db->order_by("s_date", $order_rule);
                 $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
                 $this->db->order_by("BINARY `room`.`name`", "desc", false);
-                $this->db->order_by("timestamp", "desc");
+                $this->db->order_by("reservation.timestamp", "desc");
                 break;
             case 6:
                 $this->db->order_by("e_date", $order_rule);
                 $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
                 $this->db->order_by("BINARY `room`.`name`", "desc", false);
-                $this->db->order_by("timestamp", "desc");
+                $this->db->order_by("reservation.timestamp", "desc");
                 break;
             case 7:
                 $this->db->order_by("d_date", $order_rule);
                 $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
                 $this->db->order_by("BINARY `room`.`name`", "desc", false);
-                $this->db->order_by("timestamp", "desc");
+                $this->db->order_by("reservation.timestamp", "desc");
                 break;
 
             default:
-                $this->db->order_by("timestamp", "desc");
+                $this->db->order_by("reservation.timestamp", "desc");
                 break;
         }
         // 頁數
@@ -231,6 +242,7 @@ class Mreservation extends CI_Model
         $result['count_wait'] = $this->db->count_all_results();
         return $result;
     }
+
 // 這個不太好
     function date_check_by_room($room_id, $in_date, $out_date, $contract_id){
         $this->db->select('contract_id, room_id');
@@ -303,7 +315,7 @@ class Mreservation extends CI_Model
                                   'date'=>date('Y-m-d'),
                                   'receipt_id'=>'AT-&nbsp;R-&nbsp;'.str_pad($r_id,7,'0',STR_PAD_LEFT),
                                   'm_id' =>$manager,
-                                  'description'=>($new_sname.'-'.$new_mobile.'租屋押金') );
+                                  'description'=>($new_sname.'-'.$new_mobile.'租屋訂金') );
             $this->db->insert('payment', $insertdata);
             if ($this->db->affected_rows()>0) {
                 $result['id'] = $r_id;
@@ -321,10 +333,11 @@ class Mreservation extends CI_Model
     }
     function get_print_data($r_id){
         $result = array();
-        $this->db->select('dorm.name as dname, room.name as rname, sname, mobile, s_date, e_date, d_date, timestamp, location');
+        $this->db->select('dorm.name as dname, room.name as rname, sname, mobile, s_date, e_date, d_date, reservation.timestamp, location, payment.value as deposit');
         $this->db->from('reservation');
         $this->db->join('room','room.room_id = reservation.room_id','left');
         $this->db->join('dorm','room.dorm=dorm.dorm_id','left');
+        $this->db->join('payment','payment.r_id=reservation.id','left');
         $this->db->where('reservation.id=', $r_id)->where('seal<>', 1);
         $this->db->order_by('sname')->order_by('mobile');
         $query = $this->db->get();
@@ -335,12 +348,10 @@ class Mreservation extends CI_Model
         return $result;
     }
 
-    function get_keep_info($contract_id){
-
-        $this->db->select('contract.contract_id, contract.room_id, dorm as dorm_id, e_date, out_date, stu_id, room.rent')->from('contract');
-        $this->db->join('contractpeo','contractpeo.contract_id=contract.contract_id','left');
-        $this->db->join('room','room.room_id = contract.room_id','left');
-        $this->db->where('contract.contract_id=', $contract_id);
+    function get_res_info($r_id){
+        $this->db->select('reservation.id, reservation.room_id, dorm as dorm_id, s_date, e_date, room.rent')->from('reservation');
+        $this->db->join('room','room.room_id = reservation.room_id','left');
+        $this->db->where('reservation.id=', $r_id);
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -454,6 +465,16 @@ class Mreservation extends CI_Model
         $this->db->where("r_id", $r_id);
         $this->db->update("contract", $data);
         return TRUE;
+    }
+    function sign_contract($r_id, $contract_id){
+        $data = array('seal' => 1);
+        $this->db->where('id', $r_id);
+        $this->db->update('reservation', $data);
+
+        $data = array('contract_id'=>$contract_id);
+        $this->db->where('r_id', $r_id);
+        $this->db->update('payment', $data);
+        return True;
     }
     function show_handover_list($keyword, $dorm = 0, $start_val, $end_val){
       $result = array();

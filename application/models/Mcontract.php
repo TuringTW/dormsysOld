@@ -500,7 +500,7 @@ class Mcontract extends CI_Model
             return false;
         }
     }
-    function checknotoverlap($room_id, $start, $end){
+    function checknotoverlap($room_id, $start, $end, $r_id){
          $sql = "SELECT  `dorm`.`name` as `dname`, `room`.`name` as `rname`, `student`.`name` as `sname`, `student`.`mobile`,  `contract`.`s_date`,`contract`.`in_date`,`contract`.`out_date` ,  `contract`.`e_date`, COUNT(`contractpeo`.`stu_id`) as `countp`, 'con' as `source`
                     from `contract`
                     LEFT JOIN `contractpeo` on `contract`.`contract_id` = `contractpeo`.`contract_id`
@@ -530,8 +530,11 @@ class Mcontract extends CI_Model
                              (DATEDIFF(  `reservation`.`e_date`,'$start' ) >=0
                              AND DATEDIFF(   `reservation`.`s_date`,'$start' ) <=0) or
                              (DATEDIFF(  `reservation`.`e_date`,'$end' ) >=0
-                             AND DATEDIFF(   `reservation`.`s_date`,'$end' ) <=0))
-                    GROUP BY d_date";
+                             AND DATEDIFF(   `reservation`.`s_date`,'$end' ) <=0))";
+        if (is_numeric($r_id)&&$r_id>0) {
+          $sql = $sql."and reservation.id <> '$r_id'";
+        }
+        $sql = $sql."GROUP BY d_date";
 
         $query = $this->db->query($sql);
         $output = array();
@@ -577,6 +580,8 @@ class Mcontract extends CI_Model
             if ( $this->db->affected_rows()>0) {
                 $rent = $this->Mfinance->rent_cal($data['rent'], $data['s_date'], $data['e_date'], count($data['stu_id']));
                 $output = $this->Mfinance->add_rent_record(1, $rent['rent_result']['total_rent'], date('Y-m-d'), '房屋/房間租金總額', $contract_id);
+                $output1 = $this->Mreservation->sign_contract($data['r_id'], $contract_id);
+
                 $result['state'] = $output['state'];
                 $result['contract_id'] = $contract_id;
 
@@ -624,7 +629,7 @@ class Mcontract extends CI_Model
         $query = $this->db->get();
         return $query->result_array();
     }
-    function show_avail_room($dorm_id, $str_date, $end_date, $lprice, $hprice, $type){
+    function show_avail_room($dorm_id, $str_date, $end_date, $lprice, $hprice, $type, $order_law, $order_method){
         if (is_null($str_date)||empty($str_date)) {
             $str_date = date('Y-m-d');
         }
@@ -695,14 +700,74 @@ class Mcontract extends CI_Model
             $this->db->where('dorm.dorm_id=', $dorm_id);
         }
         $this->db->where('rent>=', $lprice)->where('rent<=', $hprice);
-        $this->db->where('active=', 1);
+        $this->db->where('room.active=', 1);
+        $this->db->where('dorm.active=', 1);
         // $this->db->order_by('postmin');
         // $this->db->order_by('premin');
-        $this->db->order_by('prepost');
+        // $this->db->order_by('prepost');
+
+        // 排序規則
+        $order_rule="desc";
+        if ($order_law==1) {
+            $order_rule="asc";
+        }
+        switch ($order_method) {
+            case 1:
+                $this->db->order_by("BINARY `dorm`.`name`", $order_rule, false);
+                $this->db->order_by("BINARY `room`.`name`", "asc", false);
+                $this->db->order_by("in_date", "desc");
+                break;
+            case 2:
+                $this->db->order_by("BINARY `dorm`.`name`", $order_rule, false);
+                $this->db->order_by("BINARY `room`.`name`", $order_rule, false);
+                $this->db->order_by("prepost", "desc");
+                break;
+            case 3:
+                $this->db->order_by("BINARY `room`.`type`", $order_rule, false);
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                $this->db->order_by("prepost", "desc");
+                break;
+            case 4:
+                $this->db->order_by("out_date", $order_rule);
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                $this->db->order_by("prepost", "desc");
+                break;
+            case 5:
+                $this->db->order_by("premin", $order_rule);
+                $this->db->order_by("prepost", "desc");
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                case 7:
+                break;
+                $this->db->order_by("in_date", $order_rule);
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                $this->db->order_by("prepost", "desc");
+                break;
+            case 8:
+                $this->db->order_by("postmin", $order_rule);
+                $this->db->order_by("prepost", "desc");
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                break;
+            case 10:
+                $this->db->order_by("room.rent", $order_rule);
+                $this->db->order_by("BINARY `dorm`.`name`", "desc", false);
+                $this->db->order_by("BINARY `room`.`name`", "desc", false);
+                $this->db->order_by("prepost", "desc");
+
+                break;
+
+            default:
+                $this->db->order_by("prepost", "asc");
+                $this->db->order_by("dorm.name", "desc");
+                $this->db->order_by("room.name", "desc");
+                break;
+        }
 
 
-        $this->db->order_by('dorm.name', 'desc');
-        $this->db->order_by('room.name', 'desc');
         $this->db->limit(200, 0);
         $query = $this->db->get();
         return $query->result_array();

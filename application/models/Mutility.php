@@ -9,7 +9,7 @@ class Mutility extends CI_Model
         parent::__construct();
         $this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
         $this->load->library('session');
-        $this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mstudent', 'Mservice'));
+        $this->load->model(array('login_check', 'Mcontract', 'Mfinance', 'Mstudent', 'Mservice'));
         // check login & power, and then init the header
         $required_power = 2;
         $this->login_check->check_init($required_power);
