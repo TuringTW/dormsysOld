@@ -22,12 +22,12 @@ class Reservation extends CI_Controller
 	}
 	public function index($contract_id=0){
 		// get contract_id
-		$data['view_contract_id'] = $this->input->get('contract_id', TRUE);
-		if (is_null($data['view_contract_id'])) {
-			$data['view_contract_id'] = 0;
+		$data['view_r_id'] = $this->input->get('r_id', TRUE);
+		if (is_null($data['view_r_id'])) {
+			$data['view_r_id'] = 0;
 		}
-		if (!is_numeric($data['view_contract_id'])||$data['view_contract_id']<0) {
-			$data['view_contract_id'] = -1;
+		if (!is_numeric($data['view_r_id'])||$data['view_r_id']<0) {
+			$data['view_r_id'] = -1;
 		}
 
 
@@ -43,9 +43,7 @@ class Reservation extends CI_Controller
 		$data['saleslist'] = $this->Mutility->get_user_list();
 		$this->load->view('reservation/index/viewModel',$data);
 		$this->load->view('contract/index/printModel');
-		$this->load->view('contract/index/break_contract_dialog');
-		$this->load->view('contract/index/checkout');
-		$this->load->view('contract/index/rentdepositModal');
+		$this->load->view('reservation/index/dialog');
 
 		// footer
 		$this->load->view('reservation/index/js_section', $data);
@@ -90,15 +88,13 @@ class Reservation extends CI_Controller
 		$note = $this->input->post('note', TRUE);
 
 
-		$result = $this->Mreser->edit_contract($r_id, $sname, $mobile, $s_date, $e_date, $d_date, $sales, $note);
+		$result = $this->Mreservation->edit_contract($r_id, $sname, $mobile, $s_date, $e_date, $d_date, $sales, $note);
 		if ($result) {
 			$data['json_data'] = $result;
 			$this->load->view('template/jsonview', $data);
 		}
 	}
 	public function newres(){
-
-
 		$this->view_header();
 		$data['active'] = 1;
 		$this->load->view('reservation/sidebar', $data);

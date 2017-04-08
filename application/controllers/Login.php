@@ -6,7 +6,7 @@ class Login extends CI_Controller
 		parent::__construct();
 		$this->load->helper(array('form', 'url', 'My_url_helper', 'security'));
 		$this->load->library('session');
-		$this->load->model('login_check');
+		$this->load->model(array('login_check', 'Mtools'));
 		
 		// session
 		$this->session->sess_destroy();
@@ -38,7 +38,6 @@ class Login extends CI_Controller
 					);
 				$this->session->set_userdata($sessiondata);
 				// $this->load->view(print_r($this->session));
-
 				redirect('/index');
 			}else{
 				redirect('/login');

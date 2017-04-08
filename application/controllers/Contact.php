@@ -83,7 +83,7 @@ class Contact extends CI_Controller
 		$content = $this->input->post('content', TRUE);
 		$note = $this->input->post('note', TRUE);
 
-		$send_result = $this->Mutility->send_sms($rx, 0927619822, $content, $note);
+		$send_result = $this->Mutility->send_sms($rx, '0927619822', $content, $note);
 
 		$data['json_data'] = $send_result;
 		$this->load->view('template/jsonview', $data);

@@ -49,8 +49,10 @@ class Roomengine extends CI_Controller
 		$lprice = $this->input->post('lprice', TRUE);
 		$hprice = $this->input->post('hprice', TRUE);
 		$type = $this->input->post('type', TRUE);
+		$order_method = $this->input->post("order_method", TRUE);
+		$order_law = $this->input->post("order_law", TRUE);
 
-		$data['json_data'] = $this->Mcontract->show_avail_room($dorm_id, $str_date, $end_date, $lprice, $hprice, $type);
+		$data['json_data'] = $this->Mcontract->show_avail_room($dorm_id, $str_date, $end_date, $lprice, $hprice, $type, $order_law, $order_method);
 		$this->load->view('template/jsonview', $data);
 	}
 	public function handover(){

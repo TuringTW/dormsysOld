@@ -5,7 +5,7 @@ class Contract extends CI_Controller
 		parent::__construct();
 		$this->load->helper(array('My_url_helper','url', 'My_sidebar_helper'));
 		$this->load->library(array('session'));
-		$this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mprint'));
+		$this->load->model(array('login_check', 'Mcontract', 'Mutility', 'Mfinance', 'Mprint', 'Mreservation'));
 
 		// check login & power, and then init the header
 		$required_power = 2;
@@ -150,6 +150,7 @@ class Contract extends CI_Controller
 	}
 	public function newcontract(){
 		$keep = $this->input->get('keep', TRUE);
+		$r_id = $this->input->get('r_id', TRUE);
 		if (!is_null($keep)&&is_numeric($keep)) {
 			$data['keep'] = $keep;
 			$data['keep_result'] = $this->Mcontract->get_keep_info($keep);
@@ -158,7 +159,13 @@ class Contract extends CI_Controller
 			$data['keep'] = null;
 			$data['keep_result'] = array();
 		}
-
+		if (!is_null($r_id)&&is_numeric($r_id)) {
+			$data['r_id'] = $r_id;
+			$data['r_result'] = $this->Mreservation->get_res_info($r_id);
+		}else{
+			$data['r_id'] = null;
+			$data['r_result'] = array();
+		}
 
 		$this->load->model('Mstudent');
 		$this->view_header();
@@ -171,7 +178,7 @@ class Contract extends CI_Controller
 
 		$this->load->view('contract/index/rentdepositModal');
 
-		$this->load->view('contract/newcontract/js_section');
+		$this->load->view('contract/newcontract/js_section', $data);
 		$this->load->view('template/footer');
 	}
 	public function get_rent_cal(){
@@ -186,8 +193,10 @@ class Contract extends CI_Controller
 		$s_date = $this->input->post('s_date',TRUE);
 		$e_date = $this->input->post('e_date',TRUE);
 		$room_id = $this->input->post('room_id',TRUE);
-		if (is_numeric($room_id)&&$room_id!==0&&$s_date&&$e_date) {
-			$data['json_data'] = $this->Mcontract->checknotoverlap($room_id, $s_date, $e_date);
+		$r_id = $this->input->post('r_id',TRUE);
+		if (is_numeric($room_id)&&$room_id!==0&&$s_date&&$e_date&&!is_null($r_id)) {
+
+			$data['json_data'] = $this->Mcontract->checknotoverlap($room_id, $s_date, $e_date, $r_id);
 		}
 		else{
 			$data['json_data']['state'] = -1;
