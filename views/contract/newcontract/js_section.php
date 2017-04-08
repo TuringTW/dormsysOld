@@ -577,6 +577,8 @@
 		var s_date = $('#datepickerIn').val();
 		var e_date = $('#datepickerOut').val();
 		var room_id = $('#room_select').val();
+		var r_id = $('#r_id').val();
+
 		if (checkInOut()&&room_id!==''&&room_id!==null&&room_id!==0) {
 			var xhr;
 			if (window.XMLHttpRequest) { // Mozilla, Safari, ...
@@ -584,7 +586,7 @@
 			} else if (window.ActiveXObject) { // IE 8 and older
 				xhr = new ActiveXObject("Microsoft.XMLHTTP");
 			}
-			var data = 's_date='+s_date+'&e_date='+e_date+'&room_id='+room_id;
+			var data = 's_date='+s_date+'&e_date='+e_date+'&room_id='+room_id+'&r_id='+r_id;
 			xhr.open("POST", "<?=web_url('/contract/check_not_over_lap')?>", true);
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			xhr.send(data);
@@ -602,7 +604,7 @@
 							$('#over_lap_list').html('');
 							for (var i = 0;i < data.result.length; i++) {
 								datum = data.result[i];
-								$('#over_lap_list').append('<tr><td>'+(i+1)+'</td><td>'+datum.sname+'</td><td>'+datum.mobile+'</td><td>'+datum.s_date+'</td><td>'+datum.e_date+'</td><td>'+datum.in_date+'</td><td>'+datum.out_date+'</td></tr>')
+								$('#over_lap_list').append('<tr><td>'+(i+1)+'</td><td>'+((datum.source=='res')?'預定單':((datum.source=='con')?'合約':''))+'</td><td>'+datum.sname+'</td><td>'+datum.mobile+'</td><td>'+datum.s_date+'</td><td>'+datum.e_date+'</td><td>'+datum.in_date+'</td><td>'+datum.out_date+'</td></tr>')
 							};
 							$('#overlapModal').modal('toggle');
 							recheck();
@@ -825,6 +827,7 @@
 		cdata.note = $('#note').val()+'';
 		cdata.sales = $('#sales').val();
 		cdata.prev_contract_id=$('#prev_contract_id').val();
+		cdata.r_id=$('#r_id').val();
 		json_data = JSON.stringify(cdata);
 		data = "json_data="+json_data;
 		var xhr;
@@ -1040,6 +1043,7 @@
 
 
 	$('#keepbtn').click();
+	$('#resbtn').click();
 
 
 	$( '#datepickerStart' ).datepicker({

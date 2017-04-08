@@ -16,7 +16,7 @@
 					<td style="width:<?=$wu*10/100?>">(承租人)</td>
 					<td style="width:<?=$wu*20/100?>"><span align="center" style="font-size:20px;text-align:center;">租屋&nbsp;訂金</span></td>
 					<td style="width:<?=$wu*10/100?>">新台幣</td>
-					<td style="width:<?=$wu*15/100?>"><span style="font-size:20px;text-align:center;"><?=(isset($data[0]['res_deposit'])?$data[0]['res_deposit']:'0')?></span></td>
+					<td style="width:<?=$wu*15/100?>"><span style="font-size:20px;text-align:center;"><?=(isset($data[0]['deposit'])?$data[0]['deposit']:'0')?></span></td>
 					<td style="width:<?=$wu*10/100?>">元整</td>
 				</tr>
 				<tr>
@@ -52,8 +52,7 @@
 				<tr><td></td></tr>
 				<tr>
 					<td style="width:<?=$wu*5/100?>"></td>
-					<td style="width:<?=$wu*45/100?>">請在此時之前繳交押金、完成簽約。</td>
-
+					<td style="width:<?=$wu*95/100?>">請在此時之前繳交押金、完成簽約。（繳交押金後視同簽約，違約會扣一個月的違約金）</td>
 				</tr>
 
 				<hr>

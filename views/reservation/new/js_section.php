@@ -1,4 +1,4 @@
-<?php function js_section(){ ?>
+	<?php function js_section(){ ?>
 <script type="text/javascript">
 // 學生資料
 	function room_suggestion(keeproom){
@@ -209,7 +209,7 @@
 		$('#tab_print').attr('onclick','');
 		$('#tab_print').trigger('click');
 		$('#printFrame').attr('src', '<?=web_url("/reservation/pdf_gen")?>?r_id='+r_id);
-
+		$('#btn-view-res').attr('href', '<?=web_url("/reservation/index")?>?r_id='+r_id);
 	}
 
 	$( '#datepickerStart' ).datepicker({

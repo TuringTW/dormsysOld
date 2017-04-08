@@ -44,7 +44,34 @@
 		}
 
 	}
+	function table_order(order_method){
+		$('.order_marker').html("+");
+		$('.order_marker').css("display", "none");
 
+		if (order_method==$('#order_method').val()) {
+			var law_now = $("#order_law").val();
+			if (law_now=="true") {
+				law_now=1;
+				if (order_method!=0) {
+					$('#order_marker_'+order_method).html('-');
+					$("#order_marker_"+order_method).css("display", "inline");
+				};
+			}else{
+				law_now=0;
+				if (order_method!=0) {
+					$('#order_marker_'+order_method).html('+');
+					$("#order_marker_"+order_method).css("display", "inline");
+				};
+			}
+			$('#order_law').val(!law_now);
+		}else{
+			$("#order_method").val(order_method);
+			$("#order_law").val(0);
+			$('#order_marker_'+order_method).html('-');
+			$("#order_marker_"+order_method).css("display", "inline");
+		}
+		table_refresh();
+	}
 
 
 	// 更新想式的數量
@@ -55,7 +82,18 @@
 		var hprice = $('#hprice').val();
 		var type = $('#room_type_value').val();
 		var dorm = $('#dorm_select_value').val();
+		var order_method = $('#order_method').val();//排序方法
+		var order_law = $('#order_law').val(); //遞增或遞減
+
+		if (order_law=="true") {
+			order_law=1;
+		}else{
+			order_law=0;
+		}
+
 		$('#txtkeyword').focus();
+
+
 		// if(due_value*ofd_value==1){
 		// 	due_value = 0;
 		// 	ofd_value = 0;
@@ -69,7 +107,7 @@
 		} else if (window.ActiveXObject) { // IE 8 and older
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");
 		}
-		var data = "str_date="+str_date+"&end_date="+end_date+"&lprice="+lprice+"&hprice="+hprice+"&type="+type+"&dorm="+dorm;
+		var data = "str_date="+str_date+"&end_date="+end_date+"&lprice="+lprice+"&hprice="+hprice+"&type="+type+"&dorm="+dorm+"&order_method="+order_method+"&order_law="+order_law;
 		xhr.open("POST", "<?=web_url('/roomengine/show_avail_room')?>");
 		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		xhr.send(data);

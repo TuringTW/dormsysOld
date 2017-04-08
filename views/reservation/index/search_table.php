@@ -1,7 +1,7 @@
 <h1 class="page-header">訂單列表</h1>
 <!-- 搜尋列 次導覽列 -->
 	<!-- for view -->
-	<input type="hidden" id="view_contract_id" value="<?=$view_contract_id?>">
+	<input type="hidden" id="view_r_id" value="<?=$view_r_id?>">
 
 	<div class="form-group row">
 		<div class="col-sm-5">

@@ -1,6 +1,6 @@
 <!--item李dorm id 有 0 表示其他 在sql query前需攔截 -->
 
-<h1 class="page-header">新合約/續約</h1>
+<h1 class="page-header">新訂單</h1>
 <!-- 搜尋列 次導覽列 -->
 <input type="hidden" id="new_contract_id" value="0">
 <!-- Nav tabs -->
@@ -136,6 +136,10 @@
 			<div class="col-md-4">
 				<h2>列印</h2>
 				<hr>
+				<br>
+				<h2>查看</h2>
+				<hr>
+				<a href="#" class="btn btn-default btn-lg" id="btn-view-res">查看這筆訂單</a>
 				<br>
 			</div>
 			<div class="col-md-8" >

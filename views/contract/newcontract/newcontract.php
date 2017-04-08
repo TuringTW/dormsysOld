@@ -3,6 +3,7 @@
 <h1 class="page-header">新合約/續約</h1>
 <!-- 搜尋列 次導覽列 -->
 <input type="hidden" id="new_contract_id" value="0">
+<input type="hidden" id="r_id" value="0">
 <!-- Nav tabs -->
 <ul class="nav nav-tabs" role="tablist">
 	<li class="active "><a id="tab_stuinfo" href="#stuinfo" role="tab" data-toggle="tab">Step1.房客資料</a></li>
@@ -78,8 +79,8 @@
 							<td style="width:30%" align="right">帶看人</td>
 							<td>
 								<select class="form-control" id="sales" required="required" style="width:100%" name="manager">
- 									<option  class="form-control">請選擇...</option>
-
+<!--  									<option  class="form-control">請選擇...</option>
+ -->
      								<?php foreach ($saleslist as $key => $value): ?>
      									<option  class="form-control" value="<?=$value['m_id']?>" ><?=$value['name']?></option>
      								<?php endforeach ?>
@@ -352,4 +353,13 @@ room_suggestion(<?=$keep_result[0]['room_id']?>);
 
 $('#datepickerStart').val('<?=$keep_result[0][0]?>');
 $('#datepickerIn').val('<?=$keep_result[0][1]?>');
-$('#prev_contract_id').val(<?=$keep_result[0]['contract_id']?>) <?php } ?>"></a></button>
+$('#prev_contract_id').val(0) <?php } ?>"></a>
+
+<a class="btn" id="resbtn" onclick="<?php if(!is_null($r_id)){?>
+document.getElementById('dorm_select').value=<?=$r_result[0]['dorm_id']?>;
+room_suggestion(<?=$r_result[0]['room_id']?>);
+$('#datepickerStart').val('<?=$r_result[0]['s_date']?>');
+$('#datepickerEnd').val('<?=$r_result[0]['e_date']?>');
+	$('#r_id').val('<?=$r_id?>');
+
+ <?php } ?>"></a>

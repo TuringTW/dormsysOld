@@ -1,4 +1,4 @@
-<div id="dialog-breakcontracr" title="違約設定">
+<div id="dialog-breakcontracr" title="簽約">
 	<form>
 		<label>學生名單</label>
 		<div style="width:100%">
@@ -25,7 +25,7 @@
 					<th>合約結束日期</th>
 				</thead>
 				<tbody id="break_contract_info">
-					
+
 				</tbody>
 			</table>
 		</div>

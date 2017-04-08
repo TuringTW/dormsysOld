@@ -136,6 +136,10 @@
 				$('#sms_content').val($('#sms_content').val()+$("#smscollectionoption"+sc_id).html());
 			}
 		}
+		function session_timeout(){
+			window.location.assign('<?=web_url("/login")?>');
+		}
+		setTimeout('session_timeout()', 1000*60*30);
 	</script>
 	<!-- 讓每一頁可以寫不同script的方法 -->
 	<?php if(function_exists("js_section")){ js_section(); } ?>

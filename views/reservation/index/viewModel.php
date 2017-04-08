@@ -142,8 +142,8 @@
 						</div>
 
 						<div class="col-md-5 pull-right">
-							<a id="view_sign_btnforRes"  name="checkoutsubmit" title="簽約，把押金訂金移到合約裡，並封存這筆訂單(還是會有紀錄但不會出現在表上)" onclick="keep_check()"class="btn btn-success btn-lg keep">簽約</a>
-							<a id="view_confiscate_btnforRes"  name="checkoutsubmit" title="沒收押金，封存這筆訂單(還是會有紀錄但不會出現在表上)" onclick="checkout_check()" class="btn btn-warning btn-lg checkout">沒收押金</a>
+							<a id="view_sign_btnforRes"  name="checkoutsubmit" title="簽約，把押金訂金移到合約裡，並封存這筆訂單(還是會有紀錄但不會出現在表上)" onclick="bind_contract()"class="btn btn-success btn-lg keep">簽約</a>
+							<a id="view_confiscate_btnforRes"  name="checkoutsubmit" title="沒收押金，封存這筆訂單(還是會有紀錄但不會出現在表上)" onclick="checkout_check()" class="btn btn-warning btn-lg checkout">沒收訂金</a>
 							<a id="view_change_btnforRes"  name="checkoutsubmit" data-cnum="0" title="手滑打錯要刪除"class="btn  btn-lg btn-danger">刪除</a>
 						</div>
   					<div class="col-md-3 pull-right">
